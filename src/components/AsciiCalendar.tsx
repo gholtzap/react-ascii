@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { buildWeeks, useCalendarNav, DAY_HEADERS } from "../calendar";
 
 export interface AsciiCalendarProps {
   value?: Date;
@@ -18,49 +19,12 @@ export function AsciiCalendar({
   className,
   style,
 }: AsciiCalendarProps) {
-  const today = new Date();
-  const [viewYear, setViewYear] = useState(value?.getFullYear() ?? today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(value?.getMonth() ?? today.getMonth());
+  const { viewYear, viewMonth, monthLabel, prevMonth, nextMonth } = useCalendarNav(value);
 
   const b = borders[border];
   const inner = width - 2;
 
-  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
-
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"];
-  const monthLabel = `${monthNames[viewMonth]} ${viewYear}`;
-
-  const prev = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear((y) => y - 1); }
-    else setViewMonth((m) => m - 1);
-  };
-
-  const next = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear((y) => y + 1); }
-    else setViewMonth((m) => m + 1);
-  };
-
-  const headerLine = b.tl + repeatChar(b.h, inner) + b.tr;
-  const footerLine = b.bl + repeatChar(b.h, inner) + b.br;
-  const sepLine = b.lm + repeatChar(b.h, inner) + b.rm;
-
-  const dayHeaders = "Su Mo Tu We Th Fr Sa";
-
-  const weeks: (number | null)[][] = [];
-  let week: (number | null)[] = new Array(firstDay).fill(null);
-  for (let d = 1; d <= daysInMonth; d++) {
-    week.push(d);
-    if (week.length === 7) {
-      weeks.push(week);
-      week = [];
-    }
-  }
-  if (week.length > 0) {
-    while (week.length < 7) week.push(null);
-    weeks.push(week);
-  }
+  const weeks = buildWeeks(viewYear, viewMonth);
 
   const isSelected = (d: number) =>
     value &&
@@ -73,17 +37,17 @@ export function AsciiCalendar({
       className={`ascii-lib ascii-calendar ${className ?? ""}`.trim()}
       style={style}
     >
-      <span>{headerLine}</span>
+      <span>{b.tl + repeatChar(b.h, inner) + b.tr}</span>
       {"\n"}
       <span>{b.v}</span>
-      <button type="button" className="ascii-calendar-nav" onClick={prev} aria-label="Previous month">{"<"}</button>
+      <button type="button" className="ascii-calendar-nav" onClick={prevMonth} aria-label="Previous month">{"<"}</button>
       <span>{pad(monthLabel, inner - 4, "center")}</span>
-      <button type="button" className="ascii-calendar-nav" onClick={next} aria-label="Next month">{">"}</button>
+      <button type="button" className="ascii-calendar-nav" onClick={nextMonth} aria-label="Next month">{">"}</button>
       <span>{b.v}</span>
       {"\n"}
-      <span>{sepLine}</span>
+      <span>{b.lm + repeatChar(b.h, inner) + b.rm}</span>
       {"\n"}
-      <span>{b.v + pad(` ${dayHeaders}`, inner) + b.v}</span>
+      <span>{b.v + pad(` ${DAY_HEADERS}`, inner) + b.v}</span>
       {"\n"}
       {weeks.map((w, wi) => (
         <React.Fragment key={wi}>
@@ -108,7 +72,7 @@ export function AsciiCalendar({
           {"\n"}
         </React.Fragment>
       ))}
-      <span>{footerLine}</span>
+      <span>{b.bl + repeatChar(b.h, inner) + b.br}</span>
     </div>
   );
 }
