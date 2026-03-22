@@ -1,0 +1,1 @@
+![Demo Dashboard Gif](readme-gif-demo-dashboard.gif)
