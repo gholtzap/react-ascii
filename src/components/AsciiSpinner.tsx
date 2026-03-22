@@ -10,6 +10,10 @@ export interface AsciiSpinnerProps {
 
 const defaultFrames = ["|", "/", "-", "\\"];
 
+const prefersReducedMotion =
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 export function AsciiSpinner({
   frames = defaultFrames,
   interval = 100,
@@ -20,6 +24,7 @@ export function AsciiSpinner({
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     const timer = setInterval(() => {
       setIndex((i) => (i + 1) % frames.length);
     }, interval);

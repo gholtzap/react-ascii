@@ -981,7 +981,7 @@ function App() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 21 components        │
+  │  5 border styles / 33 components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
         </pre>

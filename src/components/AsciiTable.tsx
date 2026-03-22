@@ -75,7 +75,7 @@ export function AsciiTable({
       {/* Visual ASCII rendering */}
       <span aria-hidden="true">{lines.join("\n")}</span>
       {/* Accessible table structure for screen readers */}
-      <table className="ascii-table-sr" role="table">
+      <table className="ascii-sr-only" role="table">
         <thead>
           <tr>
             {cols.map((c) => (

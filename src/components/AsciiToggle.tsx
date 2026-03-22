@@ -30,10 +30,6 @@ export function AsciiToggle({
     ? `[${"\u2550".repeat(filledCount)}\u25CF${" ".repeat(emptyCount)}]`
     : `[${" ".repeat(emptyCount)}\u25CF${"\u2550".repeat(filledCount)}]`;
 
-  const handleClick = () => {
-    if (!disabled) onChange?.(!checked);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
     if (e.key === "Enter" || e.key === " ") {
@@ -54,14 +50,13 @@ export function AsciiToggle({
         checked={checked}
         onChange={(e) => onChange?.(e.target.checked)}
         disabled={disabled}
-        style={{ position: "absolute", opacity: 0, width: 0, height: 0, pointerEvents: "none" }}
+        tabIndex={-1}
       />
       <span
         className="ascii-toggle-track"
         role="switch"
         aria-checked={checked}
         tabIndex={disabled ? -1 : 0}
-        onClick={handleClick}
         onKeyDown={handleKeyDown}
       >
         {track}

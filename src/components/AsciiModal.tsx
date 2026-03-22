@@ -101,9 +101,11 @@ export function AsciiModal({
 
   // Title row (close button rendered separately)
   if (title) {
-    const titleSpace = inner - title.length - 1;
+    const maxTitleLen = Math.max(0, inner - 2);
+    const clampedTitle = title.length > maxTitleLen ? title.slice(0, maxTitleLen) : title;
+    const titleSpace = inner - clampedTitle.length - 1;
     lines.push(
-      b.v + ` ${title}` + " ".repeat(Math.max(1, titleSpace)) + b.v
+      b.v + ` ${clampedTitle}` + " ".repeat(Math.max(1, titleSpace)) + b.v
     );
     lines.push(b.lm + repeatChar(b.h, inner) + b.rm);
   }

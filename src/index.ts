@@ -63,6 +63,42 @@ export type { AsciiCodeProps } from "./components/AsciiCode";
 export { AsciiTextarea } from "./components/AsciiTextarea";
 export type { AsciiTextareaProps } from "./components/AsciiTextarea";
 
+export { AsciiToast } from "./components/AsciiToast";
+export type { AsciiToastProps, AsciiToastItem, ToastVariant } from "./components/AsciiToast";
+
+export { AsciiPagination } from "./components/AsciiPagination";
+export type { AsciiPaginationProps } from "./components/AsciiPagination";
+
+export { AsciiDropdownMenu } from "./components/AsciiDropdownMenu";
+export type { AsciiDropdownMenuProps, AsciiDropdownMenuItem } from "./components/AsciiDropdownMenu";
+
+export { AsciiBreadcrumb } from "./components/AsciiBreadcrumb";
+export type { AsciiBreadcrumbProps, AsciiBreadcrumbItem } from "./components/AsciiBreadcrumb";
+
+export { AsciiSparkline } from "./components/AsciiSparkline";
+export type { AsciiSparklineProps } from "./components/AsciiSparkline";
+
+export { AsciiStat } from "./components/AsciiStat";
+export type { AsciiStatProps } from "./components/AsciiStat";
+
+export { AsciiSkeleton } from "./components/AsciiSkeleton";
+export type { AsciiSkeletonProps } from "./components/AsciiSkeleton";
+
+export { AsciiTimeline } from "./components/AsciiTimeline";
+export type { AsciiTimelineProps, AsciiTimelineEvent } from "./components/AsciiTimeline";
+
+export { AsciiAvatar } from "./components/AsciiAvatar";
+export type { AsciiAvatarProps } from "./components/AsciiAvatar";
+
+export { AsciiCommandPalette } from "./components/AsciiCommandPalette";
+export type { AsciiCommandPaletteProps, AsciiCommandItem } from "./components/AsciiCommandPalette";
+
+export { AsciiSidebar } from "./components/AsciiSidebar";
+export type { AsciiSidebarProps, AsciiSidebarItem } from "./components/AsciiSidebar";
+
+export { AsciiTag } from "./components/AsciiTag";
+export type { AsciiTagProps } from "./components/AsciiTag";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";
