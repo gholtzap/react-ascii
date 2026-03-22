@@ -787,3 +787,800 @@
 .ascii-sheet-close:hover {
   filter: brightness(1.3);
 }
+
+/* ── Alert Dialog ──────────────────────── */
+
+.ascii-alertdialog {
+  white-space: pre;
+  position: relative;
+  max-width: 100%;
+}
+
+.ascii-alertdialog-actions {
+  position: absolute;
+  bottom: 1lh;
+  left: 2ch;
+  display: flex;
+  gap: 1ch;
+}
+
+.ascii-alertdialog-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-alertdialog-btn:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-alertdialog-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Aspect Ratio ──────────────────────── */
+
+.ascii-aspect-ratio {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Button Group ──────────────────────── */
+
+.ascii-button-group {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-btngroup-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-btngroup-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-btngroup-btn-active {
+  filter: brightness(1.3);
+}
+
+.ascii-btngroup-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-btngroup-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Calendar ──────────────────────────── */
+
+.ascii-calendar {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-calendar-nav {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-calendar-nav:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-calendar-day {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-calendar-day:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-calendar-day-selected {
+  filter: brightness(1.4);
+}
+
+/* ── Carousel ──────────────────────────── */
+
+.ascii-carousel {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-carousel:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-carousel-nav {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-carousel-nav:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Collapsible ───────────────────────── */
+
+.ascii-collapsible {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-collapsible-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+
+.ascii-collapsible-trigger:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-collapsible-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Combobox ──────────────────────────── */
+
+.ascii-combobox-wrapper {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-combobox-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+}
+
+.ascii-combobox-input::placeholder {
+  opacity: 0.5;
+}
+
+.ascii-combobox-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-combobox-option {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-combobox-option:hover,
+.ascii-combobox-option-active {
+  filter: brightness(1.3);
+}
+
+/* ── Context Menu ──────────────────────── */
+
+.ascii-contextmenu-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-contextmenu {
+  white-space: pre;
+  z-index: 1000;
+}
+
+.ascii-contextmenu-item {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-contextmenu-item:hover,
+.ascii-contextmenu-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-contextmenu-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Data Table ────────────────────────── */
+
+.ascii-datatable {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-datatable-sort {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datatable-sort:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-datatable-sort:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.ascii-datatable-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  white-space: pre;
+}
+
+.ascii-datatable-page-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datatable-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ascii-datatable-page-btn:hover:not(:disabled) {
+  filter: brightness(1.3);
+}
+
+/* ── Drawer ────────────────────────────── */
+
+.ascii-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ascii-overlay, rgba(0, 0, 0, 0.6));
+  z-index: 9999;
+  display: flex;
+}
+
+.ascii-drawer {
+  white-space: pre;
+  position: relative;
+  overflow-x: auto;
+}
+
+.ascii-drawer-right {
+  margin-left: auto;
+  align-self: stretch;
+}
+
+.ascii-drawer-left {
+  margin-right: auto;
+  align-self: stretch;
+}
+
+.ascii-drawer-top {
+  align-self: flex-start;
+  width: 100%;
+}
+
+.ascii-drawer-bottom {
+  align-self: flex-end;
+  width: 100%;
+}
+
+.ascii-drawer-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: inherit;
+  z-index: 1;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ascii-drawer-close:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Empty ─────────────────────────────── */
+
+.ascii-empty {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Field ─────────────────────────────── */
+
+.ascii-field {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-field-label {
+  display: block;
+}
+
+.ascii-field-hint {
+  opacity: 0.6;
+}
+
+.ascii-field-error-msg {
+  display: block;
+}
+
+/* ── Hover Card ────────────────────────── */
+
+.ascii-hovercard-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-hovercard-content {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  white-space: pre;
+  pointer-events: none;
+  z-index: 10000;
+  margin-bottom: 2px;
+}
+
+/* ── Input Group ───────────────────────── */
+
+.ascii-input-group {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-input-group-addon {
+  opacity: 0.7;
+}
+
+.ascii-input-group-native {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+}
+
+/* ── Input OTP ─────────────────────────── */
+
+.ascii-input-otp {
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+}
+
+.ascii-otp-cell {
+  display: inline-block;
+  white-space: pre;
+  text-align: center;
+}
+
+.ascii-otp-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 1ch;
+  text-align: center;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.ascii-otp-input:focus-visible {
+  outline: none;
+}
+
+.ascii-otp-cell:has(.ascii-otp-input:focus) {
+  filter: brightness(1.3);
+}
+
+.ascii-otp-sep {
+  display: inline-block;
+}
+
+/* ── Item ──────────────────────────────── */
+
+.ascii-item {
+  display: block;
+  white-space: pre;
+}
+
+.ascii-item-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+
+.ascii-item-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Label ─────────────────────────────── */
+
+.ascii-label {
+  display: inline-block;
+  white-space: pre;
+  cursor: pointer;
+}
+
+/* ── Menubar ───────────────────────────── */
+
+.ascii-menubar {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-menubar-items {
+  display: inline-flex;
+}
+
+.ascii-menubar-menu-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ascii-menubar-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  white-space: pre;
+}
+
+.ascii-menubar-trigger:hover,
+.ascii-menubar-trigger-active {
+  filter: brightness(1.3);
+}
+
+.ascii-menubar-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-menubar-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-menubar-item {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-menubar-item:hover,
+.ascii-menubar-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-menubar-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Native Select ─────────────────────── */
+
+.ascii-native-select {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-native-select-el {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* ── Navigation Menu ───────────────────── */
+
+.ascii-navmenu {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre;
+}
+
+.ascii-navmenu-sep {
+  opacity: 0.5;
+}
+
+.ascii-navmenu-link,
+.ascii-navmenu-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+
+.ascii-navmenu-link:hover,
+.ascii-navmenu-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-navmenu-active {
+  filter: brightness(1.3);
+}
+
+.ascii-navmenu-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-navmenu-btn:focus-visible,
+.ascii-navmenu-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Popover ───────────────────────────── */
+
+.ascii-popover-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-popover-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-popover-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-popover-content {
+  position: absolute;
+  left: 0;
+  white-space: pre;
+  z-index: 10000;
+}
+
+.ascii-popover-top {
+  bottom: 100%;
+  margin-bottom: 2px;
+}
+
+.ascii-popover-bottom {
+  top: 100%;
+  margin-top: 2px;
+}
+
+/* ── Scroll Area ───────────────────────── */
+
+.ascii-scrollarea {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-scrollarea-viewport {
+  scrollbar-width: none;
+}
+
+.ascii-scrollarea-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.ascii-scrollarea-track {
+  opacity: 0.5;
+}
+
+/* ── Sonner ────────────────────────────── */
+
+.ascii-sonner {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.ascii-sonner-item {
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-sonner-item:hover {
+  filter: brightness(1.2);
+}
+
+/* ── Switch ────────────────────────────── */
+
+.ascii-switch {
+  display: inline-flex;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.ascii-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ascii-switch-track {
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-switch-track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.ascii-switch:has(input:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Toggle Group ──────────────────────── */
+
+.ascii-toggle-group {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-togglegroup-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-togglegroup-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-togglegroup-btn-active {
+  filter: brightness(1.3);
+}
+
+.ascii-togglegroup-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-togglegroup-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Typography ────────────────────────── */
+
+.ascii-typography {
+  white-space: pre;
+  margin: 0;
+  padding: 0;
+}
+
+.ascii-typography-h1 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h2 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h3 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h4 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-caption {
+  opacity: 0.7;
+}
+
+.ascii-typography-overline {
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+/* ── Direction ─────────────────────────── */
+
+.ascii-direction {
+  display: inline-block;
+}

@@ -132,6 +132,87 @@ export type { AsciiResizableProps } from "./components/AsciiResizable";
 export { AsciiSheet } from "./components/AsciiSheet";
 export type { AsciiSheetProps, SheetSide } from "./components/AsciiSheet";
 
+export { AsciiAlertDialog } from "./components/AsciiAlertDialog";
+export type { AsciiAlertDialogProps } from "./components/AsciiAlertDialog";
+
+export { AsciiAspectRatio } from "./components/AsciiAspectRatio";
+export type { AsciiAspectRatioProps } from "./components/AsciiAspectRatio";
+
+export { AsciiButtonGroup } from "./components/AsciiButtonGroup";
+export type { AsciiButtonGroupProps, AsciiButtonGroupItem } from "./components/AsciiButtonGroup";
+
+export { AsciiCalendar } from "./components/AsciiCalendar";
+export type { AsciiCalendarProps } from "./components/AsciiCalendar";
+
+export { AsciiCarousel } from "./components/AsciiCarousel";
+export type { AsciiCarouselProps, AsciiCarouselItem } from "./components/AsciiCarousel";
+
+export { AsciiCollapsible } from "./components/AsciiCollapsible";
+export type { AsciiCollapsibleProps } from "./components/AsciiCollapsible";
+
+export { AsciiCombobox } from "./components/AsciiCombobox";
+export type { AsciiComboboxProps, AsciiComboboxOption } from "./components/AsciiCombobox";
+
+export { AsciiContextMenu } from "./components/AsciiContextMenu";
+export type { AsciiContextMenuProps, AsciiContextMenuItem } from "./components/AsciiContextMenu";
+
+export { AsciiDataTable } from "./components/AsciiDataTable";
+export type { AsciiDataTableProps, AsciiDataTableColumn } from "./components/AsciiDataTable";
+
+export { AsciiDirection } from "./components/AsciiDirection";
+export type { AsciiDirectionProps, AsciiDir } from "./components/AsciiDirection";
+
+export { AsciiDrawer } from "./components/AsciiDrawer";
+export type { AsciiDrawerProps, DrawerSide } from "./components/AsciiDrawer";
+
+export { AsciiEmpty } from "./components/AsciiEmpty";
+export type { AsciiEmptyProps } from "./components/AsciiEmpty";
+
+export { AsciiField } from "./components/AsciiField";
+export type { AsciiFieldProps } from "./components/AsciiField";
+
+export { AsciiHoverCard } from "./components/AsciiHoverCard";
+export type { AsciiHoverCardProps } from "./components/AsciiHoverCard";
+
+export { AsciiInputGroup } from "./components/AsciiInputGroup";
+export type { AsciiInputGroupProps } from "./components/AsciiInputGroup";
+
+export { AsciiInputOTP } from "./components/AsciiInputOTP";
+export type { AsciiInputOTPProps } from "./components/AsciiInputOTP";
+
+export { AsciiItem } from "./components/AsciiItem";
+export type { AsciiItemProps } from "./components/AsciiItem";
+
+export { AsciiLabel } from "./components/AsciiLabel";
+export type { AsciiLabelProps } from "./components/AsciiLabel";
+
+export { AsciiMenubar } from "./components/AsciiMenubar";
+export type { AsciiMenubarProps, AsciiMenubarMenu, AsciiMenubarMenuItem } from "./components/AsciiMenubar";
+
+export { AsciiNativeSelect } from "./components/AsciiNativeSelect";
+export type { AsciiNativeSelectProps, AsciiNativeSelectOption } from "./components/AsciiNativeSelect";
+
+export { AsciiNavigationMenu } from "./components/AsciiNavigationMenu";
+export type { AsciiNavigationMenuProps, AsciiNavigationMenuItem } from "./components/AsciiNavigationMenu";
+
+export { AsciiPopover } from "./components/AsciiPopover";
+export type { AsciiPopoverProps, PopoverSide } from "./components/AsciiPopover";
+
+export { AsciiScrollArea } from "./components/AsciiScrollArea";
+export type { AsciiScrollAreaProps } from "./components/AsciiScrollArea";
+
+export { AsciiSonner, useAsciiSonner } from "./components/AsciiSonner";
+export type { AsciiSonnerContainerProps, SonnerVariant } from "./components/AsciiSonner";
+
+export { AsciiSwitch } from "./components/AsciiSwitch";
+export type { AsciiSwitchProps } from "./components/AsciiSwitch";
+
+export { AsciiToggleGroup } from "./components/AsciiToggleGroup";
+export type { AsciiToggleGroupProps, AsciiToggleGroupItem } from "./components/AsciiToggleGroup";
+
+export { AsciiTypography } from "./components/AsciiTypography";
+export type { AsciiTypographyProps, TypographyVariant } from "./components/AsciiTypography";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";

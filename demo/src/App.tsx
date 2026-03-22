@@ -32,6 +32,34 @@ import {
   AsciiAsciiText,
   AsciiResizable,
   AsciiSheet,
+  AsciiAlertDialog,
+  AsciiAspectRatio,
+  AsciiButtonGroup,
+  AsciiCalendar,
+  AsciiCarousel,
+  AsciiCollapsible,
+  AsciiCombobox,
+  AsciiContextMenu,
+  AsciiDataTable,
+  AsciiDirection,
+  AsciiDrawer,
+  AsciiEmpty,
+  AsciiField,
+  AsciiHoverCard,
+  AsciiInputGroup,
+  AsciiInputOTP,
+  AsciiItem,
+  AsciiLabel,
+  AsciiMenubar,
+  AsciiNativeSelect,
+  AsciiNavigationMenu,
+  AsciiPopover,
+  AsciiScrollArea,
+  AsciiSonner,
+  useAsciiSonner,
+  AsciiSwitch,
+  AsciiToggleGroup,
+  AsciiTypography,
 } from "ascii-lib";
 import "./App.css";
 
@@ -377,6 +405,19 @@ function Components() {
   const [pickerDate, setPickerDate] = useState<Date | undefined>(undefined);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [sheetSide, setSheetSide] = useState<"left" | "right" | "bottom">("right");
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [btnGroupVal, setBtnGroupVal] = useState("grid");
+  const [calendarDate, setCalendarDate] = useState<Date | undefined>(undefined);
+  const [comboVal, setComboVal] = useState("");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [fieldVal, setFieldVal] = useState("");
+  const [otpVal, setOtpVal] = useState("");
+  const [navKey, setNavKey] = useState("home");
+  const [nativeVal, setNativeVal] = useState("usd");
+  const [switch1, setSwitch1] = useState(true);
+  const [switch2, setSwitch2] = useState(false);
+  const [toggleGroupVal, setToggleGroupVal] = useState("bold");
+  const sonner = useAsciiSonner();
 
   return (
     <div className="components">
@@ -1198,6 +1239,585 @@ image: app:v2.4.1`}
         </div>
       </div>
 
+      <AsciiDivider width={80} border="double" label="NEW COMPONENTS" className="divider-full" />
+
+      {/* ── Alert Dialog ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiAlertDialog>"}</h2>
+        <p className="section-desc">Confirmation dialog with confirm/cancel actions.</p>
+        <div className="green">
+          <AsciiButton label="Delete Item" border="bold" onClick={() => setAlertDialogOpen(true)} />
+        </div>
+        <AsciiAlertDialog
+          open={alertDialogOpen}
+          onConfirm={() => setAlertDialogOpen(false)}
+          onCancel={() => setAlertDialogOpen(false)}
+          title="Are you sure?"
+          width={46}
+          border="double"
+        >
+          {"This action cannot be undone.\nAll data will be permanently deleted."}
+        </AsciiAlertDialog>
+      </div>
+
+      {/* ── Aspect Ratio ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiAspectRatio>"}</h2>
+        <p className="section-desc">Container that enforces an aspect ratio.</p>
+        <div className="demo-row">
+          <div className="green">
+            <span className="label">16:9</span>
+            <AsciiAspectRatio ratio={16 / 9} width={36}>
+              {" 16:9 content area"}
+            </AsciiAspectRatio>
+          </div>
+          <div className="blue">
+            <span className="label">4:3</span>
+            <AsciiAspectRatio ratio={4 / 3} width={28}>
+              {" 4:3 content area"}
+            </AsciiAspectRatio>
+          </div>
+          <div className="red">
+            <span className="label">1:1</span>
+            <AsciiAspectRatio ratio={1} width={20}>
+              {" square"}
+            </AsciiAspectRatio>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Button Group ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiButtonGroup>"}</h2>
+        <p className="section-desc">Segmented button group with single selection.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiButtonGroup
+              items={[
+                { key: "list", label: "List" },
+                { key: "grid", label: "Grid" },
+                { key: "board", label: "Board" },
+              ]}
+              value={btnGroupVal}
+              onChange={setBtnGroupVal}
+            />
+          </div>
+          <div className="blue">
+            <AsciiButtonGroup
+              items={[
+                { key: "s", label: "S" },
+                { key: "m", label: "M" },
+                { key: "l", label: "L" },
+                { key: "xl", label: "XL" },
+              ]}
+              value="m"
+              border="double"
+            />
+          </div>
+        </div>
+        <div className="output">view: {btnGroupVal}</div>
+      </div>
+
+      {/* ── Calendar ──────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiCalendar>"}</h2>
+        <p className="section-desc">Standalone calendar with month navigation.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiCalendar value={calendarDate} onChange={setCalendarDate} width={28} />
+          </div>
+          <div className="blue">
+            <AsciiCalendar value={calendarDate} onChange={setCalendarDate} width={28} border="double" />
+          </div>
+        </div>
+        <div className="output">selected: {calendarDate ? calendarDate.toLocaleDateString() : "none"}</div>
+      </div>
+
+      {/* ── Carousel ──────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiCarousel>"}</h2>
+        <p className="section-desc">Cycle through items with arrow navigation.</p>
+        <div className="green">
+          <AsciiCarousel
+            width={50}
+            height={4}
+            items={[
+              { key: "1", content: " Deploy v2.5.0\n\n Status: rolling\n Region: us-east-1" },
+              { key: "2", content: " Database Migration\n\n Tables: 12 updated\n Duration: 4.2s" },
+              { key: "3", content: " Cache Flush\n\n Entries: 48,291\n Status: complete" },
+            ]}
+          />
+        </div>
+      </div>
+
+      {/* ── Collapsible ───────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiCollapsible>"}</h2>
+        <p className="section-desc">Simple collapsible section without borders.</p>
+        <div className="demo-col green" style={{ gap: "0.25rem" }}>
+          <AsciiCollapsible title="System Requirements">
+            {"Node.js >= 18\nReact >= 17\nTypeScript >= 4.7"}
+          </AsciiCollapsible>
+          <AsciiCollapsible title="Installation" defaultOpen>
+            {"npm install ascii-lib"}
+          </AsciiCollapsible>
+          <AsciiCollapsible title="License">
+            {"MIT License\nCopyright (c) 2025"}
+          </AsciiCollapsible>
+        </div>
+      </div>
+
+      {/* ── Combobox ──────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiCombobox>"}</h2>
+        <p className="section-desc">Searchable dropdown with type-ahead filtering.</p>
+        <div className="demo-row green">
+          <AsciiCombobox
+            width={32}
+            options={[
+              { value: "react", label: "React" },
+              { value: "vue", label: "Vue" },
+              { value: "svelte", label: "Svelte" },
+              { value: "solid", label: "SolidJS" },
+              { value: "angular", label: "Angular" },
+              { value: "preact", label: "Preact" },
+            ]}
+            value={comboVal}
+            onChange={setComboVal}
+            placeholder="Search frameworks..."
+          />
+        </div>
+        <div className="output">selected: {comboVal || "none"}</div>
+      </div>
+
+      {/* ── Context Menu ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiContextMenu>"}</h2>
+        <p className="section-desc">Right-click to open a context menu.</p>
+        <div className="green">
+          <AsciiContextMenu
+            width={22}
+            items={[
+              { key: "cut", label: "Cut", shortcut: "^X" },
+              { key: "copy", label: "Copy", shortcut: "^C" },
+              { key: "paste", label: "Paste", shortcut: "^V" },
+              { key: "sep1", label: "", separator: true },
+              { key: "delete", label: "Delete" },
+            ]}
+            onSelect={() => {}}
+          >
+            <AsciiBox width={36} border="single">
+              {"  right-click here"}
+            </AsciiBox>
+          </AsciiContextMenu>
+        </div>
+      </div>
+
+      {/* ── Data Table ────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiDataTable>"}</h2>
+        <p className="section-desc">Table with sortable columns and pagination.</p>
+        <div className="green">
+          <AsciiDataTable
+            columns={[
+              { key: "name", header: "NAME", width: 16, sortable: true },
+              { key: "role", header: "ROLE", width: 12, sortable: true },
+              { key: "status", header: "STATUS", width: 10 },
+              { key: "last", header: "LAST SEEN", width: 12, align: "right", sortable: true },
+            ]}
+            data={[
+              { name: "alice", role: "admin", status: "● online", last: "now" },
+              { name: "bob", role: "editor", status: "● online", last: "2m ago" },
+              { name: "carol", role: "viewer", status: "○ offline", last: "1h ago" },
+              { name: "dave", role: "admin", status: "● online", last: "5m ago" },
+              { name: "eve", role: "editor", status: "○ offline", last: "3d ago" },
+            ]}
+            pageSize={3}
+          />
+        </div>
+      </div>
+
+      {/* ── Direction ─────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiDirection>"}</h2>
+        <p className="section-desc">LTR/RTL direction wrapper.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiDirection dir="ltr">
+              <AsciiBox width={24} title="LTR" border="single">
+                {"Left to right"}
+              </AsciiBox>
+            </AsciiDirection>
+          </div>
+          <div className="blue">
+            <AsciiDirection dir="rtl">
+              <AsciiBox width={24} title="RTL" border="single">
+                {"Right to left"}
+              </AsciiBox>
+            </AsciiDirection>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Drawer ────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiDrawer>"}</h2>
+        <p className="section-desc">Overlay panel from any edge. Like Sheet but with top/bottom support.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiButton label="Open Drawer" border="single" onClick={() => setDrawerOpen(true)} />
+          </div>
+        </div>
+        <AsciiDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          side="right"
+          title="Drawer Panel"
+          width={40}
+          border="double"
+        >
+          {"Drawer content here.\n\nSlides in from any edge.\nPress Esc to close."}
+        </AsciiDrawer>
+      </div>
+
+      {/* ── Empty ─────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiEmpty>"}</h2>
+        <p className="section-desc">Empty state placeholder.</p>
+        <div className="demo-row">
+          <div className="dim">
+            <AsciiEmpty
+              title="No results found"
+              description="Try adjusting your search"
+              width={36}
+            />
+          </div>
+          <div className="blue">
+            <AsciiEmpty
+              icon="[+]"
+              title="No projects yet"
+              description="Create your first project\nto get started"
+              width={36}
+              border="double"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Field ─────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiField>"}</h2>
+        <p className="section-desc">Form field wrapper with label, hint, and error states.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiField label="Username" hint="3-20 characters" required>
+              <input
+                className="ascii-input-native"
+                placeholder="enter username..."
+                value={fieldVal}
+                onChange={(e) => setFieldVal(e.target.value)}
+                style={{ width: "24ch" }}
+              />
+            </AsciiField>
+          </div>
+          <div className="red">
+            <AsciiField label="Email" error="Invalid email address" required>
+              <input
+                className="ascii-input-native"
+                value="not-an-email"
+                readOnly
+                style={{ width: "24ch" }}
+              />
+            </AsciiField>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Hover Card ────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiHoverCard>"}</h2>
+        <p className="section-desc">Rich content card on hover.</p>
+        <div className="demo-row" style={{ gap: "2rem" }}>
+          <span className="green">
+            <AsciiHoverCard content={"role: admin\nlast login: 2m ago\nregion: us-east-1"} width={28}>
+              [hover: @admin]
+            </AsciiHoverCard>
+          </span>
+          <span className="blue">
+            <AsciiHoverCard content={"status: healthy\ncpu: 12%\nmem: 256M"} width={24} border="double">
+              [hover: api-gw]
+            </AsciiHoverCard>
+          </span>
+        </div>
+      </div>
+
+      {/* ── Input Group ───────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiInputGroup>"}</h2>
+        <p className="section-desc">Input with prefix/suffix addons.</p>
+        <div className="demo-col green" style={{ gap: "0.75rem" }}>
+          <AsciiInputGroup prefix="https://" width={44}>
+            <input placeholder="example.com" />
+          </AsciiInputGroup>
+          <AsciiInputGroup suffix=".00 USD" width={44}>
+            <input placeholder="0" />
+          </AsciiInputGroup>
+        </div>
+      </div>
+
+      {/* ── Input OTP ─────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiInputOTP>"}</h2>
+        <p className="section-desc">One-time password input with auto-advance.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiInputOTP length={6} value={otpVal} onChange={setOtpVal} />
+          </div>
+          <div className="blue">
+            <AsciiInputOTP length={4} value="" onChange={() => {}} border="double" separator="-" />
+          </div>
+        </div>
+        <div className="output">otp: "{otpVal}"</div>
+      </div>
+
+      {/* ── Item ──────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiItem>"}</h2>
+        <p className="section-desc">Generic list item with icon, label, and description.</p>
+        <div className="demo-col green" style={{ gap: "0.25rem" }}>
+          <AsciiItem icon="◆" label="Dashboard" trailing="^D" onClick={() => {}} selected />
+          <AsciiItem icon="◆" label="Settings" description="Manage preferences" trailing="^S" onClick={() => {}} />
+          <AsciiItem icon="◆" label="Logout" onClick={() => {}} />
+          <AsciiItem icon="◆" label="Disabled" disabled onClick={() => {}} />
+        </div>
+      </div>
+
+      {/* ── Label ─────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiLabel>"}</h2>
+        <p className="section-desc">Form label with optional required indicator.</p>
+        <div className="demo-col green" style={{ gap: "0.5rem" }}>
+          <AsciiLabel>Username</AsciiLabel>
+          <AsciiLabel required>Email</AsciiLabel>
+          <AsciiLabel>Description</AsciiLabel>
+        </div>
+      </div>
+
+      {/* ── Menubar ───────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiMenubar>"}</h2>
+        <p className="section-desc">Horizontal menu bar with dropdown menus.</p>
+        <div className="green">
+          <AsciiMenubar
+            menus={[
+              {
+                key: "file",
+                label: "File",
+                items: [
+                  { key: "new", label: "New File" },
+                  { key: "open", label: "Open..." },
+                  { key: "save", label: "Save" },
+                  { key: "sep", label: "", separator: true },
+                  { key: "quit", label: "Quit" },
+                ],
+              },
+              {
+                key: "edit",
+                label: "Edit",
+                items: [
+                  { key: "undo", label: "Undo" },
+                  { key: "redo", label: "Redo" },
+                  { key: "sep", label: "", separator: true },
+                  { key: "cut", label: "Cut" },
+                  { key: "copy", label: "Copy" },
+                  { key: "paste", label: "Paste" },
+                ],
+              },
+              {
+                key: "view",
+                label: "View",
+                items: [
+                  { key: "zoom-in", label: "Zoom In" },
+                  { key: "zoom-out", label: "Zoom Out" },
+                  { key: "reset", label: "Reset Zoom" },
+                ],
+              },
+            ]}
+            onSelect={() => {}}
+          />
+        </div>
+      </div>
+
+      {/* ── Native Select ─────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiNativeSelect>"}</h2>
+        <p className="section-desc">Native HTML select with ASCII borders.</p>
+        <div className="demo-row green">
+          <AsciiNativeSelect
+            label="currency:"
+            width={28}
+            options={[
+              { value: "usd", label: "USD ($)" },
+              { value: "eur", label: "EUR (€)" },
+              { value: "gbp", label: "GBP (£)" },
+              { value: "jpy", label: "JPY (¥)" },
+            ]}
+            value={nativeVal}
+            onChange={(e) => setNativeVal(e.target.value)}
+          />
+        </div>
+        <div className="output">currency: {nativeVal}</div>
+      </div>
+
+      {/* ── Navigation Menu ───────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiNavigationMenu>"}</h2>
+        <p className="section-desc">Inline navigation with separators.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiNavigationMenu
+              items={[
+                { key: "home", label: "Home" },
+                { key: "docs", label: "Docs" },
+                { key: "api", label: "API" },
+                { key: "blog", label: "Blog" },
+              ]}
+              activeKey={navKey}
+              onSelect={setNavKey}
+            />
+          </div>
+          <div className="blue">
+            <AsciiNavigationMenu
+              items={[
+                { key: "overview", label: "Overview" },
+                { key: "analytics", label: "Analytics" },
+                { key: "settings", label: "Settings" },
+              ]}
+              activeKey="overview"
+              separator=" / "
+            />
+          </div>
+        </div>
+        <div className="output">active: {navKey}</div>
+      </div>
+
+      {/* ── Popover ───────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiPopover>"}</h2>
+        <p className="section-desc">Click to toggle positioned popup content.</p>
+        <div className="demo-row" style={{ gap: "2rem" }}>
+          <span className="green">
+            <AsciiPopover content={"Status: online\nUptime: 14d 6h"} width={24}>
+              [click me]
+            </AsciiPopover>
+          </span>
+          <span className="blue">
+            <AsciiPopover content={"v2.5.0-rc.3\nBuild #1847"} width={20} side="top" border="double">
+              [version info]
+            </AsciiPopover>
+          </span>
+        </div>
+      </div>
+
+      {/* ── Scroll Area ───────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiScrollArea>"}</h2>
+        <p className="section-desc">Scrollable container with ASCII scrollbar.</p>
+        <div className="green">
+          <AsciiScrollArea width={40} height={8}>
+            <div style={{ whiteSpace: "pre" }}>
+              {" Line 1: api-gateway\n Line 2: auth-service\n Line 3: web-frontend\n Line 4: worker-queue\n Line 5: postgres-main\n Line 6: redis-cache\n Line 7: monitoring\n Line 8: log-aggregator\n Line 9: cdn-edge\n Line 10: load-balancer\n Line 11: scheduler\n Line 12: notification-svc\n Line 13: billing-service\n Line 14: search-index\n Line 15: file-storage"}
+            </div>
+          </AsciiScrollArea>
+        </div>
+      </div>
+
+      {/* ── Sonner ────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSonner>"}</h2>
+        <p className="section-desc">Toast notifications with auto-dismiss.</p>
+        <div className="demo-row" style={{ gap: "0.5rem" }}>
+          <div className="green">
+            <AsciiButton label="Success" border="single" onClick={() => sonner.toast("Deployed successfully!", "success")} />
+          </div>
+          <div className="red">
+            <AsciiButton label="Error" border="single" onClick={() => sonner.toast("Build failed", "error")} />
+          </div>
+          <div className="blue">
+            <AsciiButton label="Info" border="single" onClick={() => sonner.toast("New version available", "info")} />
+          </div>
+        </div>
+        <AsciiSonner toasts={sonner.toasts} dismiss={sonner.dismiss} width={40} />
+      </div>
+
+      {/* ── Switch ────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSwitch>"}</h2>
+        <p className="section-desc">ON/OFF switch with text indicator.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiSwitch checked={switch1} onChange={setSwitch1} label="Maintenance mode" />
+          </div>
+          <div className="blue">
+            <AsciiSwitch checked={switch2} onChange={setSwitch2} label="Debug logging" />
+          </div>
+          <div className="dim">
+            <AsciiSwitch checked disabled label="Feature locked" />
+          </div>
+        </div>
+        <div className="output">
+          maintenance: {switch1 ? "on" : "off"}, debug: {switch2 ? "on" : "off"}
+        </div>
+      </div>
+
+      {/* ── Toggle Group ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiToggleGroup>"}</h2>
+        <p className="section-desc">Exclusive or multi-select toggle buttons.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiToggleGroup
+              items={[
+                { key: "bold", label: "B" },
+                { key: "italic", label: "I" },
+                { key: "underline", label: "U" },
+                { key: "strike", label: "S" },
+              ]}
+              value={toggleGroupVal}
+              onChange={(v) => setToggleGroupVal(v as string)}
+            />
+          </div>
+          <div className="blue">
+            <AsciiToggleGroup
+              items={[
+                { key: "left", label: "Left" },
+                { key: "center", label: "Center" },
+                { key: "right", label: "Right" },
+              ]}
+              value="center"
+              border="double"
+            />
+          </div>
+        </div>
+        <div className="output">selected: {toggleGroupVal}</div>
+      </div>
+
+      {/* ── Typography ────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiTypography>"}</h2>
+        <p className="section-desc">Text styling with markdown-inspired variants.</p>
+        <div className="demo-col" style={{ gap: "0.25rem" }}>
+          <div className="green"><AsciiTypography variant="h1">Heading One</AsciiTypography></div>
+          <div className="blue"><AsciiTypography variant="h2">Heading Two</AsciiTypography></div>
+          <div className="green"><AsciiTypography variant="h3">Heading Three</AsciiTypography></div>
+          <div className="blue"><AsciiTypography variant="h4">Heading Four</AsciiTypography></div>
+          <div className="white"><AsciiTypography variant="body">Body text for paragraphs.</AsciiTypography></div>
+          <div className="dim"><AsciiTypography variant="caption">Caption or helper text</AsciiTypography></div>
+          <div className="green"><AsciiTypography variant="code">const x = 42;</AsciiTypography></div>
+          <div className="dim"><AsciiTypography variant="overline">overline label</AsciiTypography></div>
+        </div>
+      </div>
+
       <AsciiDivider width={80} border="double" className="divider-full" />
     </div>
   );
@@ -1247,7 +1867,7 @@ function App() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 44 components        │
+  │  5 border styles / 71 components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
         </pre>
