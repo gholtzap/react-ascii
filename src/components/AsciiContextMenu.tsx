@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, repeatChar, type BorderStyle } from "../chars";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
@@ -34,10 +34,11 @@ export function AsciiContextMenu({
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
   const b = borders[border];
   const inner = width - 2;
 
-  const actionItems = items.filter((item) => !item.separator);
+  const actionItems = useMemo(() => items.filter((item) => !item.separator), [items]);
   const {
     activeIndex,
     setActiveIndex,
@@ -52,7 +53,12 @@ export function AsciiContextMenu({
 
   useEffect(() => {
     if (open) reset(0);
-  }, [open, reset]);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    menuRef.current?.focus();
+  }, [open]);
 
   useDismissableLayer({
     open,
@@ -91,10 +97,14 @@ export function AsciiContextMenu({
         event.preventDefault();
         setOpen(false);
         break;
+      case "Tab":
+        setOpen(false);
+        break;
     }
   };
 
   let actionIdx = 0;
+  const activeId = open && activeIndex >= 0 ? `${menuId}-${activeIndex}` : undefined;
 
   return (
     <div
@@ -102,16 +112,18 @@ export function AsciiContextMenu({
       className={`ascii-lib ascii-contextmenu-wrapper ${className ?? ""}`.trim()}
       style={style}
       onContextMenu={handleContext}
-      onKeyDown={handleKeyDown}
     >
       {children}
       {open && (
         <div
+          id={menuId}
           ref={menuRef}
           className="ascii-contextmenu"
           role="menu"
-          tabIndex={-1}
+          tabIndex={0}
+          aria-activedescendant={activeId}
           style={{ position: "absolute", left: pos.x, top: pos.y }}
+          onKeyDown={handleKeyDown}
         >
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
@@ -136,6 +148,7 @@ export function AsciiContextMenu({
             return (
               <React.Fragment key={item.key}>
                 <div
+                  id={`${menuId}-${currentActionIdx}`}
                   className={`ascii-contextmenu-item${isActive ? " ascii-contextmenu-item-active" : ""}${item.disabled ? " ascii-contextmenu-item-disabled" : ""}`}
                   role="menuitem"
                   aria-disabled={item.disabled}

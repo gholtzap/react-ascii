@@ -1,0 +1,378 @@
+/* ── Terminal ───────────────────────────── */
+
+.ascii-terminal {
+  display: inline-block;
+  cursor: text;
+}
+
+.ascii-terminal-toolbar,
+.ascii-terminal-status,
+.ascii-logviewer-toolbar,
+.ascii-diff-toolbar,
+.ascii-processtable-toolbar,
+.ascii-processtable-summary,
+.ascii-logviewer-columns,
+.ascii-diff-columns {
+  white-space: pre-wrap;
+}
+
+.ascii-terminal-toolbar,
+.ascii-logviewer-toolbar,
+.ascii-diff-toolbar,
+.ascii-processtable-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.ascii-terminal-status,
+.ascii-processtable-summary,
+.ascii-logviewer-columns,
+.ascii-diff-columns {
+  opacity: 0.72;
+}
+
+.ascii-terminal-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  line-height: inherit;
+  letter-spacing: inherit;
+  caret-color: currentColor;
+}
+
+.ascii-terminal-body::-webkit-scrollbar {
+  width: 0;
+}
+
+/* ── Kbd ────────────────────────────────── */
+
+.ascii-kbd {
+  display: inline;
+  white-space: pre;
+  font: inherit;
+}
+
+.ascii-kbd-sep {
+  opacity: 0.5;
+}
+
+/* ── Ascii Text ─────────────────────────── */
+
+.ascii-asciitext {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Resizable ──────────────────────────── */
+
+.ascii-resizable {
+  display: flex;
+  align-items: stretch;
+}
+
+.ascii-resizable-divider {
+  cursor: col-resize;
+  white-space: pre;
+  display: flex;
+  align-items: center;
+  -webkit-user-select: none;
+  user-select: none;
+  padding: 0 2px;
+  opacity: 0.6;
+}
+
+.ascii-resizable-divider:hover {
+  opacity: 1;
+}
+
+.ascii-resizable-divider:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Sheet ──────────────────────────────── */
+
+.ascii-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ascii-overlay, rgba(0, 0, 0, 0.6));
+  z-index: 9999;
+  display: flex;
+}
+
+.ascii-sheet {
+  position: relative;
+  overflow: auto;
+}
+
+.ascii-sheet-right {
+  margin-left: auto;
+  align-self: stretch;
+}
+
+.ascii-sheet-left {
+  margin-right: auto;
+  align-self: stretch;
+}
+
+.ascii-sheet-bottom {
+  align-self: flex-end;
+  width: 100%;
+}
+
+.ascii-sheet-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: inherit;
+  z-index: 1;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ascii-sheet-close:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Alert Dialog ──────────────────────── */
+
+.ascii-alertdialog {
+  position: relative;
+  max-width: 100%;
+}
+
+.ascii-alertdialog-actions {
+  display: flex;
+  gap: 1ch;
+}
+
+.ascii-alertdialog-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-alertdialog-btn:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-alertdialog-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Aspect Ratio ──────────────────────── */
+
+.ascii-aspect-ratio {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Button Group ──────────────────────── */
+
+.ascii-button-group {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-btngroup-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-btngroup-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-btngroup-btn-active {
+  filter: brightness(1.3);
+}
+
+.ascii-btngroup-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-btngroup-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Calendar ──────────────────────────── */
+
+.ascii-calendar {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-calendar-nav {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-calendar-nav:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-calendar-day {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-calendar-day:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-calendar-day-selected {
+  filter: brightness(1.4);
+}
+
+/* ── Carousel ──────────────────────────── */
+
+.ascii-carousel {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-carousel:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-carousel-nav {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-carousel-nav:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Collapsible ───────────────────────── */
+
+.ascii-collapsible {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-collapsible-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+
+.ascii-collapsible-trigger:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-collapsible-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* ── Combobox ──────────────────────────── */
+
+.ascii-combobox-wrapper {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-combobox-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+}
+
+.ascii-combobox-input::placeholder {
+  opacity: 0.5;
+}
+
+.ascii-combobox-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-combobox-option {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-combobox-option:hover,
+.ascii-combobox-option-active {
+  filter: brightness(1.3);
+}
+
+/* ── Context Menu ──────────────────────── */
+
+.ascii-contextmenu-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-contextmenu {
+  white-space: pre;
+  z-index: 1000;
+}
+
+.ascii-contextmenu-item {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-contextmenu-item:hover,
+.ascii-contextmenu-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-contextmenu-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

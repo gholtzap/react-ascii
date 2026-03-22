@@ -1,5 +1,6 @@
 import React from "react";
 import { borders, repeatChar, type BorderStyle } from "../chars";
+import { cloneElementWithMergedProps } from "../internal/mergeProps";
 
 export interface AsciiInputGroupProps {
   prefix?: string;
@@ -39,7 +40,7 @@ export function AsciiInputGroup({
       <span>{b.v}</span>
       {prefix && <span className="ascii-input-group-addon">{prefix}{b.v}</span>}
       <span> </span>
-      {React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      {cloneElementWithMergedProps(children as React.ReactElement<Record<string, unknown>>, {
         className: "ascii-input-group-native",
         style: { width: `${Math.max(1, inputWidth)}ch` },
       })}

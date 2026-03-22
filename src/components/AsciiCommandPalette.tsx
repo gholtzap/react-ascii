@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
 import { AsciiPortal } from "../internal/AsciiPortal";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
@@ -41,8 +41,11 @@ export function AsciiCommandPalette({
   const contentRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
 
-  const filtered = items.filter((item) =>
-    item.label.toLowerCase().includes(query.toLowerCase())
+  const filtered = useMemo(
+    () => items.filter((item) =>
+      item.label.toLowerCase().includes(query.toLowerCase())
+    ),
+    [items, query]
   );
 
   const visible = filtered.slice(0, maxVisible);
@@ -71,7 +74,7 @@ export function AsciiCommandPalette({
 
   useEffect(() => {
     reset(0);
-  }, [query, reset]);
+  }, [query]);
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
     switch (event.key) {

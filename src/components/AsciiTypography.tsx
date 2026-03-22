@@ -26,27 +26,50 @@ const variantTags: Record<TypographyVariant, React.ElementType> = {
 
 export interface AsciiTypographyProps {
   variant?: TypographyVariant;
-  children: string;
+  as?: React.ElementType;
+  children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
+function decorateContent(
+  children: React.ReactNode,
+  decoration: { prefix: string; suffix: string; transform?: (value: string) => string }
+) {
+  if (typeof children === "string" || typeof children === "number") {
+    const content = decoration.transform ? decoration.transform(String(children)) : String(children);
+    return `${decoration.prefix}${content}${decoration.suffix}`;
+  }
+
+  if (!decoration.prefix && !decoration.suffix) {
+    return children;
+  }
+
+  return (
+    <>
+      {decoration.prefix}
+      {children}
+      {decoration.suffix}
+    </>
+  );
+}
+
 export function AsciiTypography({
   variant = "body",
+  as,
   children,
   className,
   style,
 }: AsciiTypographyProps) {
   const dec = variantDecorations[variant];
-  const Tag = variantTags[variant];
-  const text = dec.transform ? dec.transform(children) : children;
+  const Tag = as ?? variantTags[variant];
 
   return (
     <Tag
       className={`ascii-lib ascii-typography ascii-typography-${variant} ${className ?? ""}`.trim()}
       style={style}
     >
-      {`${dec.prefix}${text}${dec.suffix}`}
+      {decorateContent(children, dec)}
     </Tag>
   );
 }

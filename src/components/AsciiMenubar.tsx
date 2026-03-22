@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
@@ -33,6 +33,8 @@ export function AsciiMenubar({
 }: AsciiMenubarProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menubarId = useId();
   const b = borders[border];
 
   useDismissableLayer({
@@ -43,7 +45,10 @@ export function AsciiMenubar({
 
   const currentMenuIndex = menus.findIndex((menu) => menu.key === openMenu);
   const currentMenu = currentMenuIndex >= 0 ? menus[currentMenuIndex] : undefined;
-  const actionItems = currentMenu?.items.filter((item) => !item.separator) ?? [];
+  const actionItems = useMemo(
+    () => currentMenu?.items.filter((item) => !item.separator) ?? [],
+    [currentMenu]
+  );
   const {
     activeIndex,
     setActiveIndex,
@@ -58,7 +63,12 @@ export function AsciiMenubar({
 
   useEffect(() => {
     if (openMenu) reset(0);
-  }, [openMenu, reset]);
+  }, [openMenu]);
+
+  useEffect(() => {
+    if (!openMenu) return;
+    menuRef.current?.focus();
+  }, [openMenu]);
 
   const dropdownWidth = currentMenu
     ? Math.max(...currentMenu.items.map((item) => (item.separator ? 0 : item.label.length)), 0) + 6
@@ -97,10 +107,14 @@ export function AsciiMenubar({
         event.preventDefault();
         setOpenMenu(null);
         break;
+      case "Tab":
+        setOpenMenu(null);
+        break;
     }
   };
 
   let actionIdx = 0;
+  const activeId = openMenu && activeIndex >= 0 ? `${menubarId}-${openMenu}-${activeIndex}` : undefined;
 
   return (
     <div
@@ -114,19 +128,35 @@ export function AsciiMenubar({
         {menus.map((menu) => (
           <span key={menu.key} className="ascii-menubar-menu-wrapper">
             <button
+              id={`${menubarId}-${menu.key}-trigger`}
               type="button"
               className={`ascii-menubar-trigger${openMenu === menu.key ? " ascii-menubar-trigger-active" : ""}`}
               onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  setOpenMenu(menu.key);
+                }
+              }}
               onMouseEnter={() => {
                 if (openMenu) setOpenMenu(menu.key);
               }}
               aria-expanded={openMenu === menu.key}
               aria-haspopup="menu"
+              aria-controls={openMenu === menu.key ? `${menubarId}-${menu.key}-menu` : undefined}
             >
               {` ${menu.label} `}
             </button>
             {openMenu === menu.key && currentMenu && (
-              <div className="ascii-menubar-dropdown" role="menu">
+              <div
+                id={`${menubarId}-${menu.key}-menu`}
+                ref={menuRef}
+                className="ascii-menubar-dropdown"
+                role="menu"
+                tabIndex={0}
+                aria-activedescendant={activeId}
+                aria-labelledby={`${menubarId}-${menu.key}-trigger`}
+              >
                 {b.tl + repeatChar(b.h, inner) + b.tr}
                 {"\n"}
                 {currentMenu.items.map((item, index) => {
@@ -147,6 +177,7 @@ export function AsciiMenubar({
                   return (
                     <React.Fragment key={item.key}>
                       <div
+                        id={`${menubarId}-${menu.key}-${currentActionIdx}`}
                         className={`ascii-menubar-item${isActive ? " ascii-menubar-item-active" : ""}${item.disabled ? " ascii-menubar-item-disabled" : ""}`}
                         role="menuitem"
                         aria-disabled={item.disabled}

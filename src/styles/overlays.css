@@ -1,0 +1,291 @@
+/* ── Modal ───────────────────────────────────── */
+
+.ascii-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ascii-overlay, rgba(0, 0, 0, 0.6));
+  z-index: 9999;
+  padding: 1rem;
+}
+
+.ascii-modal {
+  position: relative;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.ascii-modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: inherit;
+  z-index: 1;
+}
+
+/* ── Tooltip ─────────────────────────────────── */
+
+.ascii-tooltip-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: normal;
+  pointer-events: none;
+  z-index: 10000;
+  margin-bottom: 2px;
+}
+
+/* ── Toast ───────────────────────────────────── */
+
+.ascii-toast {
+  position: fixed;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.ascii-toast-top-right {
+  top: 1rem;
+  right: 1rem;
+  align-items: flex-end;
+}
+
+.ascii-toast-top-left {
+  top: 1rem;
+  left: 1rem;
+  align-items: flex-start;
+}
+
+.ascii-toast-bottom-right {
+  bottom: 1rem;
+  right: 1rem;
+  align-items: flex-end;
+}
+
+.ascii-toast-bottom-left {
+  bottom: 1rem;
+  left: 1rem;
+  align-items: flex-start;
+}
+
+.ascii-toast-item {
+  white-space: pre;
+  pointer-events: auto;
+  position: relative;
+}
+
+.ascii-toast-close {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+/* ── Pagination ──────────────────────────────── */
+
+.ascii-pagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  white-space: pre;
+}
+
+.ascii-pagination-btn {
+  white-space: pre;
+  display: inline-block;
+}
+
+.ascii-pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ascii-pagination-btn:not(:disabled):hover {
+  filter: brightness(1.2);
+}
+
+.ascii-pagination-active {
+  filter: brightness(1.3);
+}
+
+.ascii-pagination-ellipsis {
+  white-space: pre;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Dropdown Menu ───────────────────────────── */
+
+.ascii-dropdown-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-dropdown-trigger {
+  white-space: pre;
+  display: inline-block;
+}
+
+.ascii-dropdown-trigger:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-dropdown-menu {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-dropdown-item {
+  display: block;
+  width: 100%;
+}
+
+.ascii-dropdown-item:hover,
+.ascii-dropdown-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-dropdown-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Breadcrumb ──────────────────────────────── */
+
+.ascii-breadcrumb {
+  white-space: pre;
+}
+
+.ascii-breadcrumb-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.ascii-breadcrumb-item {
+  display: inline;
+}
+
+.ascii-breadcrumb-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.ascii-breadcrumb-link:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-breadcrumb-sep {
+  opacity: 0.5;
+}
+
+/* ── Skeleton ────────────────────────────────── */
+
+@keyframes ascii-skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.ascii-skeleton {
+  animation: ascii-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ascii-skeleton {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ── Sidebar ─────────────────────────────────── */
+
+.ascii-sidebar {
+  white-space: pre;
+}
+
+.ascii-sidebar-item {
+  display: block;
+  width: 100%;
+  white-space: pre;
+}
+
+.ascii-sidebar-item:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-sidebar-item-active {
+  filter: brightness(1.3);
+}
+
+/* ── Tag ─────────────────────────────────────── */
+
+.ascii-tag-dismiss {
+  display: inline;
+  font: inherit;
+}
+
+.ascii-tag-dismiss:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Command Palette ─────────────────────────── */
+
+.ascii-cmdpalette-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+  background: var(--ascii-overlay, rgba(0, 0, 0, 0.6));
+  z-index: 9999;
+}
+
+.ascii-cmdpalette {
+  white-space: pre;
+  position: relative;
+  max-width: 100%;
+}
+
+.ascii-cmdpalette-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.ascii-cmdpalette-input::placeholder {
+  opacity: 0.5;
+}
+
+.ascii-cmdpalette-item {
+  display: block;
+  width: 100%;
+}
+
+.ascii-cmdpalette-item:hover,
+.ascii-cmdpalette-item-active {
+  filter: brightness(1.3);
+}
+

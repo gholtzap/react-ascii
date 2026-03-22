@@ -1,0 +1,446 @@
+/* ── Popover ───────────────────────────── */
+
+.ascii-popover-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-popover-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-popover-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-popover-content {
+  position: absolute;
+  left: 0;
+  white-space: normal;
+  z-index: 10000;
+}
+
+.ascii-card-body,
+.ascii-modal-body,
+.ascii-drawer-body,
+.ascii-sheet-body {
+  align-items: flex-start;
+}
+
+.ascii-card-footer,
+.ascii-window-footer,
+.ascii-alertdialog-footer {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ascii-aspect-ratio-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ascii-window-body {
+  align-items: flex-start;
+}
+
+.ascii-logviewer-list,
+.ascii-diff-list,
+.ascii-filetree-list,
+.ascii-processtable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ascii-logviewer-empty,
+.ascii-diff-empty,
+.ascii-processtable-empty {
+  opacity: 0.72;
+}
+
+.ascii-logviewer-line,
+.ascii-diff-line,
+.ascii-filetree-line,
+.ascii-processtable-header,
+.ascii-processtable-row {
+  white-space: pre;
+}
+
+.ascii-logviewer-list {
+  gap: 0.15rem;
+}
+
+.ascii-logviewer-level {
+  display: inline-block;
+  width: 5ch;
+}
+
+.ascii-logviewer-time {
+  display: inline-block;
+  width: 7ch;
+  opacity: 0.65;
+}
+
+.ascii-logviewer-source {
+  display: inline-block;
+  opacity: 0.7;
+}
+
+.ascii-logviewer-debug {
+  opacity: 0.75;
+}
+
+.ascii-logviewer-warn,
+.ascii-diff-remove {
+  filter: brightness(1.15);
+}
+
+.ascii-logviewer-error {
+  font-weight: 600;
+}
+
+.ascii-logviewer-success,
+.ascii-diff-add,
+.ascii-filetree-selected {
+  filter: brightness(1.25);
+}
+
+.ascii-diff-line {
+  display: flex;
+  gap: 1ch;
+}
+
+.ascii-diff-lineno {
+  display: inline-block;
+  width: 3ch;
+  opacity: 0.65;
+}
+
+.ascii-diff-marker {
+  display: inline-block;
+  width: 1ch;
+}
+
+.ascii-filetree-line {
+  display: block;
+}
+
+.ascii-processtable-header,
+.ascii-processtable-row {
+  display: grid;
+  grid-template-columns: 5ch 18ch 6ch 8ch 8ch 8ch;
+  column-gap: 1ch;
+}
+
+.ascii-processtable-header {
+  font-weight: 600;
+}
+
+.ascii-popover-top {
+  bottom: 100%;
+  margin-bottom: 2px;
+}
+
+.ascii-popover-bottom {
+  top: 100%;
+  margin-top: 2px;
+}
+
+.ascii-popup-measure-root {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+  inset: 0;
+  z-index: -1;
+}
+
+.ascii-popup-measure {
+  display: inline-block;
+  width: max-content;
+  white-space: pre;
+}
+
+.ascii-popup-char-measure {
+  display: inline-block;
+  width: max-content;
+}
+
+.ascii-inspector-body,
+.ascii-statusgrid-body {
+  align-items: stretch;
+}
+
+.ascii-inspector-group {
+  opacity: 0.72;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ascii-inspector-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.ascii-inspector-label {
+  opacity: 0.72;
+  flex: 0 0 auto;
+}
+
+.ascii-inspector-separator {
+  opacity: 0.5;
+}
+
+.ascii-inspector-value {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ascii-inspector-meta {
+  opacity: 0.6;
+}
+
+.ascii-statusgrid-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ascii-statusgrid-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px dashed currentColor;
+}
+
+.ascii-statusgrid-label,
+.ascii-trace-columns,
+.ascii-dependencygraph-meta {
+  opacity: 0.72;
+}
+
+.ascii-statusgrid-value {
+  font-weight: 600;
+}
+
+.ascii-statusgrid-hint {
+  opacity: 0.6;
+}
+
+.ascii-trace-list,
+.ascii-dependencygraph-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ascii-trace-columns,
+.ascii-trace-row {
+  display: grid;
+  grid-template-columns: 28ch 16ch 8ch;
+  column-gap: 1ch;
+  white-space: pre;
+}
+
+.ascii-dependencygraph-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ascii-dependencygraph-node,
+.ascii-dependencygraph-edge {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  white-space: pre;
+}
+
+.ascii-match {
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.ascii-statusgrid-info,
+.ascii-inspector-info,
+.ascii-trace-neutral,
+.ascii-dependencygraph-neutral {
+  opacity: 0.92;
+}
+
+.ascii-statusgrid-success,
+.ascii-inspector-success,
+.ascii-trace-success,
+.ascii-dependencygraph-success {
+  filter: brightness(1.18);
+}
+
+.ascii-statusgrid-warn,
+.ascii-inspector-warn,
+.ascii-trace-warn,
+.ascii-dependencygraph-warn {
+  filter: brightness(1.08);
+}
+
+.ascii-statusgrid-error,
+.ascii-inspector-error,
+.ascii-trace-error,
+.ascii-dependencygraph-error {
+  font-weight: 600;
+}
+
+/* ── Scroll Area ───────────────────────── */
+
+.ascii-scrollarea {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-scrollarea-viewport {
+  scrollbar-width: none;
+}
+
+.ascii-scrollarea-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.ascii-scrollarea-track {
+  opacity: 0.5;
+}
+
+/* ── Sonner ────────────────────────────── */
+
+.ascii-sonner {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 10001;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.ascii-sonner-item {
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-sonner-item:hover {
+  filter: brightness(1.2);
+}
+
+/* ── Switch ────────────────────────────── */
+
+.ascii-switch {
+  display: inline-flex;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.ascii-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ascii-switch-track {
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-switch-track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.ascii-switch:has(input:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Toggle Group ──────────────────────── */
+
+.ascii-toggle-group {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-togglegroup-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-togglegroup-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-togglegroup-btn-active {
+  filter: brightness(1.3);
+}
+
+.ascii-togglegroup-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-togglegroup-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Typography ────────────────────────── */
+
+.ascii-typography {
+  white-space: pre;
+  margin: 0;
+  padding: 0;
+}
+
+.ascii-typography-h1 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h2 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h3 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-h4 {
+  font-size: 1em;
+  font-weight: normal;
+}
+
+.ascii-typography-caption {
+  opacity: 0.7;
+}
+
+.ascii-typography-overline {
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+/* ── Direction ─────────────────────────── */
+
+.ascii-direction {
+  display: inline-block;
+}

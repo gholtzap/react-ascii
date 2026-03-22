@@ -1,5 +1,6 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { renderHighlightedText } from "../internal/renderHighlightedText";
 
 export interface AsciiTerminalProps {
   title?: string;
@@ -8,7 +9,13 @@ export interface AsciiTerminalProps {
   height?: number;
   border?: BorderStyle;
   initialLines?: string[];
+  streamLines?: string[];
   onCommand?: (command: string) => string | string[] | void;
+  toolbar?: React.ReactNode;
+  status?: React.ReactNode;
+  filterQuery?: string;
+  searchQuery?: string;
+  maxStoredLines?: number;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -20,11 +27,17 @@ export function AsciiTerminal({
   height = 12,
   border = "single",
   initialLines = [],
+  streamLines,
   onCommand,
+  toolbar,
+  status,
+  filterQuery,
+  searchQuery,
+  maxStoredLines = 200,
   className,
   style,
 }: AsciiTerminalProps) {
-  const [lines, setLines] = useState<string[]>(initialLines);
+  const [sessionLines, setSessionLines] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<string[]>([]);
   const [historyIdx, setHistoryIdx] = useState(-1);
@@ -34,23 +47,35 @@ export function AsciiTerminal({
   const b = borders[border];
   const inner = width - 2;
   const contentWidth = inner - 2;
+  const baseLines = streamLines ?? initialLines;
+  const allLines = useMemo(
+    () => [...baseLines, ...sessionLines].slice(-maxStoredLines),
+    [baseLines, maxStoredLines, sessionLines]
+  );
+  const visibleLines = useMemo(() => {
+    const filtered = filterQuery
+      ? allLines.filter((line) => line.toLowerCase().includes(filterQuery.toLowerCase()))
+      : allLines;
+
+    return filtered.slice(-height);
+  }, [allLines, filterQuery, height]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [lines]);
+  }, [visibleLines]);
 
   const handleSubmit = useCallback(() => {
     const cmd = input.trim();
-    const newLines = [...lines, `${prompt}${input}`];
+    const newLines = [`${prompt}${input}`];
 
     if (cmd) {
       setHistory((h) => [...h, cmd]);
       setHistoryIdx(-1);
 
       if (cmd === "clear") {
-        setLines([]);
+        setSessionLines([]);
         setInput("");
         return;
       }
@@ -64,9 +89,9 @@ export function AsciiTerminal({
       }
     }
 
-    setLines(newLines);
+    setSessionLines((currentLines) => [...currentLines, ...newLines].slice(-maxStoredLines));
     setInput("");
-  }, [input, lines, prompt, onCommand]);
+  }, [input, maxStoredLines, onCommand, prompt]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -107,6 +132,8 @@ export function AsciiTerminal({
       onClick={() => inputRef.current?.focus()}
     >
       <div style={{ whiteSpace: "pre" }}>{topLine}</div>
+      {toolbar ? <div className="ascii-terminal-toolbar">{toolbar}</div> : null}
+      {status ? <div className="ascii-terminal-status">{status}</div> : null}
       <div
         ref={scrollRef}
         className="ascii-terminal-body"
@@ -117,9 +144,11 @@ export function AsciiTerminal({
           overflowX: "hidden",
         }}
       >
-        {lines.map((line, i) => (
+        {visibleLines.map((line, i) => (
           <div key={i}>
-            {b.v + " " + pad(line, contentWidth) + " " + b.v}
+            <span>{b.v + " "}</span>
+            <span className="ascii-terminal-line">{renderHighlightedText(pad(line, contentWidth), searchQuery)}</span>
+            <span>{` ${b.v}`}</span>
           </div>
         ))}
         <div>

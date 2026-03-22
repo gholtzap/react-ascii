@@ -1,0 +1,323 @@
+.ascii-lib {
+  font-family: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
+    "Source Code Pro", "SF Mono", Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+  font-size: var(--ascii-font-size, inherit);
+  line-height: var(--ascii-line-height, 1.4);
+  letter-spacing: var(--ascii-letter-spacing, 0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Shared container ────────────────────────── */
+
+.ascii-box,
+.ascii-surface,
+.ascii-input-wrapper,
+.ascii-textarea-wrapper,
+.ascii-select-wrapper,
+.ascii-table,
+.ascii-tabs,
+.ascii-progress,
+.ascii-alert,
+.ascii-accordion,
+.ascii-card,
+.ascii-tree,
+.ascii-code,
+.ascii-spinner,
+.ascii-badge,
+.ascii-stat,
+.ascii-skeleton,
+.ascii-timeline,
+.ascii-avatar,
+.ascii-sidebar,
+.ascii-tag,
+.ascii-sparkline {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-box,
+.ascii-surface,
+.ascii-input-wrapper,
+.ascii-textarea-wrapper,
+.ascii-select-wrapper,
+.ascii-table,
+.ascii-tabs,
+.ascii-progress,
+.ascii-alert,
+.ascii-accordion,
+.ascii-card,
+.ascii-tree,
+.ascii-code,
+.ascii-stat,
+.ascii-sidebar {
+  max-width: 100%;
+}
+
+.ascii-box,
+.ascii-surface,
+.ascii-input-wrapper,
+.ascii-textarea-wrapper,
+.ascii-table,
+.ascii-tabs,
+.ascii-progress,
+.ascii-alert,
+.ascii-accordion,
+.ascii-card,
+.ascii-tree,
+.ascii-code {
+  overflow-x: auto;
+}
+
+.ascii-box,
+.ascii-input-wrapper,
+.ascii-textarea-wrapper,
+.ascii-select-wrapper {
+  position: relative;
+}
+
+.ascii-surface {
+  position: relative;
+  white-space: normal;
+}
+
+.ascii-surface-shell {
+  display: block;
+  white-space: pre;
+}
+
+.ascii-surface-body,
+.ascii-surface-footer {
+  position: absolute;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ascii-surface-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ascii-surface-footer {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Shared interactive reset ────────────────── */
+
+.ascii-btn,
+.ascii-select-trigger,
+.ascii-select-option,
+.ascii-tab-btn,
+.ascii-accordion-header,
+.ascii-modal-close,
+.ascii-pagination-btn,
+.ascii-dropdown-trigger,
+.ascii-dropdown-item,
+.ascii-sidebar-item,
+.ascii-tag-dismiss,
+.ascii-cmdpalette-item,
+.ascii-breadcrumb-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ascii-btn:focus-visible,
+.ascii-select-trigger:focus-visible,
+.ascii-tab-btn:focus-visible,
+.ascii-accordion-header:focus-visible,
+.ascii-modal-close:focus-visible,
+.ascii-pagination-btn:focus-visible,
+.ascii-dropdown-trigger:focus-visible,
+.ascii-sidebar-item:focus-visible,
+.ascii-cmdpalette-item:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-btn,
+.ascii-check,
+.ascii-radio,
+.ascii-select-trigger,
+.ascii-tab-btn,
+.ascii-accordion-header,
+.ascii-toggle,
+.ascii-pagination-btn,
+.ascii-dropdown-trigger,
+.ascii-sidebar-item {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ascii-input-native,
+.ascii-textarea-native {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.ascii-input-native::placeholder,
+.ascii-textarea-native::placeholder {
+  opacity: 0.5;
+}
+
+.ascii-btn:disabled,
+.ascii-check:has(input:disabled),
+.ascii-radio:has(input:disabled),
+.ascii-toggle:has(input:disabled) {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Box ─────────────────────────────────────── */
+
+.ascii-box-content {
+  display: block;
+}
+
+/* ── Button ──────────────────────────────────── */
+
+.ascii-btn {
+  display: inline-block;
+  white-space: pre;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.ascii-btn:not(:disabled):hover {
+  filter: brightness(1.2);
+}
+
+.ascii-btn:not(:disabled):active {
+  filter: brightness(0.85);
+}
+
+/* ── Input ───────────────────────────────────── */
+
+.ascii-input-native {
+  padding: 0;
+  width: 100%;
+}
+
+/* ── Checkbox / Radio ────────────────────────── */
+
+.ascii-check,
+.ascii-radio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  cursor: pointer;
+}
+
+.ascii-check input,
+.ascii-radio input,
+.ascii-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ascii-check:has(input:focus-visible) .ascii-check-box,
+.ascii-radio:has(input:focus-visible) .ascii-radio-dot,
+.ascii-toggle:has(input:focus-visible) .ascii-toggle-track {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Select ──────────────────────────────────── */
+
+.ascii-select-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-select-option {
+  display: block;
+  width: 100%;
+}
+
+.ascii-select-option:hover,
+.ascii-select-option:focus,
+.ascii-select-option-active {
+  filter: brightness(1.3);
+}
+
+/* ── Screen-reader only ─────────────────────── */
+
+.ascii-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Tabs ────────────────────────────────────── */
+
+.ascii-tab-bar {
+  display: flex;
+  white-space: pre;
+}
+
+.ascii-tab-btn {
+  white-space: pre;
+}
+
+.ascii-tab-panel {
+  white-space: normal;
+}
+
+/* ── Divider ─────────────────────────────────── */
+
+.ascii-divider {
+  display: block;
+  white-space: pre;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* ── Toggle ──────────────────────────────────── */
+
+.ascii-toggle {
+  display: inline-flex;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.ascii-toggle-track {
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-toggle-track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+/* ── Textarea ────────────────────────────────── */
+
+.ascii-textarea-native {
+  resize: none;
+}
+

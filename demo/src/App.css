@@ -43,6 +43,24 @@
   color: var(--accent);
 }
 
+.demo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--surface) 86%, transparent), transparent 65%),
+    var(--surface);
+}
+
+.demo-control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 /* ── Dashboard ─────────────────────────── */
 
 .dashboard {
@@ -321,6 +339,18 @@ h2.section-title {
   flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
+}
+
+.feature-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.feature-popup-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 footer {

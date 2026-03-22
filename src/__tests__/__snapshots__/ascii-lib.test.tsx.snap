@@ -1,0 +1,96 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ascii-lib > renders dependency graphs consistently 1`] = `
+<div
+  class="ascii-lib ascii-surface ascii-window ascii-dependencygraph"
+>
+  <span
+    aria-hidden="true"
+    class="ascii-surface-shell"
+  >
+    ┌──────────────────────────────────────────────────────────────┐
+│ ● ● ●  Topology                                              │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+  </span>
+  <div
+    class="ascii-surface-body ascii-window-body"
+    style="top: 88px; inset-inline-start: calc(2ch); inline-size: calc(60ch);"
+  >
+    <div
+      aria-label="Topology"
+      class="ascii-dependencygraph-list"
+      role="list"
+    >
+      <div
+        class="ascii-dependencygraph-group"
+        role="listitem"
+      >
+        <div
+          class="ascii-dependencygraph-node ascii-dependencygraph-success"
+        >
+          <span>
+            ● edge
+          </span>
+          <span
+            class="ascii-dependencygraph-meta"
+          >
+            3 regions
+          </span>
+        </div>
+        <div
+          class="ascii-dependencygraph-edge ascii-dependencygraph-success"
+        >
+          <span>
+            └─&gt; api                 
+          </span>
+          <span
+            class="ascii-dependencygraph-meta"
+          >
+            840 rps
+          </span>
+        </div>
+      </div>
+      <div
+        class="ascii-dependencygraph-group"
+        role="listitem"
+      >
+        <div
+          class="ascii-dependencygraph-node ascii-dependencygraph-success"
+        >
+          <span>
+            ● api
+          </span>
+          <span
+            class="ascii-dependencygraph-meta"
+          >
+            batch-03
+          </span>
+        </div>
+        <div
+          class="ascii-dependencygraph-edge ascii-dependencygraph-warn"
+        >
+          <span>
+            └─&gt; db                  
+          </span>
+          <span
+            class="ascii-dependencygraph-meta"
+          >
+            12ms
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

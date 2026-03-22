@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
 import { AsciiTrigger } from "../internal/AsciiTrigger";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
@@ -35,11 +35,13 @@ export function AsciiDropdownMenu({
 }: AsciiDropdownMenuProps) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuId = useId();
   const b = borders[border];
   const inner = width - 2;
 
-  const actionItems = items.filter((item) => !item.separator);
+  const actionItems = useMemo(() => items.filter((item) => !item.separator), [items]);
   const {
     activeIndex,
     setActiveIndex,
@@ -56,7 +58,12 @@ export function AsciiDropdownMenu({
 
   useEffect(() => {
     if (open) reset(0);
-  }, [open, reset]);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    menuRef.current?.focus();
+  }, [open]);
 
   useDismissableLayer({
     open,
@@ -104,33 +111,57 @@ export function AsciiDropdownMenu({
         if (activeIndex >= 0 && !actionItems[activeIndex]?.disabled) {
           onSelect(actionItems[activeIndex].key);
           setOpen(false);
+          triggerRef.current?.focus();
+        }
+        break;
+      case "Escape":
+        if (open) {
+          event.preventDefault();
+          setOpen(false);
+          triggerRef.current?.focus();
+        }
+        break;
+      case "Tab":
+        if (open) {
+          setOpen(false);
         }
         break;
     }
   };
 
   let actionIdx = 0;
+  const activeId = open && activeIndex >= 0 ? `${menuId}-${activeIndex}` : undefined;
 
   return (
     <div
       ref={wrapperRef}
       className={`ascii-lib ascii-dropdown-wrapper ${className ?? ""}`.trim()}
       style={style}
-      onKeyDown={handleKeyDown}
     >
       <AsciiTrigger
         asChild={asChild}
         className="ascii-dropdown-trigger"
+        ref={triggerRef}
         onClick={() => setOpen((current) => !current)}
+        onKeyDown={handleKeyDown}
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-controls={open ? menuId : undefined}
         aria-label="Actions menu"
       >
         {asChild ? trigger : `[${trigger}]`}
       </AsciiTrigger>
 
       {open && (
-        <div ref={menuRef} className="ascii-dropdown-menu" role="menu" tabIndex={-1}>
+        <div
+          id={menuId}
+          ref={menuRef}
+          className="ascii-dropdown-menu"
+          role="menu"
+          tabIndex={0}
+          aria-activedescendant={activeId}
+          onKeyDown={handleKeyDown}
+        >
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
           {items.map((item, index) => {
@@ -151,6 +182,7 @@ export function AsciiDropdownMenu({
             return (
               <React.Fragment key={item.key}>
                 <div
+                  id={`${menuId}-${currentActionIdx}`}
                   className={`ascii-dropdown-item${isActive ? " ascii-dropdown-item-active" : ""}${item.disabled ? " ascii-dropdown-item-disabled" : ""}`}
                   role="menuitem"
                   aria-disabled={item.disabled}
@@ -159,6 +191,7 @@ export function AsciiDropdownMenu({
                     if (!item.disabled) {
                       onSelect(item.key);
                       setOpen(false);
+                      triggerRef.current?.focus();
                     }
                   }}
                 >

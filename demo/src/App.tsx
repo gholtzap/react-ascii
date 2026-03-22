@@ -2119,6 +2119,19 @@ image: app:v2.4.1`}
 
 function App() {
   const [view, setView] = useState<"dashboard" | "components">("dashboard");
+  const [theme, setTheme] = useState("phosphor");
+  const [density, setDensity] = useState("cozy");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.demoTheme = theme;
+    root.dataset.demoDensity = density;
+
+    return () => {
+      delete root.dataset.demoTheme;
+      delete root.dataset.demoDensity;
+    };
+  }, [density, theme]);
 
   return (
     <>
@@ -2148,6 +2161,35 @@ function App() {
           {"[ Components ]"}
         </button>
       </nav>
+
+      <div className="demo-controls">
+        <div className="demo-control">
+          <span className="label">theme</span>
+          <AsciiButtonGroup
+            items={[
+              { key: "phosphor", label: "Phosphor" },
+              { key: "amber", label: "Amber" },
+              { key: "paper", label: "Paper" },
+              { key: "mono", label: "Mono" },
+            ]}
+            value={theme}
+            onChange={(nextTheme) => setTheme(nextTheme as string)}
+          />
+        </div>
+        <div className="demo-control">
+          <span className="label">density</span>
+          <AsciiButtonGroup
+            items={[
+              { key: "compact", label: "Compact" },
+              { key: "cozy", label: "Cozy" },
+              { key: "roomy", label: "Roomy" },
+            ]}
+            value={density}
+            onChange={(nextDensity) => setDensity(nextDensity as string)}
+            border="double"
+          />
+        </div>
+      </div>
 
       <main>
         {view === "dashboard" ? <Dashboard /> : <Components />}

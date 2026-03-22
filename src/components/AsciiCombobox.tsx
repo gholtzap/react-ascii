@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
@@ -39,8 +39,11 @@ export function AsciiCombobox({
   const b = borders[border];
   const inner = width - 2;
 
-  const filtered = options.filter((option) =>
-    option.label.toLowerCase().includes(query.toLowerCase())
+  const filtered = useMemo(
+    () => options.filter((option) =>
+      option.label.toLowerCase().includes(query.toLowerCase())
+    ),
+    [options, query]
   );
   const selected = options.find((option) => option.value === value);
   const {
@@ -59,7 +62,7 @@ export function AsciiCombobox({
 
   useEffect(() => {
     if (open) reset(0);
-  }, [open, query, reset]);
+  }, [open, query]);
 
   useDismissableLayer({
     open,

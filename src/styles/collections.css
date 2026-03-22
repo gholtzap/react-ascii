@@ -1,0 +1,382 @@
+/* ── Data Table ────────────────────────── */
+
+.ascii-datatable {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-datatable-sort {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datatable-sort:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-datatable-sort:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+.ascii-datatable-pager {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  white-space: pre;
+  width: 100%;
+}
+
+.ascii-datatable-meta,
+.ascii-datatable-page-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ascii-datatable-page-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datatable-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.ascii-datatable-page-btn:hover:not(:disabled) {
+  filter: brightness(1.3);
+}
+
+/* ── Drawer ────────────────────────────── */
+
+.ascii-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--ascii-overlay, rgba(0, 0, 0, 0.6));
+  z-index: 9999;
+  display: flex;
+}
+
+.ascii-drawer {
+  position: relative;
+  overflow: auto;
+}
+
+.ascii-drawer-right {
+  margin-left: auto;
+  align-self: stretch;
+}
+
+.ascii-drawer-left {
+  margin-right: auto;
+  align-self: stretch;
+}
+
+.ascii-drawer-top {
+  align-self: flex-start;
+  width: 100%;
+}
+
+.ascii-drawer-bottom {
+  align-self: flex-end;
+  width: 100%;
+}
+
+.ascii-drawer-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  line-height: inherit;
+  z-index: 1;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ascii-drawer-close:hover {
+  filter: brightness(1.3);
+}
+
+/* ── Empty ─────────────────────────────── */
+
+.ascii-empty {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Field ─────────────────────────────── */
+
+.ascii-field {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-field-label {
+  display: block;
+}
+
+.ascii-field-hint {
+  opacity: 0.6;
+}
+
+.ascii-field-error-msg {
+  display: block;
+}
+
+/* ── Hover Card ────────────────────────── */
+
+.ascii-hovercard-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.ascii-hovercard-content {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  white-space: normal;
+  pointer-events: none;
+  z-index: 10000;
+  margin-bottom: 2px;
+}
+
+/* ── Input Group ───────────────────────── */
+
+.ascii-input-group {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-input-group-addon {
+  opacity: 0.7;
+}
+
+.ascii-input-group-native {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  outline: none;
+  line-height: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+}
+
+/* ── Input OTP ─────────────────────────── */
+
+.ascii-input-otp {
+  display: inline-flex;
+  align-items: center;
+  white-space: pre;
+}
+
+.ascii-otp-cell {
+  display: inline-block;
+  white-space: pre;
+  text-align: center;
+}
+
+.ascii-otp-input {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 1ch;
+  text-align: center;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
+.ascii-otp-input:focus-visible {
+  outline: none;
+}
+
+.ascii-otp-cell:has(.ascii-otp-input:focus) {
+  filter: brightness(1.3);
+}
+
+.ascii-otp-sep {
+  display: inline-block;
+}
+
+/* ── Item ──────────────────────────────── */
+
+.ascii-item {
+  display: block;
+  white-space: pre;
+}
+
+.ascii-item-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  display: block;
+  width: 100%;
+}
+
+.ascii-item-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Label ─────────────────────────────── */
+
+.ascii-label {
+  display: inline-block;
+  white-space: pre;
+  cursor: pointer;
+}
+
+/* ── Menubar ───────────────────────────── */
+
+.ascii-menubar {
+  display: inline-block;
+  white-space: pre;
+}
+
+.ascii-menubar-items {
+  display: inline-flex;
+}
+
+.ascii-menubar-menu-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ascii-menubar-trigger {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  white-space: pre;
+}
+
+.ascii-menubar-trigger:hover,
+.ascii-menubar-trigger-active {
+  filter: brightness(1.3);
+}
+
+.ascii-menubar-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-menubar-dropdown {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1000;
+  white-space: pre;
+}
+
+.ascii-menubar-item {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.ascii-menubar-item:hover,
+.ascii-menubar-item-active {
+  filter: brightness(1.3);
+}
+
+.ascii-menubar-item-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Native Select ─────────────────────── */
+
+.ascii-native-select {
+  display: inline-block;
+  white-space: pre;
+  position: relative;
+}
+
+.ascii-native-select-el {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+/* ── Navigation Menu ───────────────────── */
+
+.ascii-navmenu {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre;
+}
+
+.ascii-navmenu-sep {
+  opacity: 0.5;
+}
+
+.ascii-navmenu-link,
+.ascii-navmenu-btn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+}
+
+.ascii-navmenu-link:hover,
+.ascii-navmenu-btn:hover {
+  filter: brightness(1.2);
+}
+
+.ascii-navmenu-active {
+  filter: brightness(1.3);
+}
+
+.ascii-navmenu-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ascii-navmenu-btn:focus-visible,
+.ascii-navmenu-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+

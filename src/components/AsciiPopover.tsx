@@ -1,12 +1,15 @@
-import React, { useRef, useState } from "react";
-import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import React, { useId, useRef, useState } from "react";
+import type { BorderStyle } from "../chars";
+import { AsciiSurface } from "../internal/AsciiSurface";
 import { AsciiTrigger } from "../internal/AsciiTrigger";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
+import { useAsciiAutoWidth } from "../internal/useAsciiAutoWidth";
+import { useAsciiOverlay } from "../internal/useAsciiOverlay";
 
 export type PopoverSide = "top" | "bottom";
 
 export interface AsciiPopoverProps {
-  content: string;
+  content: React.ReactNode;
   width?: number;
   side?: PopoverSide;
   border?: BorderStyle;
@@ -18,7 +21,7 @@ export interface AsciiPopoverProps {
 
 export function AsciiPopover({
   content,
-  width = 30,
+  width,
   side = "bottom",
   border = "single",
   asChild,
@@ -29,22 +32,26 @@ export function AsciiPopover({
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const b = borders[border];
-  const inner = width - 2;
+  const popoverId = useId();
+  const { resolvedWidth, measureRef, charMeasureRef, shouldMeasure } = useAsciiAutoWidth({
+    content,
+    width,
+  });
 
   useDismissableLayer({
     open,
     onDismiss: () => setOpen(false),
     refs: [wrapperRef, contentRef],
+    closeOnEscape: false,
   });
 
-  const contentLines = content.split("\n");
-  const lines: string[] = [];
-  lines.push(b.tl + repeatChar(b.h, inner) + b.tr);
-  for (const line of contentLines) {
-    lines.push(b.v + pad(` ${line}`, inner) + b.v);
-  }
-  lines.push(b.bl + repeatChar(b.h, inner) + b.br);
+  useAsciiOverlay({
+    open,
+    onClose: () => setOpen(false),
+    contentRef,
+    trapFocus: false,
+    lockScroll: false,
+  });
 
   const posClass = side === "top" ? "ascii-popover-top" : "ascii-popover-bottom";
 
@@ -60,17 +67,27 @@ export function AsciiPopover({
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-haspopup="dialog"
+        aria-controls={open ? popoverId : undefined}
       >
         {children}
       </AsciiTrigger>
       {open && (
         <div
+          id={popoverId}
           ref={contentRef}
           className={`ascii-popover-content ${posClass}`}
           role="dialog"
-          tabIndex={-1}
+          tabIndex={0}
         >
-          {lines.join("\n")}
+          <AsciiSurface width={resolvedWidth} border={border} className="ascii-popover-surface">
+            {content}
+          </AsciiSurface>
+          {shouldMeasure && (
+            <span className="ascii-popup-measure-root" aria-hidden="true">
+              <span ref={charMeasureRef} className="ascii-popup-char-measure">0000000000</span>
+              <span ref={measureRef} className="ascii-popup-measure">{content}</span>
+            </span>
+          )}
         </div>
       )}
     </div>

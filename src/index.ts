@@ -135,6 +135,23 @@ export type { AsciiFileTreeProps, AsciiFileTreeNode } from "./components/AsciiFi
 export { AsciiProcessTable } from "./components/AsciiProcessTable";
 export type { AsciiProcessTableProps, AsciiProcessRow } from "./components/AsciiProcessTable";
 
+export { AsciiInspector } from "./components/AsciiInspector";
+export type { AsciiInspectorProps, AsciiInspectorEntry, AsciiInspectorTone } from "./components/AsciiInspector";
+
+export { AsciiStatusGrid } from "./components/AsciiStatusGrid";
+export type { AsciiStatusGridProps, AsciiStatusGridItem, AsciiStatusGridTone } from "./components/AsciiStatusGrid";
+
+export { AsciiTraceTimeline } from "./components/AsciiTraceTimeline";
+export type { AsciiTraceTimelineProps, AsciiTraceSpan, AsciiTraceStatus } from "./components/AsciiTraceTimeline";
+
+export { AsciiDependencyGraph } from "./components/AsciiDependencyGraph";
+export type {
+  AsciiDependencyGraphProps,
+  AsciiDependencyNode,
+  AsciiDependencyEdge,
+  AsciiDependencyStatus,
+} from "./components/AsciiDependencyGraph";
+
 export { AsciiKbd } from "./components/AsciiKbd";
 export type { AsciiKbdProps } from "./components/AsciiKbd";
 

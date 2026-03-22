@@ -1,0 +1,89 @@
+/* ── Bar Chart ──────────────────────────── */
+
+.ascii-barchart {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Heatmap ────────────────────────────── */
+
+.ascii-heatmap {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Gauge ──────────────────────────────── */
+
+.ascii-gauge {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Slider ─────────────────────────────── */
+
+.ascii-slider {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: pre;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.ascii-slider-track {
+  cursor: pointer;
+  white-space: pre;
+}
+
+.ascii-slider-track:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-slider-track[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Stepper ────────────────────────────── */
+
+.ascii-stepper {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* ── Date Picker ────────────────────────── */
+
+.ascii-datepicker {
+  display: inline-block;
+}
+
+.ascii-datepicker-nav {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datepicker-nav:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-datepicker-day {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ascii-datepicker-day:hover {
+  filter: brightness(1.3);
+}
+
+.ascii-datepicker-day-selected {
+  filter: brightness(1.4);
+}
+

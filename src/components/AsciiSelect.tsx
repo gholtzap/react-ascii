@@ -33,6 +33,8 @@ export function AsciiSelect({
 }: AsciiSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listboxRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
   const b = borders[border];
   const inner = width - 2;
@@ -59,7 +61,12 @@ export function AsciiSelect({
     if (open) {
       reset(selectedIndex >= 0 ? selectedIndex : 0);
     }
-  }, [open, reset, selectedIndex]);
+  }, [open, selectedIndex]);
+
+  useEffect(() => {
+    if (!open) return;
+    listboxRef.current?.focus();
+  }, [open]);
 
   useDismissableLayer({
     open,
@@ -109,11 +116,18 @@ export function AsciiSelect({
         if (activeItem) {
           onChange?.(activeItem.value);
           setOpen(false);
+          triggerRef.current?.focus();
         }
         break;
       case "Escape":
         if (open) {
           event.preventDefault();
+          setOpen(false);
+          triggerRef.current?.focus();
+        }
+        break;
+      case "Tab":
+        if (open) {
           setOpen(false);
         }
         break;
@@ -129,12 +143,13 @@ export function AsciiSelect({
       ref={ref}
       className={`ascii-lib ascii-select-wrapper ${className ?? ""}`.trim()}
       style={style}
-      onKeyDown={handleKeyDown}
     >
       <button
+        ref={triggerRef}
         type="button"
         className="ascii-select-trigger"
         onClick={() => !disabled && setOpen((current) => !current)}
+        onKeyDown={handleKeyDown}
         disabled={disabled}
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -150,10 +165,12 @@ export function AsciiSelect({
       {open && (
         <div
           id={listboxId}
+          ref={listboxRef}
           className="ascii-select-dropdown"
           role="listbox"
-          tabIndex={-1}
+          tabIndex={0}
           aria-activedescendant={activeId}
+          onKeyDown={handleKeyDown}
         >
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
@@ -173,6 +190,7 @@ export function AsciiSelect({
                   onClick={() => {
                     onChange?.(option.value);
                     setOpen(false);
+                    triggerRef.current?.focus();
                   }}
                 >
                   {line}

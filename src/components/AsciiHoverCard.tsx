@@ -1,8 +1,11 @@
-import React, { useState, useId } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useId, useState } from "react";
+import type { BorderStyle } from "../chars";
+import { AsciiSurface } from "../internal/AsciiSurface";
+import { cloneElementWithMergedProps } from "../internal/mergeProps";
+import { useAsciiAutoWidth } from "../internal/useAsciiAutoWidth";
 
 export interface AsciiHoverCardProps {
-  content: string;
+  content: React.ReactNode;
   width?: number;
   border?: BorderStyle;
   asChild?: boolean;
@@ -13,7 +16,7 @@ export interface AsciiHoverCardProps {
 
 export function AsciiHoverCard({
   content,
-  width = 30,
+  width,
   border = "single",
   asChild,
   children,
@@ -22,16 +25,10 @@ export function AsciiHoverCard({
 }: AsciiHoverCardProps) {
   const [visible, setVisible] = useState(false);
   const cardId = useId();
-  const b = borders[border];
-  const inner = width - 2;
-
-  const contentLines = content.split("\n");
-  const lines: string[] = [];
-  lines.push(b.tl + repeatChar(b.h, inner) + b.tr);
-  for (const cl of contentLines) {
-    lines.push(b.v + pad(` ${cl}`, inner) + b.v);
-  }
-  lines.push(b.bl + repeatChar(b.h, inner) + b.br);
+  const { resolvedWidth, measureRef, charMeasureRef, shouldMeasure } = useAsciiAutoWidth({
+    content,
+    width,
+  });
 
   const triggerProps = {
     onMouseEnter: () => setVisible(true),
@@ -48,14 +45,19 @@ export function AsciiHoverCard({
     >
       {visible && (
         <span className="ascii-hovercard-content" id={cardId} role="tooltip">
-          {lines.join("\n")}
+          <AsciiSurface width={resolvedWidth} border={border} className="ascii-hovercard-surface">
+            {content}
+          </AsciiSurface>
+          {shouldMeasure && (
+            <span className="ascii-popup-measure-root" aria-hidden="true">
+              <span ref={charMeasureRef} className="ascii-popup-char-measure">0000000000</span>
+              <span ref={measureRef} className="ascii-popup-measure">{content}</span>
+            </span>
+          )}
         </span>
       )}
       {asChild && React.isValidElement(children)
-        ? React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
-          ...(children.props as Record<string, unknown>),
-          ...triggerProps,
-        })
+        ? cloneElementWithMergedProps(children as React.ReactElement<Record<string, unknown>>, triggerProps)
         : (
           <span tabIndex={0} {...triggerProps}>
             {children}

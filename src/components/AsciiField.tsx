@@ -1,4 +1,5 @@
 import React, { useId } from "react";
+import { cloneElementWithMergedProps } from "../internal/mergeProps";
 
 export interface AsciiFieldProps {
   label: string;
@@ -34,7 +35,7 @@ export function AsciiField({
         {label}{required ? " *" : ""}
       </label>
       {"\n"}
-      {React.cloneElement(children as React.ReactElement<Record<string, unknown>>, {
+      {cloneElementWithMergedProps(children as React.ReactElement<Record<string, unknown>>, {
         id: childId,
         "aria-describedby": describedBy,
         "aria-invalid": error ? true : undefined,
