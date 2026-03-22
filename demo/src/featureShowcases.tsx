@@ -19,6 +19,9 @@ import {
   AsciiPopover,
   AsciiProcessTable,
   AsciiProgress,
+  AsciiQueryPlan,
+  AsciiRackMap,
+  AsciiSequenceDiagram,
   AsciiSheet,
   AsciiSplitPane,
   AsciiStat,
@@ -27,6 +30,7 @@ import {
   AsciiTerminal,
   AsciiTooltip,
   AsciiTraceTimeline,
+  AsciiFlameGraph,
   AsciiWindow,
 } from "ascii-lib";
 
@@ -499,6 +503,92 @@ function TraceTopologyShowcase({ mode }: { mode: ShowcaseMode }) {
   );
 }
 
+function SequenceRackShowcase({ mode }: { mode: ShowcaseMode }) {
+  return (
+    <div className="feature-demo">
+      <AsciiSequenceDiagram
+        title="Deploy Handshake"
+        width={mode === "dashboard" ? 56 : 70}
+        height={5}
+        footer={<span>batch: 03 / 10</span>}
+        participants={["edge", "api", "auth", "db"]}
+        messages={[
+          { key: "1", from: "edge", to: "api", label: "POST /deploy", tone: "success" },
+          { key: "2", from: "api", to: "auth", label: "verify signer", tone: "neutral" },
+          { key: "3", from: "auth", to: "api", label: "token ok", tone: "success" },
+          { key: "4", from: "api", to: "db", label: "write rollout", note: "84ms", tone: "warn" },
+          { key: "5", from: "db", to: "api", label: "commit", tone: "success" },
+        ]}
+      />
+      <div style={{ marginTop: "0.75rem" }}>
+        <AsciiRackMap
+          title="Rack Heat"
+          width={mode === "dashboard" ? 56 : 70}
+          height={3}
+          footer={<span>zone: us-east-1</span>}
+          racks={[
+            {
+              key: "rack-a",
+              label: "rack-a",
+              slots: [
+                { key: "a1", label: "ap", status: "success" },
+                { key: "a2", label: "db", status: "success" },
+                { key: "a3", label: "qw", status: "warn" },
+                { key: "a4", label: "cd", status: "neutral" },
+              ],
+            },
+            {
+              key: "rack-b",
+              label: "rack-b",
+              slots: [
+                { key: "b1", label: "ap", status: "success" },
+                { key: "b2", label: "rd", status: "success" },
+                { key: "b3", label: "wk", status: "warn" },
+                { key: "b4", label: "ml", status: "error" },
+              ],
+            },
+          ]}
+        />
+      </div>
+    </div>
+  );
+}
+
+function RuntimePlanShowcase({ mode }: { mode: ShowcaseMode }) {
+  return (
+    <div className="feature-demo">
+      <AsciiFlameGraph
+        title="CPU Flame"
+        width={mode === "dashboard" ? 56 : 70}
+        height={5}
+        footer={<span>host: node-17</span>}
+        frames={[
+          { key: "1", label: "requestLoop", depth: 0, span: 100, tone: "success" },
+          { key: "2", label: "checkoutRoute", depth: 1, span: 82, tone: "success" },
+          { key: "3", label: "inventoryReserve", depth: 2, span: 54, tone: "warn" },
+          { key: "4", label: "pricingEngine", depth: 2, span: 33, tone: "neutral" },
+          { key: "5", label: "serializeResponse", depth: 1, span: 21, tone: "neutral" },
+        ]}
+      />
+      <div style={{ marginTop: "0.75rem" }}>
+        <AsciiQueryPlan
+          title="Query Plan"
+          width={mode === "dashboard" ? 56 : 70}
+          height={5}
+          footer={<span>relation: orders</span>}
+          steps={[
+            { key: "1", label: "Nested Loop", rows: "128", cost: "42", tone: "warn" },
+            { key: "2", label: "Index Scan", relation: "orders_idx", depth: 1, rows: "128", cost: "18", tone: "success" },
+            { key: "3", label: "Bitmap Heap Scan", relation: "payments", depth: 1, rows: "64", cost: "16", tone: "neutral" },
+            { key: "4", label: "Sort", depth: 2, rows: "64", cost: "8", tone: "neutral" },
+            { key: "5", label: "Materialize", depth: 2, rows: "64", cost: "5", tone: "success" },
+          ]}
+        />
+      </div>
+    </div>
+  );
+}
+
 const featureShowcases = [
   {
     id: "surface-composition",
@@ -569,6 +659,20 @@ const featureShowcases = [
     description: "New observability views for trace spans and service topology relationships.",
     renderDashboard: () => <TraceTopologyShowcase mode="dashboard" />,
     renderComponents: () => <TraceTopologyShowcase mode="components" />,
+  },
+  {
+    id: "sequence-rack",
+    title: "AsciiSequenceDiagram + AsciiRackMap",
+    description: "New infrastructure views for request choreography and dense rack-level status mapping.",
+    renderDashboard: () => <SequenceRackShowcase mode="dashboard" />,
+    renderComponents: () => <SequenceRackShowcase mode="components" />,
+  },
+  {
+    id: "runtime-plan",
+    title: "AsciiFlameGraph + AsciiQueryPlan",
+    description: "New runtime and database diagnostics for hot-path profiling and query planning.",
+    renderDashboard: () => <RuntimePlanShowcase mode="dashboard" />,
+    renderComponents: () => <RuntimePlanShowcase mode="components" />,
   },
 ] as const;
 

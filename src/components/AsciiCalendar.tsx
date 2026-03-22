@@ -55,15 +55,17 @@ export function AsciiCalendar({
           {w.map((d, di) => {
             if (d === null) return <span key={di}>{"   "}</span>;
             const sel = isSelected(d);
-            const label = sel ? `[${String(d).padStart(2)}]` : ` ${String(d).padStart(2)} `;
+            const label = sel ? `>${String(d).padStart(2)}` : ` ${String(d).padStart(2)}`;
             return (
               <React.Fragment key={di}>
                 <button
                   type="button"
                   className={`ascii-calendar-day${sel ? " ascii-calendar-day-selected" : ""}`}
                   onClick={() => onChange?.(new Date(viewYear, viewMonth, d))}
+                  aria-label={`${monthLabel} ${d}`}
+                  aria-pressed={Boolean(sel)}
                 >
-                  {di === 0 ? label.replace(/^ +/, "") : label.slice(0, 3)}
+                  {label}
                 </button>
               </React.Fragment>
             );

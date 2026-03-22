@@ -1,8 +1,6 @@
-import React, { useId, useRef } from "react";
+import React from "react";
 import type { BorderStyle } from "../chars";
-import { AsciiPortal } from "../internal/AsciiPortal";
-import { AsciiSurface } from "../internal/AsciiSurface";
-import { useAsciiOverlay } from "../internal/useAsciiOverlay";
+import { AsciiDialogFrame } from "../internal/AsciiDialogFrame";
 
 export interface AsciiModalProps {
   open: boolean;
@@ -27,57 +25,22 @@ export function AsciiModal({
   className,
   style,
 }: AsciiModalProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
-  const titleId = useId();
-
-  useAsciiOverlay({
-    open,
-    onClose,
-    contentRef,
-    initialFocusRef: closeRef,
-  });
-
-  if (!open) return null;
-
   return (
-    <AsciiPortal>
-      <div
-        className="ascii-lib ascii-modal-overlay"
-        onClick={(event) => {
-          if (event.target === event.currentTarget) onClose();
-        }}
-      >
-        <div
-          ref={contentRef}
-          className={`ascii-modal ${className ?? ""}`.trim()}
-          style={style}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={title ? titleId : undefined}
-          aria-label={title ? undefined : ariaLabel}
-          tabIndex={-1}
-        >
-          <button
-            ref={closeRef}
-            type="button"
-            className="ascii-modal-close"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            [x]
-          </button>
-          <AsciiSurface
-            width={width}
-            border={border}
-            title={title}
-            accessibleTitleId={title ? titleId : undefined}
-            bodyClassName="ascii-modal-body"
-          >
-            {children}
-          </AsciiSurface>
-        </div>
-      </div>
-    </AsciiPortal>
+    <AsciiDialogFrame
+      open={open}
+      onClose={onClose}
+      title={title}
+      ariaLabel={ariaLabel}
+      width={width}
+      border={border}
+      className={className}
+      style={style}
+      overlayClassName="ascii-modal-overlay"
+      panelClassName="ascii-modal"
+      bodyClassName="ascii-modal-body"
+      closeClassName="ascii-modal-close"
+    >
+      {children}
+    </AsciiDialogFrame>
   );
 }

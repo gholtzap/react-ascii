@@ -101,7 +101,7 @@ export function AsciiDatePicker({
                   aria-label={`${MONTH_NAMES[viewMonth]} ${d}`}
                   aria-pressed={isSel}
                 >
-                  {isSel ? `[${pad(String(d), 2, "right")}]`.slice(0, 3) : ` ${pad(String(d), 2, "right")}`}
+                  {isSel ? `>${pad(String(d), 2, "right")}` : ` ${pad(String(d), 2, "right")}`}
                 </button>
               );
               cellDay++;

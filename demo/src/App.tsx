@@ -74,14 +74,7 @@ import {
 } from "ascii-lib";
 import "./App.css";
 import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
-
-const BANNER = `
-    ___   _____ ______________   __    ________
-   /   | / ___// ____/  _/  _/  / /   /  _/ __ )
-  / /| | \\__ \\/ /    / / / /   / /    / // __  |
- / ___ |___/ / /____/ /_/ /   / /____/ // /_/ /
-/_/  |_/____/\\____/___/___/  /_____/___/_____/
-`;
+import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
 
 // ─── Dashboard Tab ──────────────────────────────────────────
 
@@ -2222,77 +2215,20 @@ function App() {
 
   return (
     <>
-      {/* ── Header ──────────────────────────────── */}
-      <header className="demo-header">
-        <span aria-hidden="true">{BANNER}</span>
-        <h1 className="sr-only">ascii-lib</h1>
-        <div className="subtitle">
-          Every component is ASCII. A React component library
-          {"\n"}
-          rendered entirely with box-drawing characters.
-        </div>
-      </header>
-
-      {/* ── View switcher ───────────────────────── */}
-      <nav className="view-switcher">
-        <button
-          className={`view-tab ${view === "dashboard" ? "view-tab-active" : ""}`}
-          onClick={() => setView("dashboard")}
-        >
-          {"[ Dashboard ]"}
-        </button>
-        <button
-          className={`view-tab ${view === "components" ? "view-tab-active" : ""}`}
-          onClick={() => setView("components")}
-        >
-          {"[ Components ]"}
-        </button>
-      </nav>
-
-      <div className="demo-controls">
-        <div className="demo-control">
-          <span className="label">theme</span>
-          <AsciiButtonGroup
-            items={[
-              { key: "phosphor", label: "Phosphor" },
-              { key: "amber", label: "Amber" },
-              { key: "paper", label: "Paper" },
-              { key: "mono", label: "Mono" },
-            ]}
-            value={theme}
-            onChange={(nextTheme) => setTheme(nextTheme as string)}
-          />
-        </div>
-        <div className="demo-control">
-          <span className="label">density</span>
-          <AsciiButtonGroup
-            items={[
-              { key: "compact", label: "Compact" },
-              { key: "cozy", label: "Cozy" },
-              { key: "roomy", label: "Roomy" },
-            ]}
-            value={density}
-            onChange={(nextDensity) => setDensity(nextDensity as string)}
-            border="double"
-          />
-        </div>
-      </div>
+      <DemoHeader />
+      <DemoViewSwitcher view={view} onChange={setView} />
+      <DemoControls
+        theme={theme}
+        density={density}
+        onThemeChange={setTheme}
+        onDensityChange={setDensity}
+      />
 
       <main>
         {view === "dashboard" ? <Dashboard /> : <Components />}
       </main>
 
-      {/* ── Footer ──────────────────────────────── */}
-      <footer>
-        <pre>
-{`  ┌─────────────────────────────────────────┐
-  │  ascii-lib ~ every pixel is a character │
-  │                                         │
-  │  5 border styles / 76 components        │
-  │  typescript / accessible / zero deps    │
-  └─────────────────────────────────────────┘`}
-        </pre>
-      </footer>
+      <DemoFooter />
     </>
   );
 }

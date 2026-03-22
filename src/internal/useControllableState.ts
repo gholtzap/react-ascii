@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseControllableStateOptions<T> {
   value?: T;
@@ -14,20 +14,38 @@ export function useControllableState<T>({
   const [internalValue, setInternalValue] = useState(defaultValue);
   const controlled = value !== undefined;
   const currentValue = controlled ? value : internalValue;
+  const currentValueRef = useRef(currentValue);
+
+  useEffect(() => {
+    currentValueRef.current = currentValue;
+  }, [currentValue]);
 
   const setValue = useCallback(
     (nextValue: T | ((currentValue: T) => T)) => {
-      const resolvedValue = typeof nextValue === "function"
-        ? (nextValue as (currentValue: T) => T)(currentValue)
-        : nextValue;
+      if (typeof nextValue === "function") {
+        const updater = nextValue as (currentValue: T) => T;
 
-      if (!controlled) {
-        setInternalValue(resolvedValue);
+        if (!controlled) {
+          setInternalValue((previousValue) => {
+            const resolvedValue = updater(previousValue);
+            onChange?.(resolvedValue);
+            return resolvedValue;
+          });
+          return;
+        }
+
+        const resolvedValue = updater(currentValueRef.current);
+        onChange?.(resolvedValue);
+        return;
       }
 
-      onChange?.(resolvedValue);
+      if (!controlled) {
+        setInternalValue(nextValue);
+      }
+
+      onChange?.(nextValue);
     },
-    [controlled, currentValue, onChange]
+    [controlled, onChange]
   );
 
   return [currentValue, setValue] as const;

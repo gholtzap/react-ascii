@@ -117,6 +117,7 @@
 .ascii-dropdown-trigger,
 .ascii-dropdown-item,
 .ascii-sidebar-item,
+.ascii-tree-item,
 .ascii-tag-dismiss,
 .ascii-cmdpalette-item,
 .ascii-breadcrumb-btn {
@@ -137,6 +138,7 @@
 .ascii-pagination-btn:focus-visible,
 .ascii-dropdown-trigger:focus-visible,
 .ascii-sidebar-item:focus-visible,
+.ascii-tree-item:focus-visible,
 .ascii-cmdpalette-item:focus-visible {
   outline: 2px solid currentColor;
   outline-offset: 2px;
@@ -151,7 +153,8 @@
 .ascii-toggle,
 .ascii-pagination-btn,
 .ascii-dropdown-trigger,
-.ascii-sidebar-item {
+.ascii-sidebar-item,
+.ascii-tree-item {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -259,6 +262,29 @@
   filter: brightness(1.3);
 }
 
+.ascii-tree-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ascii-tree-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  white-space: pre;
+  cursor: pointer;
+}
+
+.ascii-tree-item:hover,
+.ascii-tree-item-selected {
+  filter: brightness(1.24);
+}
+
 /* ── Screen-reader only ─────────────────────── */
 
 .ascii-sr-only {
@@ -320,4 +346,3 @@
 .ascii-textarea-native {
   resize: none;
 }
-

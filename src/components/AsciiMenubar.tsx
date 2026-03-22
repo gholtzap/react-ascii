@@ -1,5 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { AsciiPortal } from "../internal/AsciiPortal";
+import { useAsciiFloating } from "../internal/useAsciiFloating";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
 
@@ -34,13 +36,18 @@ export function AsciiMenubar({
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const menubarId = useId();
   const b = borders[border];
+  const activeTriggerRef = useMemo(
+    () => ({ current: openMenu ? triggerRefs.current[openMenu] ?? null : null }),
+    [openMenu]
+  );
 
   useDismissableLayer({
     open: Boolean(openMenu),
     onDismiss: () => setOpenMenu(null),
-    refs: [ref],
+    refs: [ref, menuRef],
   });
 
   const currentMenuIndex = menus.findIndex((menu) => menu.key === openMenu);
@@ -74,6 +81,14 @@ export function AsciiMenubar({
     ? Math.max(...currentMenu.items.map((item) => (item.separator ? 0 : item.label.length)), 0) + 6
     : 0;
   const inner = dropdownWidth - 2;
+  const { floatingStyle, placement } = useAsciiFloating({
+    open: Boolean(openMenu),
+    anchorRef: activeTriggerRef,
+    contentRef: menuRef,
+    side: "bottom",
+    align: "start",
+    offset: 4,
+  });
 
   const handleMenuKeyDown = (event: React.KeyboardEvent) => {
     if (!openMenu || !currentMenu) return;
@@ -101,11 +116,13 @@ export function AsciiMenubar({
         if (activeIndex >= 0 && !actionItems[activeIndex]?.disabled) {
           onSelect(openMenu, actionItems[activeIndex].key);
           setOpenMenu(null);
+          triggerRefs.current[openMenu]?.focus();
         }
         break;
       case "Escape":
         event.preventDefault();
         setOpenMenu(null);
+        triggerRefs.current[openMenu]?.focus();
         break;
       case "Tab":
         setOpenMenu(null);
@@ -129,6 +146,9 @@ export function AsciiMenubar({
           <span key={menu.key} className="ascii-menubar-menu-wrapper">
             <button
               id={`${menubarId}-${menu.key}-trigger`}
+              ref={(node) => {
+                triggerRefs.current[menu.key] = node;
+              }}
               type="button"
               className={`ascii-menubar-trigger${openMenu === menu.key ? " ascii-menubar-trigger-active" : ""}`}
               onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
@@ -147,60 +167,64 @@ export function AsciiMenubar({
             >
               {` ${menu.label} `}
             </button>
-            {openMenu === menu.key && currentMenu && (
-              <div
-                id={`${menubarId}-${menu.key}-menu`}
-                ref={menuRef}
-                className="ascii-menubar-dropdown"
-                role="menu"
-                tabIndex={0}
-                aria-activedescendant={activeId}
-                aria-labelledby={`${menubarId}-${menu.key}-trigger`}
-              >
-                {b.tl + repeatChar(b.h, inner) + b.tr}
-                {"\n"}
-                {currentMenu.items.map((item, index) => {
-                  if (item.separator) {
-                    return (
-                      <React.Fragment key={`sep-${index}`}>
-                        {b.lm + repeatChar(b.h, inner) + b.rm}
-                        {"\n"}
-                      </React.Fragment>
-                    );
-                  }
-
-                  const currentActionIdx = actionIdx++;
-                  const isActive = currentActionIdx === activeIndex;
-                  const marker = isActive ? ">" : " ";
-                  const line = b.v + pad(`${marker} ${item.label}`, inner) + b.v;
-
-                  return (
-                    <React.Fragment key={item.key}>
-                      <div
-                        id={`${menubarId}-${menu.key}-${currentActionIdx}`}
-                        className={`ascii-menubar-item${isActive ? " ascii-menubar-item-active" : ""}${item.disabled ? " ascii-menubar-item-disabled" : ""}`}
-                        role="menuitem"
-                        aria-disabled={item.disabled}
-                        onMouseEnter={() => setActiveIndex(currentActionIdx)}
-                        onClick={() => {
-                          if (!item.disabled) {
-                            onSelect(menu.key, item.key);
-                            setOpenMenu(null);
-                          }
-                        }}
-                      >
-                        {line}
-                      </div>
-                      {"\n"}
-                    </React.Fragment>
-                  );
-                })}
-                {b.bl + repeatChar(b.h, inner) + b.br}
-              </div>
-            )}
           </span>
         ))}
       </div>
+      {openMenu && currentMenu ? (
+        <AsciiPortal>
+          <div
+            id={`${menubarId}-${openMenu}-menu`}
+            ref={menuRef}
+            className={`ascii-menubar-dropdown ascii-menubar-${placement.side}`}
+            style={floatingStyle}
+            role="menu"
+            tabIndex={0}
+            aria-activedescendant={activeId}
+            aria-labelledby={`${menubarId}-${openMenu}-trigger`}
+          >
+            {b.tl + repeatChar(b.h, inner) + b.tr}
+            {"\n"}
+            {currentMenu.items.map((item, index) => {
+              if (item.separator) {
+                return (
+                  <React.Fragment key={`sep-${index}`}>
+                    {b.lm + repeatChar(b.h, inner) + b.rm}
+                    {"\n"}
+                  </React.Fragment>
+                );
+              }
+
+              const currentActionIdx = actionIdx++;
+              const isActive = currentActionIdx === activeIndex;
+              const marker = isActive ? ">" : " ";
+              const line = b.v + pad(`${marker} ${item.label}`, inner) + b.v;
+
+              return (
+                <React.Fragment key={item.key}>
+                  <div
+                    id={`${menubarId}-${openMenu}-${currentActionIdx}`}
+                    className={`ascii-menubar-item${isActive ? " ascii-menubar-item-active" : ""}${item.disabled ? " ascii-menubar-item-disabled" : ""}`}
+                    role="menuitem"
+                    aria-disabled={item.disabled}
+                    onMouseEnter={() => setActiveIndex(currentActionIdx)}
+                    onClick={() => {
+                      if (!item.disabled) {
+                        onSelect(openMenu, item.key);
+                        setOpenMenu(null);
+                        triggerRefs.current[openMenu]?.focus();
+                      }
+                    }}
+                  >
+                    {line}
+                  </div>
+                  {"\n"}
+                </React.Fragment>
+              );
+            })}
+            {b.bl + repeatChar(b.h, inner) + b.br}
+          </div>
+        </AsciiPortal>
+      ) : null}
     </div>
   );
 }

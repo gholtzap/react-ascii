@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
 
 export interface AsciiCarouselItem {
@@ -26,6 +26,12 @@ export function AsciiCarousel({
   const [index, setIndex] = useState(0);
   const b = borders[border];
   const inner = width - 2;
+
+  useEffect(() => {
+    if (items.length === 0) return;
+    if (index < items.length) return;
+    setIndex(items.length - 1);
+  }, [index, items.length]);
 
   const prev = useCallback(() => {
     setIndex((i) => (i === 0 ? items.length - 1 : i - 1));

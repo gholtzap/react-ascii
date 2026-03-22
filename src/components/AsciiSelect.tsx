@@ -1,5 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { AsciiPortal } from "../internal/AsciiPortal";
+import { type AsciiFloatingAlign, type AsciiFloatingSide, useAsciiFloating } from "../internal/useAsciiFloating";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
 
@@ -16,6 +18,9 @@ export interface AsciiSelectProps {
   width?: number;
   border?: BorderStyle;
   disabled?: boolean;
+  side?: AsciiFloatingSide;
+  align?: AsciiFloatingAlign;
+  offset?: number;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -28,16 +33,29 @@ export function AsciiSelect({
   width = 30,
   border = "single",
   disabled,
+  side = "bottom",
+  align = "start",
+  offset = 4,
   className,
   style,
 }: AsciiSelectProps) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
   const listboxId = useId();
+  const triggerId = useId();
   const b = borders[border];
   const inner = width - 2;
+  const { floatingStyle, placement } = useAsciiFloating({
+    open,
+    anchorRef: triggerRef,
+    contentRef: listboxRef,
+    side,
+    align,
+    offset,
+    matchAnchorWidth: true,
+  });
 
   const selected = options.find((option) => option.value === value);
   const displayText = selected ? selected.label : placeholder;
@@ -71,7 +89,7 @@ export function AsciiSelect({
   useDismissableLayer({
     open,
     onDismiss: () => setOpen(false),
-    refs: [ref],
+    refs: [wrapperRef, listboxRef],
   });
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -140,11 +158,12 @@ export function AsciiSelect({
 
   return (
     <div
-      ref={ref}
+      ref={wrapperRef}
       className={`ascii-lib ascii-select-wrapper ${className ?? ""}`.trim()}
       style={style}
     >
       <button
+        id={triggerId}
         ref={triggerRef}
         type="button"
         className="ascii-select-trigger"
@@ -163,44 +182,48 @@ export function AsciiSelect({
       </button>
 
       {open && (
-        <div
-          id={listboxId}
-          ref={listboxRef}
-          className="ascii-select-dropdown"
-          role="listbox"
-          tabIndex={0}
-          aria-activedescendant={activeId}
-          onKeyDown={handleKeyDown}
-        >
-          {b.tl + repeatChar(b.h, inner) + b.tr}
-          {"\n"}
-          {options.map((option, index) => {
-            const marker = option.value === value ? ">" : " ";
-            const line = b.v + pad(`${marker} ${option.label}`, inner) + b.v;
-            const isActive = index === activeIndex;
+        <AsciiPortal>
+          <div
+            id={listboxId}
+            ref={listboxRef}
+            className={`ascii-select-dropdown ascii-select-${placement.side}`}
+            style={floatingStyle}
+            role="listbox"
+            tabIndex={0}
+            aria-labelledby={triggerId}
+            aria-activedescendant={activeId}
+            onKeyDown={handleKeyDown}
+          >
+            {b.tl + repeatChar(b.h, inner) + b.tr}
+            {"\n"}
+            {options.map((option, index) => {
+              const marker = option.value === value ? ">" : " ";
+              const line = b.v + pad(`${marker} ${option.label}`, inner) + b.v;
+              const isActive = index === activeIndex;
 
-            return (
-              <React.Fragment key={option.value}>
-                <div
-                  id={`${listboxId}-${index}`}
-                  className={`ascii-select-option${isActive ? " ascii-select-option-active" : ""}`}
-                  role="option"
-                  aria-selected={option.value === value}
-                  onMouseEnter={() => setActiveIndex(index)}
-                  onClick={() => {
-                    onChange?.(option.value);
-                    setOpen(false);
-                    triggerRef.current?.focus();
-                  }}
-                >
-                  {line}
-                </div>
-                {"\n"}
-              </React.Fragment>
-            );
-          })}
-          {b.bl + repeatChar(b.h, inner) + b.br}
-        </div>
+              return (
+                <React.Fragment key={option.value}>
+                  <div
+                    id={`${listboxId}-${index}`}
+                    className={`ascii-select-option${isActive ? " ascii-select-option-active" : ""}`}
+                    role="option"
+                    aria-selected={option.value === value}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={() => {
+                      onChange?.(option.value);
+                      setOpen(false);
+                      triggerRef.current?.focus();
+                    }}
+                  >
+                    {line}
+                  </div>
+                  {"\n"}
+                </React.Fragment>
+              );
+            })}
+            {b.bl + repeatChar(b.h, inner) + b.br}
+          </div>
+        </AsciiPortal>
       )}
     </div>
   );

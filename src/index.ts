@@ -248,6 +248,18 @@ export type { AsciiToggleGroupProps, AsciiToggleGroupItem } from "./components/A
 export { AsciiTypography } from "./components/AsciiTypography";
 export type { AsciiTypographyProps, TypographyVariant } from "./components/AsciiTypography";
 
+export { AsciiSequenceDiagram } from "./components/AsciiSequenceDiagram";
+export type { AsciiSequenceDiagramProps, AsciiSequenceMessage, AsciiSequenceTone } from "./components/AsciiSequenceDiagram";
+
+export { AsciiFlameGraph } from "./components/AsciiFlameGraph";
+export type { AsciiFlameGraphProps, AsciiFlameFrame, AsciiFlameTone } from "./components/AsciiFlameGraph";
+
+export { AsciiQueryPlan } from "./components/AsciiQueryPlan";
+export type { AsciiQueryPlanProps, AsciiQueryPlanStep, AsciiQueryPlanTone } from "./components/AsciiQueryPlan";
+
+export { AsciiRackMap } from "./components/AsciiRackMap";
+export type { AsciiRackMapProps, AsciiRack, AsciiRackSlot, AsciiRackTone } from "./components/AsciiRackMap";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";

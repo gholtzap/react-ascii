@@ -4,14 +4,19 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, test, vi } from "vitest";
 import { AsciiBadge } from "../components/AsciiBadge";
 import { AsciiButton } from "../components/AsciiButton";
+import { AsciiCalendar } from "../components/AsciiCalendar";
+import { AsciiCarousel } from "../components/AsciiCarousel";
 import { AsciiCommandPalette } from "../components/AsciiCommandPalette";
 import { AsciiDataTable } from "../components/AsciiDataTable";
+import { AsciiDatePicker } from "../components/AsciiDatePicker";
 import { AsciiDependencyGraph } from "../components/AsciiDependencyGraph";
 import { AsciiDropdownMenu } from "../components/AsciiDropdownMenu";
 import { AsciiLogViewer } from "../components/AsciiLogViewer";
 import { AsciiModal } from "../components/AsciiModal";
 import { AsciiPopover } from "../components/AsciiPopover";
 import { AsciiTooltip } from "../components/AsciiTooltip";
+import { AsciiTree } from "../components/AsciiTree";
+import { useControllableState } from "../internal/useControllableState";
 
 function CommandPaletteHarness() {
   const [open, setOpen] = useState(true);
@@ -35,7 +40,68 @@ function CommandPaletteHarness() {
   );
 }
 
+function ControllableStateHarness() {
+  const [value, setValue] = useControllableState({
+    defaultValue: 0,
+  });
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => {
+          setValue((currentValue) => currentValue + 1);
+          setValue((currentValue) => currentValue + 1);
+        }}
+      >
+        bump
+      </button>
+      <span>{value}</span>
+    </div>
+  );
+}
+
+function CalendarHarness() {
+  const [value, setValue] = useState(new Date(2026, 0, 12));
+
+  return (
+    <div>
+      <button type="button" onClick={() => setValue(new Date(2026, 2, 28))}>
+        jump
+      </button>
+      <AsciiCalendar value={value} onChange={setValue} />
+      <AsciiDatePicker value={value} onChange={setValue} />
+    </div>
+  );
+}
+
+function CarouselHarness() {
+  const [items, setItems] = useState([
+    { key: "one", content: "alpha" },
+    { key: "two", content: "bravo" },
+  ]);
+
+  return (
+    <div>
+      <button type="button" onClick={() => setItems([{ key: "one", content: "alpha" }])}>
+        shrink
+      </button>
+      <AsciiCarousel items={items} />
+    </div>
+  );
+}
+
 describe("ascii-lib", () => {
+  test("applies functional controllable updates against the latest value", async () => {
+    const user = userEvent.setup();
+
+    render(<ControllableStateHarness />);
+
+    await user.click(screen.getByRole("button", { name: "bump" }));
+
+    expect(screen.getByText("2")).toBeInTheDocument();
+  });
+
   test("traps focus inside titled modal overlays and exposes an accessible name", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
@@ -130,6 +196,19 @@ describe("ascii-lib", () => {
     expect(screen.getByRole("tooltip")).toHaveTextContent("route: /api/checkout");
   });
 
+  test("syncs calendar views to controlled value changes and keeps selected markers aligned", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<CalendarHarness />);
+
+    expect(container.textContent).toContain("January 2026");
+    expect(container.textContent).toContain(">12");
+
+    await user.click(screen.getByRole("button", { name: "jump" }));
+
+    expect(container.textContent).toContain("March 2026");
+    expect(container.textContent).toContain(">28");
+  });
+
   test("renders grouped command sections and promotes recent commands", async () => {
     const user = userEvent.setup();
     const { container } = render(<CommandPaletteHarness />);
@@ -192,6 +271,20 @@ describe("ascii-lib", () => {
     expect(container.textContent).toContain("sort: MEM");
   });
 
+  test("clamps carousel selection when items shrink", async () => {
+    const user = userEvent.setup();
+
+    const { container } = render(<CarouselHarness />);
+
+    await user.click(screen.getByRole("button", { name: "Next slide" }));
+    expect(screen.getByLabelText("Slide 2 of 2")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "shrink" }));
+
+    expect(screen.getByLabelText("Slide 1 of 1")).toBeInTheDocument();
+    expect(container.textContent).toContain("alpha");
+  });
+
   test("supports follow toggles, bookmarks, and copy hooks in log viewers", async () => {
     const user = userEvent.setup();
     const onCopyLine = vi.fn();
@@ -237,5 +330,36 @@ describe("ascii-lib", () => {
     );
 
     expect(container.firstChild).toMatchSnapshot();
+  });
+
+  test("renders tree items with keyboard-expandable hierarchy semantics", () => {
+    render(
+      <AsciiTree
+        data={[
+          {
+            label: "src",
+            children: [
+              {
+                label: "components",
+                children: [
+                  { label: "AsciiTree.tsx" },
+                ],
+              },
+            ],
+          },
+        ]}
+      />
+    );
+
+    const rootNode = screen.getByRole("treeitem", { name: /src/ });
+    rootNode.focus();
+
+    expect(screen.getByRole("treeitem", { name: /AsciiTree\.tsx/ })).toBeInTheDocument();
+
+    fireEvent.keyDown(rootNode, { key: "ArrowLeft" });
+    expect(screen.queryByRole("treeitem", { name: /AsciiTree\.tsx/ })).not.toBeInTheDocument();
+
+    fireEvent.keyDown(rootNode, { key: "ArrowRight" });
+    expect(screen.getByRole("treeitem", { name: /AsciiTree\.tsx/ })).toBeInTheDocument();
   });
 });

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -38,6 +38,16 @@ export function useCalendarNav(initial?: Date) {
   const today = new Date();
   const [viewYear, setViewYear] = useState(initial?.getFullYear() ?? today.getFullYear());
   const [viewMonth, setViewMonth] = useState(initial?.getMonth() ?? today.getMonth());
+  const initialMonthKey = useMemo(
+    () => initial ? `${initial.getFullYear()}-${initial.getMonth()}` : null,
+    [initial]
+  );
+
+  useEffect(() => {
+    if (!initial) return;
+    setViewYear(initial.getFullYear());
+    setViewMonth(initial.getMonth());
+  }, [initialMonthKey, initial]);
 
   const prevMonth = useCallback(() => {
     setViewMonth((m) => {
