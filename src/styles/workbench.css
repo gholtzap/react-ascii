@@ -97,6 +97,34 @@
   outline-offset: 1px;
 }
 
+.ascii-splitpane .ascii-resizable-left,
+.ascii-splitpane .ascii-resizable-right {
+  min-width: 0;
+}
+
+.ascii-splitpane-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  min-height: 0;
+  padding: 0.5rem;
+  border: 1px dashed currentColor;
+}
+
+.ascii-splitpane-header,
+.ascii-splitpane-footer {
+  white-space: pre-wrap;
+  opacity: 0.72;
+}
+
+.ascii-splitpane-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+}
+
 /* ── Sheet ──────────────────────────────── */
 
 .ascii-sheet-overlay {
@@ -357,7 +385,6 @@
 
 .ascii-contextmenu {
   white-space: pre;
-  z-index: 1000;
 }
 
 .ascii-contextmenu-item {
@@ -375,4 +402,3 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
-

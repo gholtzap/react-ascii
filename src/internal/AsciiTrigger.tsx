@@ -1,5 +1,6 @@
 import React from "react";
 import { cloneElementWithMergedProps } from "./mergeProps";
+import { composeRefs } from "./composeRefs";
 
 export interface AsciiTriggerProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "children"> {
@@ -7,7 +8,7 @@ export interface AsciiTriggerProps
   children: React.ReactNode;
 }
 
-export const AsciiTrigger = React.forwardRef<HTMLButtonElement, AsciiTriggerProps>(function AsciiTrigger({
+export const AsciiTrigger = React.forwardRef<HTMLElement, AsciiTriggerProps>(function AsciiTrigger({
   asChild,
   children,
   className,
@@ -20,8 +21,12 @@ export const AsciiTrigger = React.forwardRef<HTMLButtonElement, AsciiTriggerProp
   ...rest
 }, ref) {
   if (asChild && React.isValidElement(children)) {
-    return cloneElementWithMergedProps(children as React.ReactElement<Record<string, unknown>>, {
+    const child = children as React.ReactElement<Record<string, unknown> & { ref?: React.Ref<HTMLElement> }>;
+    const childRef = child.props.ref;
+
+    return cloneElementWithMergedProps(child, {
       ...rest,
+      ref: composeRefs(childRef, ref),
       className,
       onClick,
       onFocus,
@@ -33,7 +38,7 @@ export const AsciiTrigger = React.forwardRef<HTMLButtonElement, AsciiTriggerProp
   }
 
   return (
-    <button ref={ref} type="button" className={className} onClick={onClick} onFocus={onFocus} onBlur={onBlur} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onKeyDown={onKeyDown} {...rest}>
+    <button ref={ref as React.Ref<HTMLButtonElement>} type="button" className={className} onClick={onClick} onFocus={onFocus} onBlur={onBlur} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onKeyDown={onKeyDown} {...rest}>
       {children}
     </button>
   );

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef } from "react";
 import type { BorderStyle } from "../chars";
 import { AsciiPortal } from "../internal/AsciiPortal";
 import { AsciiSurface } from "../internal/AsciiSurface";
@@ -11,6 +11,7 @@ export interface AsciiDrawerProps {
   onClose: () => void;
   side?: DrawerSide;
   title?: string;
+  ariaLabel?: string;
   children?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
@@ -23,6 +24,7 @@ export function AsciiDrawer({
   onClose,
   side = "right",
   title,
+  ariaLabel = "Drawer",
   children,
   width = 40,
   border = "single",
@@ -31,6 +33,7 @@ export function AsciiDrawer({
 }: AsciiDrawerProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
 
   useAsciiOverlay({
     open,
@@ -57,7 +60,8 @@ export function AsciiDrawer({
           style={style}
           role="dialog"
           aria-modal="true"
-          aria-label={title}
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : ariaLabel}
           tabIndex={-1}
         >
           <button
@@ -69,7 +73,13 @@ export function AsciiDrawer({
           >
             [x]
           </button>
-          <AsciiSurface width={width} border={border} title={title} bodyClassName="ascii-drawer-body">
+          <AsciiSurface
+            width={width}
+            border={border}
+            title={title}
+            accessibleTitleId={title ? titleId : undefined}
+            bodyClassName="ascii-drawer-body"
+          >
             {children}
           </AsciiSurface>
         </div>

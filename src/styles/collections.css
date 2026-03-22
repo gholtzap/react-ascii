@@ -3,6 +3,47 @@
 .ascii-datatable {
   display: inline-block;
   white-space: pre;
+  max-width: 100%;
+}
+
+.ascii-datatable-head {
+  display: block;
+  white-space: pre;
+}
+
+.ascii-datatable-head-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: inherit;
+}
+
+.ascii-datatable-body {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  white-space: pre;
+}
+
+.ascii-datatable-row {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ascii-datatable-row:hover,
+.ascii-datatable-row-active {
+  filter: brightness(1.12);
+}
+
+.ascii-datatable-row-selected {
+  filter: brightness(1.22);
 }
 
 .ascii-datatable-sort {
@@ -379,4 +420,3 @@
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
-

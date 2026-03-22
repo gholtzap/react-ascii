@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { AsciiPortal } from "../internal/AsciiPortal";
 import { AsciiTrigger } from "../internal/AsciiTrigger";
+import { type AsciiFloatingAlign, type AsciiFloatingSide, useAsciiFloating } from "../internal/useAsciiFloating";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
 
@@ -17,6 +19,9 @@ export interface AsciiDropdownMenuProps {
   onSelect: (key: string) => void;
   trigger?: React.ReactNode;
   width?: number;
+  side?: AsciiFloatingSide;
+  align?: AsciiFloatingAlign;
+  offset?: number;
   border?: BorderStyle;
   asChild?: boolean;
   className?: string;
@@ -28,6 +33,9 @@ export function AsciiDropdownMenu({
   onSelect,
   trigger = "⋮",
   width = 24,
+  side = "bottom",
+  align = "start",
+  offset = 4,
   border = "single",
   asChild,
   className,
@@ -35,11 +43,19 @@ export function AsciiDropdownMenu({
 }: AsciiDropdownMenuProps) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const b = borders[border];
   const inner = width - 2;
+  const { floatingStyle, placement } = useAsciiFloating({
+    open,
+    anchorRef: triggerRef,
+    contentRef: menuRef,
+    side,
+    align,
+    offset,
+  });
 
   const actionItems = useMemo(() => items.filter((item) => !item.separator), [items]);
   const {
@@ -58,7 +74,7 @@ export function AsciiDropdownMenu({
 
   useEffect(() => {
     if (open) reset(0);
-  }, [open]);
+  }, [open, reset]);
 
   useEffect(() => {
     if (!open) return;
@@ -153,56 +169,60 @@ export function AsciiDropdownMenu({
       </AsciiTrigger>
 
       {open && (
-        <div
-          id={menuId}
-          ref={menuRef}
-          className="ascii-dropdown-menu"
-          role="menu"
-          tabIndex={0}
-          aria-activedescendant={activeId}
-          onKeyDown={handleKeyDown}
-        >
-          {b.tl + repeatChar(b.h, inner) + b.tr}
-          {"\n"}
-          {items.map((item, index) => {
-            if (item.separator) {
+        <AsciiPortal>
+          <div
+            id={menuId}
+            ref={menuRef}
+            className={`ascii-dropdown-menu ascii-dropdown-${placement.side}`}
+            style={floatingStyle}
+            role="menu"
+            tabIndex={0}
+            aria-activedescendant={activeId}
+            onKeyDown={handleKeyDown}
+          >
+            {b.tl + repeatChar(b.h, inner) + b.tr}
+            {"\n"}
+            {items.map((item, index) => {
+              if (item.separator) {
+                return (
+                  <React.Fragment key={`sep-${index}`}>
+                    {b.lm + repeatChar(b.h, inner) + b.rm}
+                    {"\n"}
+                  </React.Fragment>
+                );
+              }
+
+              const currentActionIdx = actionIdx++;
+              const isActive = currentActionIdx === activeIndex;
+              const marker = isActive ? ">" : " ";
+              const prefix = item.danger ? `${marker}! ` : `${marker} `;
+              const line = b.v + pad(`${prefix}${item.label}`, inner) + b.v;
+
               return (
-                <React.Fragment key={`sep-${index}`}>
-                  {b.lm + repeatChar(b.h, inner) + b.rm}
+                <React.Fragment key={item.key}>
+                  <div
+                    id={`${menuId}-${currentActionIdx}`}
+                    className={`ascii-dropdown-item${isActive ? " ascii-dropdown-item-active" : ""}${item.disabled ? " ascii-dropdown-item-disabled" : ""}${item.danger ? " ascii-dropdown-item-danger" : ""}`}
+                    role="menuitem"
+                    aria-disabled={item.disabled}
+                    onMouseEnter={() => setActiveIndex(currentActionIdx)}
+                    onClick={() => {
+                      if (!item.disabled) {
+                        onSelect(item.key);
+                        setOpen(false);
+                        triggerRef.current?.focus();
+                      }
+                    }}
+                  >
+                    {line}
+                  </div>
                   {"\n"}
                 </React.Fragment>
               );
-            }
-
-            const currentActionIdx = actionIdx++;
-            const isActive = currentActionIdx === activeIndex;
-            const marker = isActive ? ">" : " ";
-            const line = b.v + pad(`${marker} ${item.label}`, inner) + b.v;
-
-            return (
-              <React.Fragment key={item.key}>
-                <div
-                  id={`${menuId}-${currentActionIdx}`}
-                  className={`ascii-dropdown-item${isActive ? " ascii-dropdown-item-active" : ""}${item.disabled ? " ascii-dropdown-item-disabled" : ""}`}
-                  role="menuitem"
-                  aria-disabled={item.disabled}
-                  onMouseEnter={() => setActiveIndex(currentActionIdx)}
-                  onClick={() => {
-                    if (!item.disabled) {
-                      onSelect(item.key);
-                      setOpen(false);
-                      triggerRef.current?.focus();
-                    }
-                  }}
-                >
-                  {line}
-                </div>
-                {"\n"}
-              </React.Fragment>
-            );
-          })}
-          {b.bl + repeatChar(b.h, inner) + b.br}
-        </div>
+            })}
+            {b.bl + repeatChar(b.h, inner) + b.br}
+          </div>
+        </AsciiPortal>
       )}
     </div>
   );

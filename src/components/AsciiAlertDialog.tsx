@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef } from "react";
 import type { BorderStyle } from "../chars";
 import { AsciiPortal } from "../internal/AsciiPortal";
 import { AsciiSurface } from "../internal/AsciiSurface";
@@ -9,6 +9,7 @@ export interface AsciiAlertDialogProps {
   onConfirm: () => void;
   onCancel: () => void;
   title?: string;
+  ariaLabel?: string;
   children?: React.ReactNode;
   confirmLabel?: string;
   cancelLabel?: string;
@@ -23,6 +24,7 @@ export function AsciiAlertDialog({
   onConfirm,
   onCancel,
   title,
+  ariaLabel = "Alert",
   children,
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
@@ -33,6 +35,7 @@ export function AsciiAlertDialog({
 }: AsciiAlertDialogProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const confirmRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
 
   useAsciiOverlay({
     open,
@@ -57,13 +60,15 @@ export function AsciiAlertDialog({
           style={style}
           role="alertdialog"
           aria-modal="true"
-          aria-label={title}
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : ariaLabel}
           tabIndex={-1}
         >
           <AsciiSurface
             width={width}
             border={border}
             title={title}
+            accessibleTitleId={title ? titleId : undefined}
             footer={
               <div className="ascii-alertdialog-actions">
                 <button

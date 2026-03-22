@@ -31,6 +31,7 @@ import {
   AsciiKbd,
   AsciiAsciiText,
   AsciiResizable,
+  AsciiSplitPane,
   AsciiSheet,
   AsciiAlertDialog,
   AsciiAspectRatio,
@@ -672,6 +673,7 @@ function Components() {
   const [switch1, setSwitch1] = useState(true);
   const [switch2, setSwitch2] = useState(false);
   const [toggleGroupVal, setToggleGroupVal] = useState("bold");
+  const [componentPaletteOpen, setComponentPaletteOpen] = useState(false);
   const sonner = useAsciiSonner();
 
   return (
@@ -1529,6 +1531,38 @@ image: app:v2.4.1`}
         </div>
       </div>
 
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSplitPane>"}</h2>
+        <p className="section-desc">Workbench-style split panes built on top of the resizable primitive.</p>
+        <div className="green">
+          <AsciiSplitPane
+            initialSplit={42}
+            leftPanel={{
+              title: "Timeline",
+              footer: <span>drag to rebalance</span>,
+              content: (
+                <div style={{ whiteSpace: "pre-wrap" }}>
+                  <div>12:01 deploy created</div>
+                  <div>12:03 canary approved</div>
+                  <div>12:05 traffic 25%</div>
+                </div>
+              ),
+            }}
+            rightPanel={{
+              title: "Notes",
+              footer: <span>linked workbench panel</span>,
+              content: (
+                <div style={{ whiteSpace: "pre-wrap" }}>
+                  <div>owner: platform</div>
+                  <div>risk: low</div>
+                  <div>rollback: ready</div>
+                </div>
+              ),
+            }}
+          />
+        </div>
+      </div>
+
       <AsciiDivider width={80} border="double" label="NEW COMPONENTS" className="divider-full" />
 
       {/* ── Alert Dialog ──────────────────────────── */}
@@ -1703,27 +1737,80 @@ image: app:v2.4.1`}
         </div>
       </div>
 
+      <div className="section">
+        <h2 className="section-title">{"<AsciiCommandPalette>"}</h2>
+        <p className="section-desc">Grouped command palette with recent actions and fuzzy ranking.</p>
+        <div className="green">
+          <AsciiButton label="Open Command Palette" border="double" onClick={() => setComponentPaletteOpen(true)} />
+        </div>
+        <AsciiCommandPalette
+          open={componentPaletteOpen}
+          onClose={() => setComponentPaletteOpen(false)}
+          onSelect={(key: string) => {
+            setComponentPaletteOpen(false);
+            sonner.toast(`palette: ${key}`, "info");
+          }}
+          items={[
+            { key: "deploy", label: "Ship canary", group: "Deploy", shortcut: "D" },
+            { key: "rollback", label: "Rollback build", group: "Deploy", shortcut: "R" },
+            { key: "latency", label: "Inspect latency", group: "Observe", shortcut: "L" },
+            { key: "queue", label: "Open queue drain", group: "Observe", shortcut: "Q" },
+            { key: "config", label: "Edit config", group: "Change", shortcut: "C" },
+            { key: "alerts", label: "Adjust alerts", group: "Change", shortcut: "A" },
+          ]}
+          placeholder="Search grouped commands..."
+        />
+      </div>
+
       {/* ── Data Table ────────────────────────────── */}
       <div className="section">
         <h2 className="section-title">{"<AsciiDataTable>"}</h2>
-        <p className="section-desc">Table with sortable columns and pagination.</p>
-        <div className="green">
-          <AsciiDataTable
-            columns={[
-              { key: "name", header: "NAME", width: 16, sortable: true },
-              { key: "role", header: "ROLE", width: 12, sortable: true },
-              { key: "status", header: "STATUS", width: 10 },
-              { key: "last", header: "LAST SEEN", width: 12, align: "right", sortable: true },
-            ]}
-            data={[
-              { name: "alice", role: "admin", status: "● online", last: "now" },
-              { name: "bob", role: "editor", status: "● online", last: "2m ago" },
-              { name: "carol", role: "viewer", status: "○ offline", last: "1h ago" },
-              { name: "dave", role: "admin", status: "● online", last: "5m ago" },
-              { name: "eve", role: "editor", status: "○ offline", last: "3d ago" },
-            ]}
-            pageSize={3}
-          />
+        <p className="section-desc">Selectable table with pinned columns, keyboard navigation, resize controls, and loading/error states.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiDataTable
+              columns={[
+                { key: "name", header: "NAME", width: 16, sortable: true },
+                { key: "role", header: "ROLE", width: 12, sortable: true },
+                { key: "status", header: "STATUS", width: 14 },
+                { key: "last", header: "LAST SEEN", width: 12, align: "right", sortable: true },
+              ]}
+              data={[
+                { name: "alice", role: "admin", status: "● online", last: "now" },
+                { name: "bob", role: "editor", status: "● online", last: "2m ago" },
+                { name: "carol", role: "viewer", status: "○ offline", last: "1h ago" },
+                { name: "dave", role: "admin", status: "● online", last: "5m ago" },
+                { name: "eve", role: "editor", status: "○ offline", last: "3d ago" },
+              ]}
+              pageSize={3}
+              height={5}
+              selectable
+              rowKey="name"
+              defaultSelectedKeys={["bob"]}
+              pinnedColumns={["name"]}
+              resizableColumns
+            />
+          </div>
+          <div className="blue" style={{ display: "grid", gap: "0.75rem" }}>
+            <AsciiDataTable
+              columns={[
+                { key: "env", header: "ENV", width: 10 },
+                { key: "state", header: "STATE", width: 18 },
+              ]}
+              data={[]}
+              height={3}
+              loading
+            />
+            <AsciiDataTable
+              columns={[
+                { key: "env", header: "ENV", width: 10 },
+                { key: "state", header: "STATE", width: 18 },
+              ]}
+              data={[]}
+              height={3}
+              error="control plane unavailable"
+            />
+          </div>
         </div>
       </div>
 

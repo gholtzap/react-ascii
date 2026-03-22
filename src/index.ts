@@ -161,6 +161,9 @@ export type { AsciiAsciiTextProps } from "./components/AsciiAsciiText";
 export { AsciiResizable } from "./components/AsciiResizable";
 export type { AsciiResizableProps } from "./components/AsciiResizable";
 
+export { AsciiSplitPane } from "./components/AsciiSplitPane";
+export type { AsciiSplitPaneProps } from "./components/AsciiSplitPane";
+
 export { AsciiSheet } from "./components/AsciiSheet";
 export type { AsciiSheetProps, SheetSide } from "./components/AsciiSheet";
 

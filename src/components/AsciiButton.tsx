@@ -8,14 +8,14 @@ export interface AsciiButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBu
   style?: React.CSSProperties;
 }
 
-export function AsciiButton({
+export const AsciiButton = React.forwardRef<HTMLButtonElement, AsciiButtonProps>(function AsciiButton({
   label,
   border = "single",
   width,
   className,
   style,
   ...rest
-}: AsciiButtonProps) {
+}, ref) {
   const b = borders[border];
   const inner = width ? width - 2 : label.length + 2;
 
@@ -25,6 +25,7 @@ export function AsciiButton({
 
   return (
     <button
+      ref={ref}
       className={`ascii-lib ascii-btn ${className ?? ""}`.trim()}
       style={style}
       {...rest}
@@ -36,4 +37,4 @@ export function AsciiButton({
       {bot}
     </button>
   );
-}
+});

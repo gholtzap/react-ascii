@@ -1,5 +1,7 @@
 import React, { useEffect, useId, useMemo, useRef, useState } from "react";
 import { borders, repeatChar, type BorderStyle } from "../chars";
+import { AsciiPortal } from "../internal/AsciiPortal";
+import { useAsciiFloating } from "../internal/useAsciiFloating";
 import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
 import { useDismissableLayer } from "../internal/useDismissableLayer";
 
@@ -31,12 +33,20 @@ export function AsciiContextMenu({
   style,
 }: AsciiContextMenuProps) {
   const [open, setOpen] = useState(false);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const b = borders[border];
   const inner = width - 2;
+  const { floatingStyle } = useAsciiFloating({
+    open,
+    anchorRect,
+    contentRef: menuRef,
+    side: "bottom",
+    align: "start",
+    offset: 0,
+  });
 
   const actionItems = useMemo(() => items.filter((item) => !item.separator), [items]);
   const {
@@ -53,7 +63,7 @@ export function AsciiContextMenu({
 
   useEffect(() => {
     if (open) reset(0);
-  }, [open]);
+  }, [open, reset]);
 
   useEffect(() => {
     if (!open) return;
@@ -68,8 +78,7 @@ export function AsciiContextMenu({
 
   const handleContext = (event: React.MouseEvent) => {
     event.preventDefault();
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    setPos({ x: event.clientX - rect.left, y: event.clientY - rect.top });
+    setAnchorRect(new DOMRect(event.clientX, event.clientY, 0, 0));
     setOpen(true);
   };
 
@@ -115,59 +124,61 @@ export function AsciiContextMenu({
     >
       {children}
       {open && (
-        <div
-          id={menuId}
-          ref={menuRef}
-          className="ascii-contextmenu"
-          role="menu"
-          tabIndex={0}
-          aria-activedescendant={activeId}
-          style={{ position: "absolute", left: pos.x, top: pos.y }}
-          onKeyDown={handleKeyDown}
-        >
-          {b.tl + repeatChar(b.h, inner) + b.tr}
-          {"\n"}
-          {items.map((item, index) => {
-            if (item.separator) {
+        <AsciiPortal>
+          <div
+            id={menuId}
+            ref={menuRef}
+            className="ascii-contextmenu"
+            role="menu"
+            tabIndex={0}
+            aria-activedescendant={activeId}
+            style={floatingStyle}
+            onKeyDown={handleKeyDown}
+          >
+            {b.tl + repeatChar(b.h, inner) + b.tr}
+            {"\n"}
+            {items.map((item, index) => {
+              if (item.separator) {
+                return (
+                  <React.Fragment key={`sep-${index}`}>
+                    {b.lm + repeatChar(b.h, inner) + b.rm}
+                    {"\n"}
+                  </React.Fragment>
+                );
+              }
+
+              const currentActionIdx = actionIdx++;
+              const isActive = currentActionIdx === activeIndex;
+              const marker = isActive ? ">" : " ";
+              const shortcut = item.shortcut ? `  ${item.shortcut}` : "";
+              const label = `${marker} ${item.label}`;
+              const combined = label + " ".repeat(Math.max(1, inner - label.length - shortcut.length)) + shortcut;
+              const line = b.v + combined.slice(0, inner) + " ".repeat(Math.max(0, inner - combined.length)) + b.v;
+
               return (
-                <React.Fragment key={`sep-${index}`}>
-                  {b.lm + repeatChar(b.h, inner) + b.rm}
+                <React.Fragment key={item.key}>
+                  <div
+                    id={`${menuId}-${currentActionIdx}`}
+                    className={`ascii-contextmenu-item${isActive ? " ascii-contextmenu-item-active" : ""}${item.disabled ? " ascii-contextmenu-item-disabled" : ""}`}
+                    role="menuitem"
+                    aria-disabled={item.disabled}
+                    onMouseEnter={() => setActiveIndex(currentActionIdx)}
+                    onClick={() => {
+                      if (!item.disabled) {
+                        onSelect(item.key);
+                        setOpen(false);
+                      }
+                    }}
+                  >
+                    {line}
+                  </div>
                   {"\n"}
                 </React.Fragment>
               );
-            }
-
-            const currentActionIdx = actionIdx++;
-            const isActive = currentActionIdx === activeIndex;
-            const marker = isActive ? ">" : " ";
-            const shortcut = item.shortcut ? `  ${item.shortcut}` : "";
-            const label = `${marker} ${item.label}`;
-            const combined = label + " ".repeat(Math.max(1, inner - label.length - shortcut.length)) + shortcut;
-            const line = b.v + combined.slice(0, inner) + " ".repeat(Math.max(0, inner - combined.length)) + b.v;
-
-            return (
-              <React.Fragment key={item.key}>
-                <div
-                  id={`${menuId}-${currentActionIdx}`}
-                  className={`ascii-contextmenu-item${isActive ? " ascii-contextmenu-item-active" : ""}${item.disabled ? " ascii-contextmenu-item-disabled" : ""}`}
-                  role="menuitem"
-                  aria-disabled={item.disabled}
-                  onMouseEnter={() => setActiveIndex(currentActionIdx)}
-                  onClick={() => {
-                    if (!item.disabled) {
-                      onSelect(item.key);
-                      setOpen(false);
-                    }
-                  }}
-                >
-                  {line}
-                </div>
-                {"\n"}
-              </React.Fragment>
-            );
-          })}
-          {b.bl + repeatChar(b.h, inner) + b.br}
-        </div>
+            })}
+            {b.bl + repeatChar(b.h, inner) + b.br}
+          </div>
+        </AsciiPortal>
       )}
     </div>
   );

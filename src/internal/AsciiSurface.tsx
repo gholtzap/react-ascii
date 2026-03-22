@@ -6,6 +6,8 @@ interface AsciiSurfaceProps {
   width: number;
   border: BorderStyle;
   title?: string;
+  accessibleTitle?: string;
+  accessibleTitleId?: string;
   footer?: React.ReactNode;
   padding?: number;
   minBodyRows?: number;
@@ -39,6 +41,8 @@ export function AsciiSurface({
   width,
   border,
   title,
+  accessibleTitle,
+  accessibleTitleId,
   footer,
   padding = 1,
   minBodyRows = 1,
@@ -127,6 +131,11 @@ export function AsciiSurface({
 
   return (
     <div ref={rootRef} className={`ascii-lib ascii-surface ${className ?? ""}`.trim()} style={style}>
+      {accessibleTitleId && (accessibleTitle ?? title) ? (
+        <span id={accessibleTitleId} className="ascii-sr-only">
+          {accessibleTitle ?? title}
+        </span>
+      ) : null}
       <span className="ascii-surface-shell" aria-hidden="true">
         {lines.join("\n")}
       </span>

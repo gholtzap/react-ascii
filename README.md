@@ -50,16 +50,18 @@ export function Example() {
 
 ## Highlights
 
-- 76 exported components
+- 77 exported components
 - zero runtime dependencies beyond React
 - built-in ASCII borders, charts, overlays, tables, navigation, and app-shell primitives
 - accessible focus handling for modal-style overlays
 - `asChild` trigger composition for popover, dropdown, tooltip, and hover card
+- grouped command palettes, selectable data tables, and split-pane workbenches
 - richer surface components that now accept real `ReactNode` content
 
 ## Notable Components
 
 - `AsciiWindow` for terminal-window style shells
+- `AsciiSplitPane` for resizable operator workbenches
 - `AsciiLogViewer` for live logs and event streams
 - `AsciiDiff` for change previews and config review
 - `AsciiFileTree` for repository and deployment trees

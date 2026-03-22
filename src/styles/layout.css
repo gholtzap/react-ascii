@@ -20,10 +20,7 @@
 }
 
 .ascii-popover-content {
-  position: absolute;
-  left: 0;
   white-space: normal;
-  z-index: 10000;
 }
 
 .ascii-card-body,
@@ -83,6 +80,11 @@
   width: 5ch;
 }
 
+.ascii-logviewer-mark {
+  display: inline-block;
+  width: 3ch;
+}
+
 .ascii-logviewer-time {
   display: inline-block;
   width: 7ch;
@@ -107,10 +109,27 @@
   font-weight: 600;
 }
 
+.ascii-logviewer-line-selected {
+  filter: brightness(1.28);
+}
+
+.ascii-logviewer-line-bookmarked {
+  font-weight: 600;
+}
+
 .ascii-logviewer-success,
 .ascii-diff-add,
 .ascii-filetree-selected {
   filter: brightness(1.25);
+}
+
+.ascii-logviewer-action {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
 }
 
 .ascii-diff-line {
@@ -145,13 +164,19 @@
 }
 
 .ascii-popover-top {
-  bottom: 100%;
-  margin-bottom: 2px;
+  margin-bottom: 0;
 }
 
 .ascii-popover-bottom {
-  top: 100%;
-  margin-top: 2px;
+  margin-top: 0;
+}
+
+.ascii-popover-left {
+  margin-right: 0;
+}
+
+.ascii-popover-right {
+  margin-left: 0;
 }
 
 .ascii-popup-measure-root {

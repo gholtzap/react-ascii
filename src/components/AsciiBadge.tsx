@@ -1,18 +1,17 @@
 import React from "react";
 
-export interface AsciiBadgeProps {
+export interface AsciiBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: React.ReactNode;
   variant?: "default" | "outline";
-  className?: string;
-  style?: React.CSSProperties;
 }
 
-export function AsciiBadge({
+export const AsciiBadge = React.forwardRef<HTMLSpanElement, AsciiBadgeProps>(function AsciiBadge({
   children,
   variant = "default",
   className,
   style,
-}: AsciiBadgeProps) {
+  ...rest
+}, ref) {
   const text = typeof children === "string" ? children : "";
 
   const rendered =
@@ -20,10 +19,12 @@ export function AsciiBadge({
 
   return (
     <span
+      ref={ref}
       className={`ascii-lib ascii-badge ${className ?? ""}`.trim()}
       style={style}
+      {...rest}
     >
       {rendered}
     </span>
   );
-}
+});

@@ -4,11 +4,14 @@ import {
   AsciiBadge,
   AsciiButton,
   AsciiCard,
+  AsciiCommandPalette,
+  AsciiDataTable,
   AsciiDependencyGraph,
   AsciiDiff,
   AsciiDivider,
   AsciiDrawer,
   AsciiDropdownMenu,
+  AsciiFileTree,
   AsciiHoverCard,
   AsciiInspector,
   AsciiLogViewer,
@@ -17,6 +20,7 @@ import {
   AsciiProcessTable,
   AsciiProgress,
   AsciiSheet,
+  AsciiSplitPane,
   AsciiStat,
   AsciiStatusGrid,
   AsciiTag,
@@ -217,12 +221,12 @@ function TerminalShowcase({ mode }: { mode: ShowcaseMode }) {
 function LogViewerShowcase({ mode }: { mode: ShowcaseMode }) {
   const logs = useMemo(
     () => [
-      { timestamp: "12:01", level: "info" as const, source: "edge", message: "warmup complete" },
-      { timestamp: "12:02", level: "success" as const, source: "deploy", message: "traffic moved to batch-03" },
-      { timestamp: "12:03", level: "warn" as const, source: "worker", message: "retry budget at 68%" },
-      { timestamp: "12:04", level: "debug" as const, source: "queue", message: "lag sample = 42" },
-      { timestamp: "12:05", level: "error" as const, source: "api", message: "checkout timeout on shard-2" },
-      { timestamp: "12:06", level: "info" as const, source: "api", message: "p99 recovered to 84ms" },
+      { id: "warmup", timestamp: "12:01", level: "info" as const, source: "edge", message: "warmup complete" },
+      { id: "shift", timestamp: "12:02", level: "success" as const, source: "deploy", message: "traffic moved to batch-03" },
+      { id: "budget", timestamp: "12:03", level: "warn" as const, source: "worker", message: "retry budget at 68%" },
+      { id: "lag", timestamp: "12:04", level: "debug" as const, source: "queue", message: "lag sample = 42" },
+      { id: "timeout", timestamp: "12:05", level: "error" as const, source: "api", message: "checkout timeout on shard-2" },
+      { id: "recover", timestamp: "12:06", level: "info" as const, source: "api", message: "p99 recovered to 84ms" },
     ],
     []
   );
@@ -235,6 +239,9 @@ function LogViewerShowcase({ mode }: { mode: ShowcaseMode }) {
       footer={<span>follow: on</span>}
       query="queue"
       levels={["debug", "warn", "error"]}
+      defaultFollow={false}
+      defaultSelectedId="budget"
+      defaultBookmarkedIds={["budget"]}
       toolbar={
         <div className="feature-toolbar">
           <AsciiBadge>query: queue</AsciiBadge>
@@ -243,6 +250,121 @@ function LogViewerShowcase({ mode }: { mode: ShowcaseMode }) {
       }
       lines={logs}
     />
+  );
+}
+
+function CommandWorkbenchShowcase({ mode }: { mode: ShowcaseMode }) {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [selectedCommand, setSelectedCommand] = useState("deploy");
+
+  const commandItems = [
+    { key: "deploy", label: "Ship canary", group: "Deploy", shortcut: "D" },
+    { key: "rollback", label: "Rollback batch", group: "Deploy", shortcut: "R" },
+    { key: "latency", label: "Inspect latency", group: "Observe", shortcut: "L" },
+    { key: "queue", label: "Open queue drain", group: "Observe", shortcut: "Q" },
+    { key: "config", label: "Edit rollout config", group: "Change", shortcut: "C" },
+    { key: "alerts", label: "Adjust alert rules", group: "Change", shortcut: "A" },
+  ];
+
+  return (
+    <div className="feature-demo">
+      <AsciiSplitPane
+        width={mode === "dashboard" ? 58 : 72}
+        initialSplit={mode === "dashboard" ? 42 : 36}
+        leftPanel={{
+          title: "Workspace",
+          footer: <span>split: command dock</span>,
+          content: (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              <div>queued: 3</div>
+              <div>recent: {selectedCommand}</div>
+              <div>shortcut: press open to build recent history</div>
+            </div>
+          ),
+        }}
+        rightPanel={{
+          title: "Preview",
+          footer: <span>palette groups + recent</span>,
+          content: (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              <div>current command</div>
+              <div>{selectedCommand}</div>
+              <div style={{ marginTop: "0.5rem" }}>
+                <AsciiFileTree
+                  title="runbooks"
+                  width={mode === "dashboard" ? 24 : 30}
+                  height={4}
+                  items={[
+                    {
+                      path: "ops",
+                      name: "ops",
+                      kind: "folder",
+                      expanded: true,
+                      children: [
+                        { path: "ops/deploy.md", name: "deploy.md", kind: "file", selected: selectedCommand === "deploy" },
+                        { path: "ops/rollback.md", name: "rollback.md", kind: "file", selected: selectedCommand === "rollback" },
+                      ],
+                    },
+                  ]}
+                />
+              </div>
+            </div>
+          ),
+        }}
+      />
+      <div style={{ marginTop: "0.75rem" }}>
+        <AsciiButton label="Open Palette" border="double" onClick={() => setPaletteOpen(true)} />
+      </div>
+      <AsciiCommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        onSelect={(key) => {
+          setSelectedCommand(key);
+        }}
+        items={commandItems}
+        placeholder="Search command groups..."
+        width={mode === "dashboard" ? 52 : 60}
+      />
+    </div>
+  );
+}
+
+function DataTableShowcase({ mode }: { mode: ShowcaseMode }) {
+  return (
+    <div className="feature-demo">
+      <AsciiDataTable
+        columns={[
+          { key: "name", header: "NAME", width: 16, sortable: true },
+          { key: "region", header: "REGION", width: 12, sortable: true },
+          { key: "latency", header: "P99", width: 10, align: "right", sortable: true },
+          { key: "status", header: "STATUS", width: 14 },
+        ]}
+        data={[
+          { name: "api-gateway", region: "us-east-1", latency: "48ms", status: "● healthy" },
+          { name: "checkout", region: "us-west-2", latency: "91ms", status: "◐ draining" },
+          { name: "billing", region: "eu-west-1", latency: "63ms", status: "● healthy" },
+          { name: "search", region: "ap-southeast", latency: "118ms", status: "○ cold" },
+        ]}
+        pageSize={3}
+        height={5}
+        selectable
+        rowKey="name"
+        defaultSelectedKeys={["checkout"]}
+        pinnedColumns={["name"]}
+        resizableColumns
+      />
+      <div style={{ marginTop: "0.75rem" }}>
+        <AsciiDataTable
+          columns={[
+            { key: "env", header: "ENV", width: 10 },
+            { key: "state", header: "STATE", width: 20 },
+          ]}
+          data={[]}
+          loading={mode === "dashboard"}
+          error={mode === "components" ? "control plane unreachable" : undefined}
+        />
+      </div>
+    </div>
   );
 }
 
@@ -402,9 +524,23 @@ const featureShowcases = [
   {
     id: "log-viewer",
     title: "AsciiLogViewer",
-    description: "Live logs now support toolbar content, search filtering, and level slicing.",
+    description: "Live logs now support toolbar content, search filtering, bookmarks, copy actions, and follow control.",
     renderDashboard: () => <LogViewerShowcase mode="dashboard" />,
     renderComponents: () => <LogViewerShowcase mode="components" />,
+  },
+  {
+    id: "command-workbench",
+    title: "AsciiCommandPalette + AsciiSplitPane",
+    description: "Grouped commands now learn recent actions, and split workbenches compose side-by-side task views.",
+    renderDashboard: () => <CommandWorkbenchShowcase mode="dashboard" />,
+    renderComponents: () => <CommandWorkbenchShowcase mode="components" />,
+  },
+  {
+    id: "data-table",
+    title: "AsciiDataTable",
+    description: "Data tables now support row selection, keyboard navigation, pinned columns, resize controls, and loading/error states.",
+    renderDashboard: () => <DataTableShowcase mode="dashboard" />,
+    renderComponents: () => <DataTableShowcase mode="components" />,
   },
   {
     id: "diff",

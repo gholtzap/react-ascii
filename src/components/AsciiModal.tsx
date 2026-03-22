@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId, useRef } from "react";
 import type { BorderStyle } from "../chars";
 import { AsciiPortal } from "../internal/AsciiPortal";
 import { AsciiSurface } from "../internal/AsciiSurface";
@@ -8,6 +8,7 @@ export interface AsciiModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
+  ariaLabel?: string;
   children?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
@@ -19,6 +20,7 @@ export function AsciiModal({
   open,
   onClose,
   title,
+  ariaLabel = "Modal",
   children,
   width = 50,
   border = "double",
@@ -27,6 +29,7 @@ export function AsciiModal({
 }: AsciiModalProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const titleId = useId();
 
   useAsciiOverlay({
     open,
@@ -51,7 +54,8 @@ export function AsciiModal({
           style={style}
           role="dialog"
           aria-modal="true"
-          aria-label={title}
+          aria-labelledby={title ? titleId : undefined}
+          aria-label={title ? undefined : ariaLabel}
           tabIndex={-1}
         >
           <button
@@ -63,7 +67,13 @@ export function AsciiModal({
           >
             [x]
           </button>
-          <AsciiSurface width={width} border={border} title={title} bodyClassName="ascii-modal-body">
+          <AsciiSurface
+            width={width}
+            border={border}
+            title={title}
+            accessibleTitleId={title ? titleId : undefined}
+            bodyClassName="ascii-modal-body"
+          >
             {children}
           </AsciiSurface>
         </div>

@@ -33,14 +33,13 @@
 }
 
 .ascii-tooltip-content {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
   white-space: normal;
   pointer-events: none;
-  z-index: 10000;
-  margin-bottom: 2px;
+}
+
+.ascii-hovercard-content {
+  white-space: normal;
+  pointer-events: none;
 }
 
 /* ── Toast ───────────────────────────────────── */
@@ -165,6 +164,10 @@
   cursor: not-allowed;
 }
 
+.ascii-dropdown-item-danger {
+  filter: brightness(1.15);
+}
+
 /* ── Breadcrumb ──────────────────────────────── */
 
 .ascii-breadcrumb {
@@ -282,6 +285,7 @@
 .ascii-cmdpalette-item {
   display: block;
   width: 100%;
+  cursor: pointer;
 }
 
 .ascii-cmdpalette-item:hover,
@@ -289,3 +293,6 @@
   filter: brightness(1.3);
 }
 
+.ascii-cmdpalette-item-recent {
+  font-weight: 600;
+}

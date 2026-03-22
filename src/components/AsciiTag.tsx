@@ -1,28 +1,29 @@
 import React from "react";
 
-export interface AsciiTagProps {
+export interface AsciiTagProps extends React.HTMLAttributes<HTMLSpanElement> {
   children: string;
   onDismiss?: () => void;
   variant?: "default" | "outline";
-  className?: string;
-  style?: React.CSSProperties;
 }
 
-export function AsciiTag({
+export const AsciiTag = React.forwardRef<HTMLSpanElement, AsciiTagProps>(function AsciiTag({
   children,
   onDismiss,
   variant = "default",
   className,
   style,
-}: AsciiTagProps) {
+  ...rest
+}, ref) {
   const open = variant === "outline" ? "( " : "[ ";
   const close = variant === "outline" ? " )" : " ]";
   const dismissible = onDismiss !== undefined;
 
   return (
     <span
+      ref={ref}
       className={`ascii-lib ascii-tag ${className ?? ""}`.trim()}
       style={style}
+      {...rest}
     >
       {open}{children}
       {dismissible ? (
@@ -43,4 +44,4 @@ export function AsciiTag({
       )}
     </span>
   );
-}
+});
