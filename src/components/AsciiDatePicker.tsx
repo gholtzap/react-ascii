@@ -40,22 +40,24 @@ export function AsciiDatePicker({
   const inner = width - 2;
 
   const prevMonth = useCallback(() => {
-    if (viewMonth === 0) {
-      setViewMonth(11);
-      setViewYear((y) => y - 1);
-    } else {
-      setViewMonth((m) => m - 1);
-    }
-  }, [viewMonth]);
+    setViewMonth((m) => {
+      if (m === 0) {
+        setViewYear((y) => y - 1);
+        return 11;
+      }
+      return m - 1;
+    });
+  }, []);
 
   const nextMonth = useCallback(() => {
-    if (viewMonth === 11) {
-      setViewMonth(0);
-      setViewYear((y) => y + 1);
-    } else {
-      setViewMonth((m) => m + 1);
-    }
-  }, [viewMonth]);
+    setViewMonth((m) => {
+      if (m === 11) {
+        setViewYear((y) => y + 1);
+        return 0;
+      }
+      return m + 1;
+    });
+  }, []);
 
   const handleDayClick = useCallback(
     (day: number) => {
@@ -151,15 +153,6 @@ export function AsciiDatePicker({
             const weekCells: React.ReactNode[] = [];
             weekCells.push(b.v + " ");
             const startDayForLine = lineIdx - 4;
-            let dc = 1;
-            for (let prevW = 0; prevW < startDayForLine; prevW++) {
-              for (let dow = 0; dow < 7; dow++) {
-                if (prevW === 0 && dow < startDay) continue;
-                dc++;
-              }
-            }
-
-            const weekStartDay = cellDay;
             for (let dow = 0; dow < 7; dow++) {
               if (startDayForLine === 0 && dow < startDay) {
                 weekCells.push("   ");

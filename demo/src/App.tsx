@@ -60,14 +60,25 @@ import {
   AsciiSwitch,
   AsciiToggleGroup,
   AsciiTypography,
+  AsciiStat,
+  AsciiSparkline,
+  AsciiTimeline,
+  AsciiAvatar,
+  AsciiCommandPalette,
+  AsciiDropdownMenu,
+  AsciiBreadcrumb,
+  AsciiTag,
+  AsciiSkeleton,
+  AsciiPagination,
 } from "ascii-lib";
 import "./App.css";
 
 const BANNER = `
-   ___   _____ __________   __    ________
-  / _ | / ___// ___/  _/ / / /   /  _/ _ )
- / __ |_\\ \\/ /__ _/ / / /_/ /__ _/ // _  |
-/_/ |_/___/\\___/___//_____/____/___/____/
+    ___   _____ ______________   __    ________
+   /   | / ___// ____/  _/  _/  / /   /  _/ __ )
+  / /| | \\__ \\/ /    / / / /   / /    / // __  |
+ / ___ |___/ / /____/ /_/ /   / /____/ // /_/ /
+/_/  |_/____/\\____/___/___/  /_____/___/_____/
 `;
 
 // ─── Dashboard Tab ──────────────────────────────────────────
@@ -80,34 +91,121 @@ function Dashboard() {
   const [searchVal, setSearchVal] = useState("");
   const [envSelect, setEnvSelect] = useState("production");
   const [deployProgress, setDeployProgress] = useState(73);
+  const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
+  const [dashNav, setDashNav] = useState("overview");
+  const [viewMode, setViewMode] = useState("expanded");
+  const sonner = useAsciiSonner();
 
-  // Simulate live progress
   useEffect(() => {
     if (deployProgress >= 100) return;
     const t = setTimeout(() => setDeployProgress((p) => Math.min(100, p + 1)), 600);
     return () => clearTimeout(t);
   }, [deployProgress]);
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdPaletteOpen(true);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   return (
     <div className="dashboard">
-      {/* ── Top bar ─────────────────────────── */}
-      <div className="dash-topbar">
-        <div className="dash-topbar-left">
-          <span className="dash-logo">{"▲ NEXUS"}</span>
-          <span className="dim">{"│"}</span>
-          <span className="dim">infrastructure</span>
-        </div>
-        <div className="dash-topbar-right">
+      <div className="dash-menubar green">
+        <AsciiMenubar
+          menus={[
+            {
+              key: "file",
+              label: "File",
+              items: [
+                { key: "export", label: "Export Report" },
+                { key: "print", label: "Print View" },
+                { key: "sep", label: "", separator: true },
+                { key: "quit", label: "Quit" },
+              ],
+            },
+            {
+              key: "view",
+              label: "View",
+              items: [
+                { key: "compact", label: "Compact" },
+                { key: "expanded", label: "Expanded" },
+                { key: "sep", label: "", separator: true },
+                { key: "refresh", label: "Force Refresh" },
+              ],
+            },
+            {
+              key: "deploy",
+              label: "Deploy",
+              items: [
+                { key: "new", label: "New Deploy" },
+                { key: "rollback", label: "Rollback" },
+                { key: "sep", label: "", separator: true },
+                { key: "history", label: "History" },
+              ],
+            },
+            {
+              key: "help",
+              label: "Help",
+              items: [
+                { key: "shortcuts", label: "Shortcuts" },
+                { key: "docs", label: "Documentation" },
+                { key: "about", label: "About NEXUS" },
+              ],
+            },
+          ]}
+          onSelect={(_, itemKey) => {
+            if (itemKey === "new") setDeployOpen(true);
+            if (itemKey === "rollback") setDeployProgress(0);
+            sonner.toast(`Action: ${itemKey}`, "info");
+          }}
+        />
+      </div>
+
+      <div className="dash-breadcrumb-row">
+        <AsciiBreadcrumb
+          items={[
+            { label: "Home" },
+            { label: "Infrastructure" },
+            { label: "Production" },
+          ]}
+          separator=" / "
+        />
+        <div className="dash-user-area">
+          <AsciiAvatar name="Admin" size="sm" />
+          <AsciiDropdownMenu
+            trigger="admin ▾"
+            width={20}
+            items={[
+              { key: "profile", label: "Profile" },
+              { key: "settings", label: "Settings" },
+              { key: "sep", label: "", separator: true },
+              { key: "logout", label: "Logout", danger: true },
+            ]}
+            onSelect={(key) => sonner.toast(`${key}`, "info")}
+          />
           <AsciiSpinner frames={["◠", "◡"]} interval={800} label="" />
           <span className="dim">live</span>
-          <span className="dim">│</span>
-          <AsciiTooltip text="Signed in as admin@nexus.io">
-            <span>admin</span>
-          </AsciiTooltip>
         </div>
       </div>
 
-      {/* ── Environment selector + controls ── */}
+      <div className="dash-nav">
+        <AsciiNavigationMenu
+          items={[
+            { key: "overview", label: "Overview" },
+            { key: "services", label: "Services" },
+            { key: "deploys", label: "Deployments" },
+            { key: "monitoring", label: "Monitoring" },
+          ]}
+          activeKey={dashNav}
+          onSelect={setDashNav}
+        />
+      </div>
+
       <div className="dash-controls">
         <AsciiSelect
           width={24}
@@ -125,48 +223,60 @@ function Dashboard() {
           value={searchVal}
           onChange={(e) => setSearchVal(e.target.value)}
         />
-        <div className="dash-toggles">
-          <AsciiToggle checked={autoRefresh} onChange={setAutoRefresh} label="auto-refresh" width={10} />
-          <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} />
-        </div>
+        <AsciiSwitch checked={autoRefresh} onChange={setAutoRefresh} label="auto-refresh" />
+        <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} />
+        <AsciiButtonGroup
+          items={[
+            { key: "compact", label: "Compact" },
+            { key: "expanded", label: "Expanded" },
+          ]}
+          value={viewMode}
+          onChange={setViewMode}
+        />
       </div>
 
-      {/* ── Status alert ─────────────────────── */}
       {!darkAlerts && (
-        <div className="dash-alert-strip">
-          <div className="warning">
-            <AsciiAlert variant="warning" width={72}>
-              Memory usage on web-02 at 87% — autoscaler triggered
-            </AsciiAlert>
-          </div>
+        <div className="dash-alert-strip warning">
+          <AsciiAlert variant="warning" width={72}>
+            Memory usage on web-02 at 87% — autoscaler triggered
+          </AsciiAlert>
         </div>
       )}
 
-      {/* ── Metric cards ──────────────────────── */}
-      <div className="dash-metrics">
+      <div className="dash-stats">
         <div className="green">
-          <AsciiCard title="Requests / min" width={26} border="single">
-            {"  ██ 12,847\n  ▲ +4.2% from last hour"}
-          </AsciiCard>
+          <AsciiStat label="Requests / min" value="12,847" trend={4.2} trendLabel="from last hour" width={28} />
+          <AsciiSparkline data={[40, 42, 38, 45, 50, 48, 52, 58, 55, 60, 62, 65]} aria-label="Request trend" />
         </div>
         <div className="blue">
-          <AsciiCard title="Avg Latency" width={26} border="single">
-            {"  ██ 34ms\n  ▼ -12% from last hour"}
-          </AsciiCard>
+          <AsciiStat label="Avg Latency" value="34ms" trend={-12} trendLabel="from last hour" width={28} />
+          <AsciiSparkline data={[48, 45, 42, 38, 35, 36, 34, 33, 35, 34, 33, 34]} aria-label="Latency trend" />
         </div>
         <div className="green">
-          <AsciiCard title="Error Rate" width={26} border="single">
-            {"  ██ 0.02%\n  ─ stable"}
-          </AsciiCard>
+          <AsciiStat label="Error Rate" value="0.02%" trend={0} trendLabel="stable" width={28} />
+          <AsciiSparkline data={[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 2]} aria-label="Error rate trend" />
         </div>
         <div className="accent2">
-          <AsciiCard title="Active Users" width={26} border="single">
-            {"  ██ 3,291\n  ▲ +18% from yesterday"}
-          </AsciiCard>
+          <AsciiStat label="Active Users" value="3,291" trend={18} trendLabel="from yesterday" width={28} />
+          <AsciiSparkline data={[20, 22, 24, 25, 28, 30, 29, 31, 32, 30, 33, 33]} aria-label="User trend" />
         </div>
       </div>
 
-      {/* ── Deployment progress ───────────────── */}
+      <div className="dash-gauges">
+        <div className="green">
+          <AsciiGauge value={23} label="CPU" width={24} />
+        </div>
+        <div className="blue">
+          <AsciiGauge value={67} label="Memory" width={24} border="double" />
+        </div>
+        <div className="warning">
+          <AsciiGauge value={87} label="web-02 MEM" width={24} border="bold" />
+        </div>
+        <div className="green">
+          <AsciiGauge value={42} label="Disk" width={24} />
+        </div>
+      </div>
+
       <div className="dash-deploy-section">
         <AsciiDivider width={72} border="single" label="DEPLOYMENT v2.5.0-rc.3" />
         <div className="dash-deploy-row">
@@ -176,6 +286,8 @@ function Dashboard() {
           <div className="dash-deploy-badges">
             <span className="green"><AsciiBadge>ROLLING</AsciiBadge></span>
             <span className="dim"><AsciiBadge variant="outline">{`${deployProgress}%`}</AsciiBadge></span>
+            <span className="blue"><AsciiTag>k8s</AsciiTag></span>
+            <span className="green"><AsciiTag>us-east-1</AsciiTag></span>
           </div>
         </div>
         <div className="dash-deploy-actions">
@@ -183,88 +295,157 @@ function Dashboard() {
             <AsciiButton label="Deploy New" border="single" onClick={() => setDeployOpen(true)} />
           </div>
           <div className="red">
-            <AsciiButton label="Rollback" border="bold" onClick={() => setDeployProgress(0)} />
+            <AsciiButton label="Rollback" border="bold" onClick={() => { setDeployProgress(0); sonner.toast("Rolling back...", "info"); }} />
+          </div>
+          <div className="dim">
+            <AsciiPopover content={"Strategy: rolling\nMax surge: 1\nMax unavail: 0\nTimeout: 600s"} width={26}>
+              [deploy config]
+            </AsciiPopover>
           </div>
         </div>
       </div>
 
-      {/* ── Services table ───────────────────── */}
-      <div className="dash-section">
-        <h3 className="dash-section-title">Services</h3>
-        <div className="green">
-          <AsciiTable
-            columns={[
-              { key: "name", header: "SERVICE", width: 18 },
-              { key: "status", header: "STATUS", width: 10 },
-              { key: "cpu", header: "CPU", width: 8, align: "right" },
-              { key: "mem", header: "MEM", width: 8, align: "right" },
-              { key: "replicas", header: "PODS", width: 8, align: "right" },
-              { key: "version", header: "VERSION", width: 12 },
-            ]}
-            data={[
-              { name: "api-gateway", status: "● healthy", cpu: "12%", mem: "256M", replicas: "3/3", version: "v2.4.1" },
-              { name: "auth-service", status: "● healthy", cpu: "8%", mem: "128M", replicas: "2/2", version: "v1.9.0" },
-              { name: "web-frontend", status: "● healthy", cpu: "3%", mem: "64M", replicas: "4/4", version: "v2.5.0" },
-              { name: "worker-queue", status: "◐ scaling", cpu: "78%", mem: "512M", replicas: "2/5", version: "v2.4.1" },
-              { name: "postgres-main", status: "● healthy", cpu: "22%", mem: "2.1G", replicas: "1/1", version: "15.4" },
-              { name: "redis-cache", status: "● healthy", cpu: "1%", mem: "48M", replicas: "3/3", version: "7.2" },
-            ].filter(r => !searchVal || r.name.includes(searchVal))}
-          />
+      <div className="dash-grid">
+        <div>
+          <h3 className="dash-section-title">Services</h3>
+          <div className="green">
+            <AsciiTable
+              columns={[
+                { key: "name", header: "SERVICE", width: 16 },
+                { key: "status", header: "STATUS", width: 10 },
+                { key: "cpu", header: "CPU", width: 7, align: "right" },
+                { key: "mem", header: "MEM", width: 7, align: "right" },
+                { key: "pods", header: "PODS", width: 6, align: "right" },
+              ]}
+              data={[
+                { name: "api-gateway", status: "● healthy", cpu: "12%", mem: "256M", pods: "3/3" },
+                { name: "auth-service", status: "● healthy", cpu: "8%", mem: "128M", pods: "2/2" },
+                { name: "web-frontend", status: "● healthy", cpu: "3%", mem: "64M", pods: "4/4" },
+                { name: "worker-queue", status: "◐ scaling", cpu: "78%", mem: "512M", pods: "2/5" },
+                { name: "postgres-main", status: "● healthy", cpu: "22%", mem: "2.1G", pods: "1/1" },
+                { name: "redis-cache", status: "● healthy", cpu: "1%", mem: "48M", pods: "3/3" },
+              ].filter(r => !searchVal || r.name.includes(searchVal))}
+            />
+          </div>
+          <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <span className="green"><AsciiTag>microservice</AsciiTag></span>
+            <span className="blue"><AsciiTag>kubernetes</AsciiTag></span>
+            <span className="dim"><AsciiTag>auto-scaled</AsciiTag></span>
+          </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <span className="green">
+              <AsciiHoverCard content={"Service: api-gateway\nCPU: 12%  MEM: 256M\nPods: 3/3\nRegion: us-east-1\nUptime: 14d 6h 32m"} width={30}>
+                [hover: api-gateway details]
+              </AsciiHoverCard>
+            </span>
+          </div>
+        </div>
+        <div>
+          <h3 className="dash-section-title">Traffic by Service</h3>
+          <div className="green">
+            <AsciiBarChart
+              width={40}
+              bars={[
+                { label: "api-gw", value: 847 },
+                { label: "auth", value: 320 },
+                { label: "web", value: 580 },
+                { label: "worker", value: 1200 },
+                { label: "cache", value: 95 },
+              ]}
+            />
+          </div>
+          <h3 className="dash-section-title" style={{ marginTop: "1rem" }}>Weekly Activity</h3>
+          <div className="blue">
+            <AsciiHeatmap
+              data={[
+                [0, 1, 3, 5, 2, 0, 1, 4, 8, 6, 3, 1],
+                [1, 2, 4, 7, 3, 1, 2, 5, 9, 7, 4, 2],
+                [0, 1, 2, 4, 5, 3, 4, 6, 7, 5, 3, 1],
+                [2, 3, 5, 8, 6, 4, 3, 7, 10, 8, 5, 2],
+                [1, 2, 3, 6, 4, 2, 1, 4, 6, 5, 3, 1],
+                [0, 0, 1, 3, 2, 1, 0, 2, 4, 3, 2, 0],
+                [1, 1, 2, 4, 3, 2, 1, 3, 5, 4, 2, 1],
+              ]}
+              yLabels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+              aria-label="Weekly request heatmap"
+            />
+          </div>
         </div>
       </div>
 
-      {/* ── Activity / Logs / Incidents tabs ──── */}
-      <div className="dash-section">
-        <div className="green">
-          <AsciiTabs
-            activeKey={activeSection}
-            onTabChange={setActiveSection}
-            tabs={[
-              {
-                key: "logs",
-                label: "Request Log",
-                content: (
-                  <div style={{ padding: "0.75rem 0", whiteSpace: "pre" }} className="dim">
-                    {"  [14:32:01] GET  /api/health       200   2ms\n"}
-                    {"  [14:32:03] POST /api/auth/token   201  48ms\n"}
-                    {"  [14:32:05] GET  /api/users?p=1    200  14ms\n"}
-                    {"  [14:32:06] PUT  /api/users/291    200  31ms\n"}
-                    {"  [14:32:08] POST /api/deploy       202 1.2s\n"}
-                    {"  [14:32:11] GET  /api/metrics      200   8ms\n"}
-                    {"  [14:32:14] DEL  /api/sessions/old 204  22ms"}
-                  </div>
-                ),
-              },
-              {
-                key: "deploys",
-                label: "Deploys",
-                content: (
-                  <div style={{ padding: "0.75rem 0", whiteSpace: "pre" }}>
-                    <span className="green">  ✓ v2.5.0-rc.3  rolling   admin   2m ago{"\n"}</span>
-                    <span className="green">  ✓ v2.5.0-rc.2  complete  admin   1h ago{"\n"}</span>
-                    <span className="red">  ✗ v2.5.0-rc.1  failed    ci/cd   3h ago{"\n"}</span>
-                    <span className="green">  ✓ v2.4.1       complete  ci/cd   2d ago{"\n"}</span>
-                    <span className="green">  ✓ v2.4.0       complete  admin   5d ago</span>
-                  </div>
-                ),
-              },
-              {
-                key: "incidents",
-                label: "Incidents",
-                content: (
-                  <div style={{ padding: "0.75rem 0", whiteSpace: "pre" }}>
-                    <span className="warning">  ⚠ MEM-HIGH   web-02 memory 87%       open   14:28{"\n"}</span>
-                    <span className="green">  ✓ LATENCY    p99 spike resolved     closed 13:45{"\n"}</span>
-                    <span className="green">  ✓ CERT-EXP   TLS cert renewed       closed 09:00</span>
-                  </div>
-                ),
-              },
-            ]}
-          />
+      <div className="dash-grid">
+        <div>
+          <div className="green">
+            <AsciiTabs
+              activeKey={activeSection}
+              onTabChange={setActiveSection}
+              tabs={[
+                {
+                  key: "logs",
+                  label: "Request Log",
+                  content: (
+                    <AsciiScrollArea width={44} height={8}>
+                      <div style={{ whiteSpace: "pre" }} className="dim">
+                        {"  [14:32:01] GET  /api/health       200   2ms\n"}
+                        {"  [14:32:03] POST /api/auth/token   201  48ms\n"}
+                        {"  [14:32:05] GET  /api/users?p=1    200  14ms\n"}
+                        {"  [14:32:06] PUT  /api/users/291    200  31ms\n"}
+                        {"  [14:32:08] POST /api/deploy       202 1.2s\n"}
+                        {"  [14:32:11] GET  /api/metrics      200   8ms\n"}
+                        {"  [14:32:14] DEL  /api/sessions/old 204  22ms\n"}
+                        {"  [14:32:16] GET  /api/health       200   1ms\n"}
+                        {"  [14:32:18] POST /api/webhooks     200  84ms\n"}
+                        {"  [14:32:20] GET  /api/status       200   3ms\n"}
+                        {"  [14:32:22] PUT  /api/config       200  12ms\n"}
+                        {"  [14:32:25] GET  /api/health       200   2ms"}
+                      </div>
+                    </AsciiScrollArea>
+                  ),
+                },
+                {
+                  key: "deploys",
+                  label: "Deploys",
+                  content: (
+                    <div style={{ padding: "0.75rem 0", whiteSpace: "pre" }}>
+                      <span className="green">  ✓ v2.5.0-rc.3  rolling   admin   2m ago{"\n"}</span>
+                      <span className="green">  ✓ v2.5.0-rc.2  complete  admin   1h ago{"\n"}</span>
+                      <span className="red">  ✗ v2.5.0-rc.1  failed    ci/cd   3h ago{"\n"}</span>
+                      <span className="green">  ✓ v2.4.1       complete  ci/cd   2d ago{"\n"}</span>
+                      <span className="green">  ✓ v2.4.0       complete  admin   5d ago</span>
+                    </div>
+                  ),
+                },
+                {
+                  key: "incidents",
+                  label: "Incidents",
+                  content: (
+                    <div style={{ padding: "0.75rem 0", whiteSpace: "pre" }}>
+                      <span className="warning">  ⚠ MEM-HIGH   web-02 memory 87%       open   14:28{"\n"}</span>
+                      <span className="green">  ✓ LATENCY    p99 spike resolved     closed 13:45{"\n"}</span>
+                      <span className="green">  ✓ CERT-EXP   TLS cert renewed       closed 09:00</span>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
+        <div>
+          <h3 className="dash-section-title">Recent Events</h3>
+          <div className="green">
+            <AsciiTimeline
+              events={[
+                { key: "1", timestamp: "14:32", title: "Deploy v2.5.0-rc.3 started", description: "Rolling update to 3 pods" },
+                { key: "2", timestamp: "14:28", title: "Memory alert triggered", description: "web-02 at 87%" },
+                { key: "3", timestamp: "13:45", title: "Latency spike resolved", description: "p99 back to normal" },
+                { key: "4", timestamp: "12:00", title: "TLS cert renewed", description: "Auto via cert-manager" },
+                { key: "5", timestamp: "09:30", title: "v2.5.0-rc.2 deployed", description: "All health checks passing" },
+              ]}
+            />
+          </div>
         </div>
       </div>
 
-      {/* ── Infrastructure tree + Endpoints side by side ── */}
       <div className="dash-split">
         <div className="dash-split-left">
           <h3 className="dash-section-title">Infrastructure</h3>
@@ -319,19 +500,18 @@ function Dashboard() {
               ]}
             />
           </div>
+          <div style={{ marginTop: "0.5rem" }}>
+            <AsciiPagination page={1} totalPages={4} onPageChange={() => {}} />
+          </div>
         </div>
       </div>
 
-      {/* ── Config snippet ────────────────────── */}
       <div className="dash-section">
-        <AsciiAccordion
-          width={72}
-          border="single"
-          items={[
-            {
-              key: "k8s",
-              title: "Kubernetes Config",
-              content: `apiVersion: apps/v1
+        <AsciiDivider width={72} border="single" label="CONFIGURATION" />
+        <div className="dash-grid" style={{ marginTop: "0.75rem" }}>
+          <div className="green">
+            <AsciiCode title="deployment.yaml" border="single">
+{`apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-gateway
@@ -341,36 +521,49 @@ spec:
     spec:
       containers:
       - name: api
-        image: nexus/api:v2.5.0-rc.3
-        resources:
-          limits:
-            memory: "512Mi"
-            cpu: "500m"`,
-            },
-            {
-              key: "env",
-              title: "Environment Variables",
-              content: `NODE_ENV=production
+        image: nexus/api:v2.5.0-rc.3`}
+            </AsciiCode>
+          </div>
+          <div>
+            <AsciiAccordion
+              width={40}
+              border="single"
+              items={[
+                {
+                  key: "env",
+                  title: "Environment Variables",
+                  content: `NODE_ENV=production
 DATABASE_URL=postgres://...
 REDIS_URL=redis://cache:6379
-LOG_LEVEL=info
-RATE_LIMIT=1000`,
-            },
-            {
-              key: "alerts",
-              title: "Alert Rules",
-              content: `- name: high-memory
-  condition: mem_usage > 80%
+LOG_LEVEL=info`,
+                },
+                {
+                  key: "alerts",
+                  title: "Alert Rules",
+                  content: `- name: high-memory
+  condition: mem > 80%
   action: autoscale + notify
 - name: error-rate
-  condition: error_rate > 1%
+  condition: err > 1%
   action: page oncall`,
-            },
-          ]}
-        />
+                },
+              ]}
+            />
+            <div style={{ marginTop: "0.75rem" }} className="dim">
+              <AsciiSkeleton width={38} lines={2} />
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* ── Deploy modal ──────────────────────── */}
+      <div className="dash-kbd-hints">
+        <span className="dim">Shortcuts:</span>
+        <span><AsciiKbd keys={["⌘", "K"]} /> command palette</span>
+        <span><AsciiKbd keys={["R"]} /> refresh</span>
+        <span><AsciiKbd keys={["D"]} /> deploy</span>
+        <span><AsciiKbd keys={["?"]} /> help</span>
+      </div>
+
       <AsciiModal
         open={deployOpen}
         onClose={() => setDeployOpen(false)}
@@ -380,6 +573,30 @@ RATE_LIMIT=1000`,
       >
         {"Target:   production (us-east-1, eu-west-1)\nImage:    nexus/api:v2.5.1\nStrategy: rolling (max-surge 1)\n\n  [Enter] confirm   [Esc] cancel"}
       </AsciiModal>
+
+      <AsciiCommandPalette
+        open={cmdPaletteOpen}
+        onClose={() => setCmdPaletteOpen(false)}
+        onSelect={(key) => {
+          setCmdPaletteOpen(false);
+          if (key === "deploy") setDeployOpen(true);
+          if (key === "rollback") setDeployProgress(0);
+          sonner.toast(`Executed: ${key}`, "success");
+        }}
+        items={[
+          { key: "deploy", label: "New Deployment", group: "Deploy", shortcut: "D" },
+          { key: "rollback", label: "Rollback", group: "Deploy", shortcut: "R" },
+          { key: "logs", label: "View Logs", group: "Monitor" },
+          { key: "metrics", label: "View Metrics", group: "Monitor" },
+          { key: "scale", label: "Scale Service", group: "Services" },
+          { key: "restart", label: "Restart Service", group: "Services" },
+          { key: "config", label: "Edit Config", group: "Settings" },
+          { key: "alerts", label: "Alert Rules", group: "Settings" },
+        ]}
+        placeholder="Search commands..."
+      />
+
+      <AsciiSonner toasts={sonner.toasts} dismiss={sonner.dismiss} width={40} />
     </div>
   );
 }

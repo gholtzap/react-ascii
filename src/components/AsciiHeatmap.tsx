@@ -25,9 +25,9 @@ export function AsciiHeatmap({
 }: AsciiHeatmapProps) {
   if (data.length === 0) return null;
 
-  const flat = ([] as number[]).concat(...data);
-  const min = minOverride ?? Math.min(...flat);
-  const max = maxOverride ?? Math.max(...flat);
+  const flat = data.flat();
+  const min = minOverride ?? flat.reduce((a, b) => a < b ? a : b, flat[0]);
+  const max = maxOverride ?? flat.reduce((a, b) => a > b ? a : b, flat[0]);
   const range = max - min || 1;
 
   const yLabelWidth = yLabels ? Math.max(...yLabels.map((l) => l.length)) + 1 : 0;

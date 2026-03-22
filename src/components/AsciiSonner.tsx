@@ -31,17 +31,31 @@ let globalId = 0;
 
 export function useAsciiSonner() {
   const [toasts, setToasts] = useState<SonnerToast[]>([]);
+  const timers = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
+
+  useEffect(() => {
+    return () => {
+      timers.current.forEach((t) => clearTimeout(t));
+    };
+  }, []);
 
   const toast = useCallback((message: string, variant: SonnerVariant = "default") => {
     const id = ++globalId;
     setToasts((prev) => [...prev, { id, message, variant }]);
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
+      timers.current.delete(id);
     }, 3000);
+    timers.current.set(id, timer);
   }, []);
 
   const dismiss = useCallback((id: number) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+    const timer = timers.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      timers.current.delete(id);
+    }
   }, []);
 
   return { toasts, toast, dismiss };
