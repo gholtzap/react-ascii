@@ -9,5 +9,6 @@ export default defineConfig({
     alias: {
       'ascii-lib': path.resolve(__dirname, '../src/index.ts'),
     },
+    dedupe: ['react', 'react-dom'],
   },
 })
