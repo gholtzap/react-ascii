@@ -21,6 +21,17 @@ import {
   AsciiToggle,
   AsciiCode,
   AsciiTextarea,
+  AsciiBarChart,
+  AsciiHeatmap,
+  AsciiGauge,
+  AsciiSlider,
+  AsciiStepper,
+  AsciiDatePicker,
+  AsciiTerminal,
+  AsciiKbd,
+  AsciiAsciiText,
+  AsciiResizable,
+  AsciiSheet,
 } from "ascii-lib";
 import "./App.css";
 
@@ -360,6 +371,12 @@ function Components() {
   const [toggle2, setToggle2] = useState(false);
   const [textareaVal, setTextareaVal] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [sliderVal, setSliderVal] = useState(42);
+  const [slider2Val, setSlider2Val] = useState(75);
+  const [stepperIdx, setStepperIdx] = useState(1);
+  const [pickerDate, setPickerDate] = useState<Date | undefined>(undefined);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetSide, setSheetSide] = useState<"left" | "right" | "bottom">("right");
 
   return (
     <div className="components">
@@ -932,6 +949,255 @@ image: app:v2.4.1`}
         </AsciiModal>
       </div>
 
+      {/* ── Sheet ────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSheet>"}</h2>
+        <p className="section-desc">Slide-in panel from left, right, or bottom.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiButton label="Right Sheet" border="single" onClick={() => { setSheetSide("right"); setSheetOpen(true); }} />
+          </div>
+          <div className="blue">
+            <AsciiButton label="Left Sheet" border="single" onClick={() => { setSheetSide("left"); setSheetOpen(true); }} />
+          </div>
+          <div className="red">
+            <AsciiButton label="Bottom Sheet" border="single" onClick={() => { setSheetSide("bottom"); setSheetOpen(true); }} />
+          </div>
+        </div>
+        <AsciiSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          side={sheetSide}
+          title={`${sheetSide} panel`}
+          width={40}
+          border="double"
+        >
+          {"Sheet content goes here.\n\nSlides in from the side.\nPress Esc or click backdrop\nto close."}
+        </AsciiSheet>
+      </div>
+
+      <AsciiDivider width={80} border="double" label="DATA VISUALIZATION" className="divider-full" />
+
+      {/* ── Bar Chart ────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiBarChart>"}</h2>
+        <p className="section-desc">Horizontal bar charts with block fill characters.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiBarChart
+              width={50}
+              bars={[
+                { label: "api-gw", value: 847 },
+                { label: "auth", value: 320 },
+                { label: "web", value: 580 },
+                { label: "worker", value: 1200 },
+                { label: "cache", value: 95 },
+              ]}
+            />
+          </div>
+          <div className="blue">
+            <AsciiBarChart
+              width={40}
+              border="double"
+              fillChar="#"
+              emptyChar="."
+              bars={[
+                { label: "Mon", value: 42 },
+                { label: "Tue", value: 78 },
+                { label: "Wed", value: 63 },
+                { label: "Thu", value: 91 },
+                { label: "Fri", value: 55 },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Heatmap ──────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiHeatmap>"}</h2>
+        <p className="section-desc">Grid heatmaps using density characters.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiHeatmap
+              data={[
+                [0, 1, 3, 5, 2, 0, 1, 4, 8, 6, 3, 1],
+                [1, 2, 4, 7, 3, 1, 2, 5, 9, 7, 4, 2],
+                [0, 1, 2, 4, 5, 3, 4, 6, 7, 5, 3, 1],
+                [2, 3, 5, 8, 6, 4, 3, 7, 10, 8, 5, 2],
+                [1, 2, 3, 6, 4, 2, 1, 4, 6, 5, 3, 1],
+                [0, 0, 1, 3, 2, 1, 0, 2, 4, 3, 2, 0],
+                [1, 1, 2, 4, 3, 2, 1, 3, 5, 4, 2, 1],
+              ]}
+              yLabels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+              aria-label="Weekly activity heatmap"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Gauge ────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiGauge>"}</h2>
+        <p className="section-desc">Meter gauges with arc visualization.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiGauge value={73} label="CPU Usage" width={30} />
+          </div>
+          <div className="blue">
+            <AsciiGauge value={2.1} min={0} max={8} label="Memory (GB)" width={30} border="double" />
+          </div>
+          <div className="red">
+            <AsciiGauge value={92} label="Disk" width={24} border="bold" />
+          </div>
+        </div>
+      </div>
+
+      <AsciiDivider width={80} border="double" label="INTERACTIVE" className="divider-full" />
+
+      {/* ── Slider ───────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSlider>"}</h2>
+        <p className="section-desc">Draggable range input with keyboard support.</p>
+        <div className="demo-col" style={{ gap: "0.75rem" }}>
+          <div className="green">
+            <AsciiSlider value={sliderVal} onChange={setSliderVal} width={40} label="Volume" />
+          </div>
+          <div className="blue">
+            <AsciiSlider value={slider2Val} onChange={setSlider2Val} width={40} label="Brightness" min={0} max={255} step={5} />
+          </div>
+          <div className="dim">
+            <AsciiSlider value={50} disabled width={40} label="Locked" />
+          </div>
+        </div>
+        <div className="output">volume: {sliderVal}, brightness: {slider2Val}</div>
+      </div>
+
+      {/* ── Stepper ──────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiStepper>"}</h2>
+        <p className="section-desc">Multi-step wizard progress indicator.</p>
+        <div className="demo-col" style={{ gap: "1rem" }}>
+          <div className="green">
+            <AsciiStepper
+              current={stepperIdx}
+              steps={[
+                { label: "Config", description: "Set up environment" },
+                { label: "Build", description: "Compile assets" },
+                { label: "Test", description: "Run test suite" },
+                { label: "Deploy" },
+              ]}
+            />
+          </div>
+          <div className="demo-row" style={{ gap: "0.5rem" }}>
+            <AsciiButton label="Prev" border="single" onClick={() => setStepperIdx((i) => Math.max(0, i - 1))} />
+            <AsciiButton label="Next" border="single" onClick={() => setStepperIdx((i) => Math.min(3, i + 1))} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Date Picker ──────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiDatePicker>"}</h2>
+        <p className="section-desc">Calendar grid with month navigation.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiDatePicker value={pickerDate} onChange={setPickerDate} width={28} />
+          </div>
+          <div className="blue">
+            <AsciiDatePicker value={pickerDate} onChange={setPickerDate} width={28} border="double" />
+          </div>
+        </div>
+        <div className="output">selected: {pickerDate ? pickerDate.toLocaleDateString() : "none"}</div>
+      </div>
+
+      <AsciiDivider width={80} border="double" label="TERMINAL" className="divider-full" />
+
+      {/* ── Terminal ─────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiTerminal>"}</h2>
+        <p className="section-desc">Interactive terminal with command history and custom handlers.</p>
+        <div className="green">
+          <AsciiTerminal
+            title="nexus-prod"
+            width={60}
+            height={10}
+            initialLines={[
+              "Welcome to NEXUS terminal v2.5.0",
+              "Type 'help' for available commands.",
+              "",
+            ]}
+            onCommand={(cmd) => {
+              if (cmd === "help") return ["  status  - show system status", "  uptime  - show uptime", "  whoami  - current user", "  clear   - clear screen"];
+              if (cmd === "status") return "  all systems operational ●";
+              if (cmd === "uptime") return "  14d 6h 32m";
+              if (cmd === "whoami") return "  admin@nexus.io";
+              return `  command not found: ${cmd}`;
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ── Kbd ──────────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiKbd>"}</h2>
+        <p className="section-desc">Keyboard shortcut badges.</p>
+        <div className="demo-row" style={{ gap: "2rem", alignItems: "center" }}>
+          <span className="green">
+            <AsciiKbd keys={["⌘", "K"]} />
+          </span>
+          <span className="blue">
+            <AsciiKbd keys={["Ctrl", "Shift", "P"]} />
+          </span>
+          <span className="red">
+            <AsciiKbd keys={["Esc"]} />
+          </span>
+          <span className="dim">
+            <AsciiKbd keys={["⌘", "⇧", "Enter"]} separator=" " />
+          </span>
+        </div>
+      </div>
+
+      {/* ── Ascii Text ───────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiAsciiText>"}</h2>
+        <p className="section-desc">Large banner text rendered with block characters.</p>
+        <div className="demo-col" style={{ gap: "1.5rem" }}>
+          <div className="green">
+            <AsciiAsciiText text="NEXUS" />
+          </div>
+          <div className="blue">
+            <AsciiAsciiText text="ASCII" />
+          </div>
+          <div className="red">
+            <AsciiAsciiText text="404" />
+          </div>
+        </div>
+      </div>
+
+      <AsciiDivider width={80} border="double" label="LAYOUT" className="divider-full" />
+
+      {/* ── Resizable ────────────────────────────── */}
+      <div className="section">
+        <h2 className="section-title">{"<AsciiResizable>"}</h2>
+        <p className="section-desc">Draggable split panes. Grab the divider to resize.</p>
+        <div className="green">
+          <AsciiResizable
+            left={
+              <div style={{ whiteSpace: "pre", padding: "0.5rem" }}>
+                {"Left panel\n\nDrag the │ divider\nto resize."}
+              </div>
+            }
+            right={
+              <div style={{ whiteSpace: "pre", padding: "0.5rem" }}>
+                {"Right panel\n\nContent adjusts\nautomatically."}
+              </div>
+            }
+            initialSplit={40}
+          />
+        </div>
+      </div>
+
       <AsciiDivider width={80} border="double" className="divider-full" />
     </div>
   );
@@ -981,7 +1247,7 @@ function App() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 33 components        │
+  │  5 border styles / 44 components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
         </pre>

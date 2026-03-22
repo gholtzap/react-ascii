@@ -99,6 +99,39 @@ export type { AsciiSidebarProps, AsciiSidebarItem } from "./components/AsciiSide
 export { AsciiTag } from "./components/AsciiTag";
 export type { AsciiTagProps } from "./components/AsciiTag";
 
+export { AsciiBarChart } from "./components/AsciiBarChart";
+export type { AsciiBarChartProps, AsciiBarChartBar } from "./components/AsciiBarChart";
+
+export { AsciiHeatmap } from "./components/AsciiHeatmap";
+export type { AsciiHeatmapProps } from "./components/AsciiHeatmap";
+
+export { AsciiGauge } from "./components/AsciiGauge";
+export type { AsciiGaugeProps } from "./components/AsciiGauge";
+
+export { AsciiSlider } from "./components/AsciiSlider";
+export type { AsciiSliderProps } from "./components/AsciiSlider";
+
+export { AsciiStepper } from "./components/AsciiStepper";
+export type { AsciiStepperProps, AsciiStepperStep } from "./components/AsciiStepper";
+
+export { AsciiDatePicker } from "./components/AsciiDatePicker";
+export type { AsciiDatePickerProps } from "./components/AsciiDatePicker";
+
+export { AsciiTerminal } from "./components/AsciiTerminal";
+export type { AsciiTerminalProps } from "./components/AsciiTerminal";
+
+export { AsciiKbd } from "./components/AsciiKbd";
+export type { AsciiKbdProps } from "./components/AsciiKbd";
+
+export { AsciiAsciiText } from "./components/AsciiAsciiText";
+export type { AsciiAsciiTextProps } from "./components/AsciiAsciiText";
+
+export { AsciiResizable } from "./components/AsciiResizable";
+export type { AsciiResizableProps } from "./components/AsciiResizable";
+
+export { AsciiSheet } from "./components/AsciiSheet";
+export type { AsciiSheetProps, SheetSide } from "./components/AsciiSheet";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";
