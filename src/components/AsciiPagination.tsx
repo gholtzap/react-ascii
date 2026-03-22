@@ -1,5 +1,5 @@
 import React from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { borders, repeatChar, type BorderStyle } from "../chars";
 
 export interface AsciiPaginationProps {
   page: number;

@@ -81,7 +81,7 @@ export function AsciiTabs({
   return (
     <div className={`ascii-lib ascii-tabs ${className ?? ""}`.trim()} style={style}>
       <div className="ascii-tab-bar" role="tablist" onKeyDown={handleKeyDown}>
-        {tabHeaders.map((th, i) => {
+        {tabHeaders.map((th) => {
           const isActive = th.key === activeKey;
           return (
             <button

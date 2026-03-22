@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { borders, type BorderStyle } from "../chars";
 
 export interface AsciiInputOTPProps {
@@ -64,7 +64,6 @@ export function AsciiInputOTP({
       aria-label="One-time password"
     >
       {Array.from({ length }).map((_, i) => {
-        const char = digits[i] || " ";
         const top = b.tl + b.h + b.h + b.h + b.tr;
         const bot = b.bl + b.h + b.h + b.h + b.br;
         return (

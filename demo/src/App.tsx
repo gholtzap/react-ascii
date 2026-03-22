@@ -206,7 +206,7 @@ function Dashboard() {
               ],
             },
           ]}
-          onSelect={(_, itemKey) => {
+          onSelect={(_: string, itemKey: string) => {
             if (itemKey === "new") setDeployOpen(true);
             if (itemKey === "rollback") setDeployProgress(0);
             sonner.toast(`Action: ${itemKey}`, "info");
@@ -234,7 +234,7 @@ function Dashboard() {
               { key: "sep", label: "", separator: true },
               { key: "logout", label: "Logout", danger: true },
             ]}
-            onSelect={(key) => sonner.toast(`${key}`, "info")}
+            onSelect={(key: string) => sonner.toast(`${key}`, "info")}
           />
           <AsciiSpinner frames={["◠", "◡"]} interval={800} label="" />
           <span className="dim">live</span>
@@ -612,7 +612,7 @@ LOG_LEVEL=info`,
       <AsciiCommandPalette
         open={cmdPaletteOpen}
         onClose={() => setCmdPaletteOpen(false)}
-        onSelect={(key) => {
+        onSelect={(key: string) => {
           setCmdPaletteOpen(false);
           if (key === "deploy") setDeployOpen(true);
           if (key === "rollback") setDeployProgress(0);
@@ -794,7 +794,7 @@ function Components() {
               width={36}
               placeholder="enter a value..."
               value={inputVal}
-              onChange={(e) => setInputVal(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputVal(e.target.value)}
             />
           </div>
         </div>
@@ -809,12 +809,12 @@ function Components() {
           <AsciiCheckbox
             label="Enable logging"
             checked={check1}
-            onChange={(e) => setCheck1(e.target.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheck1(e.target.checked)}
           />
           <AsciiCheckbox
             label="Verbose mode"
             checked={check2}
-            onChange={(e) => setCheck2(e.target.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheck2(e.target.checked)}
           />
           <AsciiCheckbox label="Read-only" checked disabled onChange={() => {}} />
         </div>
@@ -874,7 +874,7 @@ function Components() {
               height={4}
               placeholder="Type something..."
               value={textareaVal}
-              onChange={(e) => setTextareaVal(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setTextareaVal(e.target.value)}
             />
           </div>
         </div>
@@ -1455,7 +1455,7 @@ image: app:v2.4.1`}
               "Type 'help' for available commands.",
               "",
             ]}
-            onCommand={(cmd) => {
+            onCommand={(cmd: string) => {
               if (cmd === "help") return ["  status  - show system status", "  uptime  - show uptime", "  whoami  - current user", "  clear   - clear screen"];
               if (cmd === "status") return "  all systems operational ●";
               if (cmd === "uptime") return "  14d 6h 32m";
@@ -1950,7 +1950,7 @@ image: app:v2.4.1`}
               { value: "jpy", label: "JPY (¥)" },
             ]}
             value={nativeVal}
-            onChange={(e) => setNativeVal(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setNativeVal(e.target.value)}
           />
         </div>
         <div className="output">currency: {nativeVal}</div>
@@ -2071,7 +2071,7 @@ image: app:v2.4.1`}
                 { key: "strike", label: "S" },
               ]}
               value={toggleGroupVal}
-              onChange={(v) => setToggleGroupVal(v as string)}
+              onChange={(v: string | string[]) => setToggleGroupVal(v as string)}
             />
           </div>
           <div className="blue">

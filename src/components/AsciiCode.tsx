@@ -30,8 +30,6 @@ export function AsciiCode({
   // Auto-calculate width if not provided
   const maxContentWidth = Math.max(...codeLines.map((l) => l.length));
   const innerWidth = (width ? width - 2 : Math.max(maxContentWidth + gutterWidth + 3, (title?.length ?? 0) + 4));
-  const totalWidth = innerWidth + 2;
-
   const lines: string[] = [];
 
   // Top border

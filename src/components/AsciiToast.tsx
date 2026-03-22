@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
 
 export type ToastVariant = "info" | "success" | "warning" | "error";
