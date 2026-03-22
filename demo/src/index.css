@@ -1,0 +1,61 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0a0a0a;
+  --fg: #e0e0e0;
+  --dim: #666;
+  --accent: #00ff88;
+  --accent2: #ff6b6b;
+  --accent3: #6bb3ff;
+  --warning: #ffaa00;
+  --surface: #141414;
+  --border: #2a2a2a;
+  --overlay: rgba(0, 0, 0, 0.6);
+}
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
+    "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  padding: 2rem;
+  overflow-x: hidden;
+}
+
+#root {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  html {
+    font-size: 12px;
+  }
+
+  body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  html {
+    font-size: 11px;
+  }
+
+  body {
+    padding: 0.75rem;
+  }
+}

@@ -1,0 +1,283 @@
+.demo-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  white-space: pre;
+  line-height: 1.2;
+  color: var(--accent);
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.demo-header .subtitle {
+  color: var(--dim);
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+/* ── View switcher ─────────────────────── */
+
+.view-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1rem;
+}
+
+.view-tab {
+  background: none;
+  border: none;
+  color: var(--dim);
+  font: inherit;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  transition: color 0.15s;
+}
+
+.view-tab:hover {
+  color: var(--fg);
+}
+
+.view-tab-active {
+  color: var(--accent);
+}
+
+/* ── Dashboard ─────────────────────────── */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dash-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dash-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dash-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dash-logo {
+  color: var(--accent);
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.dash-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.dash-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dash-alert-strip {
+  margin: 0;
+}
+
+.dash-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dash-deploy-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dash-deploy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dash-deploy-badges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dash-deploy-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.dash-section {
+  margin-top: 0.5rem;
+}
+
+.dash-section-title {
+  color: var(--dim);
+  font-size: 0.8rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.dash-split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.dash-split-left,
+.dash-split-right {
+  flex: 1;
+  min-width: 260px;
+}
+
+.accent2 {
+  color: var(--fg);
+}
+
+/* ── Components showcase ───────────────── */
+
+.section {
+  margin-bottom: 3rem;
+}
+
+h2.section-title {
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.section-desc {
+  color: var(--dim);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.demo-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  color: var(--dim);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.green { color: var(--accent); }
+.red { color: var(--accent2); }
+.blue { color: var(--accent3); }
+.warning { color: var(--warning); }
+.dim { color: var(--dim); }
+.white { color: var(--fg); }
+
+.ascii-lib {
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ascii-select-dropdown {
+  background: var(--bg);
+}
+
+.ascii-modal-overlay {
+  --ascii-overlay: var(--overlay);
+}
+
+.divider-full {
+  color: var(--border);
+  margin: 2rem 0;
+}
+
+.output {
+  color: var(--dim);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+footer {
+  text-align: center;
+  color: var(--dim);
+  margin-bottom: 2rem;
+}
+
+footer pre {
+  max-width: 100%;
+  overflow: hidden;
+  margin: 0;
+  font: inherit;
+}
+
+.demo-tab-content {
+  padding: 0.75rem 0;
+  white-space: pre;
+}
+
+@media (max-width: 600px) {
+  .demo-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .section {
+    margin-bottom: 2rem;
+  }
+
+  .demo-row {
+    gap: 1rem;
+  }
+
+  .divider-full {
+    margin: 1.5rem 0;
+  }
+
+  .dash-metrics {
+    gap: 0.75rem;
+  }
+
+  .dash-split {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
