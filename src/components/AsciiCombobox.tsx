@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useEffect, useId, useRef, useState } from "react";
+import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
+import { useDismissableLayer } from "../internal/useDismissableLayer";
 
 export interface AsciiComboboxOption {
   value: string;
@@ -31,63 +33,92 @@ export function AsciiCombobox({
 }: AsciiComboboxProps) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const listboxId = useId();
   const b = borders[border];
   const inner = width - 2;
 
-  const filtered = options.filter((o) =>
-    o.label.toLowerCase().includes(query.toLowerCase())
+  const filtered = options.filter((option) =>
+    option.label.toLowerCase().includes(query.toLowerCase())
   );
-
-  const selected = options.find((o) => o.value === value);
-
-  const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setOpen(false);
-    }
-  }, []);
+  const selected = options.find((option) => option.value === value);
+  const {
+    activeIndex,
+    activeItem,
+    moveNext,
+    movePrev,
+    moveFirst,
+    moveLast,
+    setActiveIndex,
+    reset,
+  } = useAsciiListNavigation({
+    items: filtered,
+    loop: true,
+  });
 
   useEffect(() => {
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [open, handleClickOutside]);
+    if (open) reset(0);
+  }, [open, query, reset]);
 
-  useEffect(() => {
-    if (open) setActiveIndex(0);
-  }, [open, query]);
+  useDismissableLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    refs: [ref],
+  });
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (disabled) return;
-    switch (e.key) {
+
+    switch (event.key) {
       case "ArrowDown":
-        e.preventDefault();
-        if (!open) setOpen(true);
-        else setActiveIndex((i) => Math.min(i + 1, filtered.length - 1));
+        event.preventDefault();
+        if (!open) {
+          setOpen(true);
+          return;
+        }
+        moveNext();
         break;
       case "ArrowUp":
-        e.preventDefault();
-        if (open) setActiveIndex((i) => Math.max(i - 1, 0));
+        event.preventDefault();
+        if (!open) {
+          setOpen(true);
+          return;
+        }
+        movePrev();
+        break;
+      case "Home":
+        if (open) {
+          event.preventDefault();
+          moveFirst();
+        }
+        break;
+      case "End":
+        if (open) {
+          event.preventDefault();
+          moveLast();
+        }
         break;
       case "Enter":
-        e.preventDefault();
-        if (open && filtered[activeIndex]) {
-          onChange?.(filtered[activeIndex].value);
+        event.preventDefault();
+        if (open && activeItem) {
+          onChange?.(activeItem.value);
           setQuery("");
           setOpen(false);
         }
         break;
       case "Escape":
-        if (open) { e.preventDefault(); setOpen(false); }
+        if (open) {
+          event.preventDefault();
+          setOpen(false);
+        }
         break;
     }
   };
 
   const topLine = b.tl + repeatChar(b.h, inner) + b.tr;
   const botLine = b.bl + repeatChar(b.h, inner) + b.br;
+  const activeId = open && activeIndex >= 0 ? `${listboxId}-${activeIndex}` : undefined;
 
   return (
     <div
@@ -106,12 +137,17 @@ export function AsciiCombobox({
           style={{ width: `${inner - 4}ch` }}
           placeholder={selected ? selected.label : placeholder}
           value={query}
-          onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setOpen(true);
+          }}
           onFocus={() => setOpen(true)}
           disabled={disabled}
           role="combobox"
           aria-expanded={open}
           aria-autocomplete="list"
+          aria-controls={listboxId}
+          aria-activedescendant={activeId}
         />
         <span> {open ? "^" : "v"} </span>
         <span>{b.v}</span>
@@ -120,21 +156,24 @@ export function AsciiCombobox({
       </div>
 
       {open && filtered.length > 0 && (
-        <div className="ascii-combobox-dropdown" role="listbox">
+        <div id={listboxId} className="ascii-combobox-dropdown" role="listbox">
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
-          {filtered.map((opt, i) => {
-            const marker = opt.value === value ? ">" : " ";
-            const isActive = i === activeIndex;
-            const line = b.v + pad(`${marker} ${opt.label}`, inner) + b.v;
+          {filtered.map((option, index) => {
+            const marker = option.value === value ? ">" : " ";
+            const isActive = index === activeIndex;
+            const line = b.v + pad(`${marker} ${option.label}`, inner) + b.v;
+
             return (
-              <React.Fragment key={opt.value}>
+              <React.Fragment key={option.value}>
                 <div
+                  id={`${listboxId}-${index}`}
                   className={`ascii-combobox-option${isActive ? " ascii-combobox-option-active" : ""}`}
                   role="option"
-                  aria-selected={opt.value === value}
+                  aria-selected={option.value === value}
+                  onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => {
-                    onChange?.(opt.value);
+                    onChange?.(option.value);
                     setQuery("");
                     setOpen(false);
                   }}

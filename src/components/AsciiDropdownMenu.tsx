@@ -1,5 +1,8 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useEffect, useRef, useState } from "react";
+import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { AsciiTrigger } from "../internal/AsciiTrigger";
+import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
+import { useDismissableLayer } from "../internal/useDismissableLayer";
 
 export interface AsciiDropdownMenuItem {
   key: string;
@@ -12,9 +15,10 @@ export interface AsciiDropdownMenuItem {
 export interface AsciiDropdownMenuProps {
   items: AsciiDropdownMenuItem[];
   onSelect: (key: string) => void;
-  trigger?: string;
+  trigger?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  asChild?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -25,83 +29,80 @@ export function AsciiDropdownMenu({
   trigger = "⋮",
   width = 24,
   border = "single",
+  asChild,
   className,
   style,
 }: AsciiDropdownMenuProps) {
   const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const ref = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const b = borders[border];
   const inner = width - 2;
 
   const actionItems = items.filter((item) => !item.separator);
-
-  const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setOpen(false);
-    }
-  }, []);
+  const {
+    activeIndex,
+    setActiveIndex,
+    moveNext,
+    movePrev,
+    moveFirst,
+    moveLast,
+    reset,
+  } = useAsciiListNavigation({
+    items: actionItems,
+    isDisabled: (item) => Boolean(item.disabled),
+    loop: true,
+  });
 
   useEffect(() => {
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [open, handleClickOutside]);
+    if (open) reset(0);
+  }, [open, reset]);
 
-  useEffect(() => {
-    if (open) setActiveIndex(0);
-  }, [open]);
+  useDismissableLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    refs: [wrapperRef, menuRef],
+  });
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
       case "ArrowDown":
-        e.preventDefault();
+        event.preventDefault();
         if (!open) {
           setOpen(true);
-        } else {
-          setActiveIndex((i) => {
-            let next = i + 1;
-            while (next < actionItems.length && actionItems[next].disabled) next++;
-            return next < actionItems.length ? next : i;
-          });
+          return;
         }
+        moveNext();
         break;
       case "ArrowUp":
-        e.preventDefault();
-        if (open) {
-          setActiveIndex((i) => {
-            let next = i - 1;
-            while (next >= 0 && actionItems[next].disabled) next--;
-            return next >= 0 ? next : i;
-          });
+        event.preventDefault();
+        if (!open) {
+          setOpen(true);
+          return;
         }
+        movePrev();
         break;
       case "Home":
         if (open) {
-          e.preventDefault();
-          setActiveIndex(0);
+          event.preventDefault();
+          moveFirst();
         }
         break;
       case "End":
         if (open) {
-          e.preventDefault();
-          setActiveIndex(actionItems.length - 1);
+          event.preventDefault();
+          moveLast();
         }
         break;
       case "Enter":
       case " ":
-        e.preventDefault();
-        if (open && activeIndex >= 0 && !actionItems[activeIndex].disabled) {
-          onSelect(actionItems[activeIndex].key);
-          setOpen(false);
-        } else if (!open) {
+        event.preventDefault();
+        if (!open) {
           setOpen(true);
+          return;
         }
-        break;
-      case "Escape":
-        if (open) {
-          e.preventDefault();
+        if (activeIndex >= 0 && !actionItems[activeIndex]?.disabled) {
+          onSelect(actionItems[activeIndex].key);
           setOpen(false);
         }
         break;
@@ -112,30 +113,30 @@ export function AsciiDropdownMenu({
 
   return (
     <div
-      ref={ref}
+      ref={wrapperRef}
       className={`ascii-lib ascii-dropdown-wrapper ${className ?? ""}`.trim()}
       style={style}
       onKeyDown={handleKeyDown}
     >
-      <button
-        type="button"
+      <AsciiTrigger
+        asChild={asChild}
         className="ascii-dropdown-trigger"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label="Actions menu"
       >
-        [{trigger}]
-      </button>
+        {asChild ? trigger : `[${trigger}]`}
+      </AsciiTrigger>
 
       {open && (
-        <div className="ascii-dropdown-menu" role="menu" tabIndex={-1}>
+        <div ref={menuRef} className="ascii-dropdown-menu" role="menu" tabIndex={-1}>
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
-          {items.map((item, i) => {
+          {items.map((item, index) => {
             if (item.separator) {
               return (
-                <React.Fragment key={`sep-${i}`}>
+                <React.Fragment key={`sep-${index}`}>
                   {b.lm + repeatChar(b.h, inner) + b.rm}
                   {"\n"}
                 </React.Fragment>
@@ -153,6 +154,7 @@ export function AsciiDropdownMenu({
                   className={`ascii-dropdown-item${isActive ? " ascii-dropdown-item-active" : ""}${item.disabled ? " ascii-dropdown-item-disabled" : ""}`}
                   role="menuitem"
                   aria-disabled={item.disabled}
+                  onMouseEnter={() => setActiveIndex(currentActionIdx)}
                   onClick={() => {
                     if (!item.disabled) {
                       onSelect(item.key);

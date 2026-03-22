@@ -25,29 +25,33 @@ export function AsciiResizable({
 }: AsciiResizableProps) {
   const [split, setSplit] = useState(initialSplit);
   const containerRef = useRef<HTMLDivElement>(null);
-  const dragging = useRef(false);
+  const activePointerId = useRef<number | null>(null);
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
       e.preventDefault();
-      dragging.current = true;
+      activePointerId.current = e.pointerId;
+      (e.currentTarget as HTMLDivElement).setPointerCapture?.(e.pointerId);
 
-      const handleMove = (ev: MouseEvent) => {
-        if (!dragging.current || !containerRef.current) return;
+      const handleMove = (ev: PointerEvent) => {
+        if (activePointerId.current !== ev.pointerId || !containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
         const x = ev.clientX - rect.left;
         const pct = Math.max(minLeft, Math.min(100 - minRight, (x / rect.width) * 100));
         setSplit(pct);
       };
 
-      const handleUp = () => {
-        dragging.current = false;
-        document.removeEventListener("mousemove", handleMove);
-        document.removeEventListener("mouseup", handleUp);
+      const handleUp = (ev: PointerEvent) => {
+        if (activePointerId.current !== ev.pointerId) return;
+        activePointerId.current = null;
+        document.removeEventListener("pointermove", handleMove);
+        document.removeEventListener("pointerup", handleUp);
+        document.removeEventListener("pointercancel", handleUp);
       };
 
-      document.addEventListener("mousemove", handleMove);
-      document.addEventListener("mouseup", handleUp);
+      document.addEventListener("pointermove", handleMove);
+      document.addEventListener("pointerup", handleUp);
+      document.addEventListener("pointercancel", handleUp);
     },
     [minLeft, minRight]
   );
@@ -67,7 +71,7 @@ export function AsciiResizable({
       </div>
       <div
         className="ascii-resizable-divider"
-        onMouseDown={handleMouseDown}
+        onPointerDown={handlePointerDown}
         role="separator"
         aria-orientation="vertical"
         aria-valuenow={Math.round(split)}

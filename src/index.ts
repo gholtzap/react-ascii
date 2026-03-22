@@ -120,6 +120,21 @@ export type { AsciiDatePickerProps } from "./components/AsciiDatePicker";
 export { AsciiTerminal } from "./components/AsciiTerminal";
 export type { AsciiTerminalProps } from "./components/AsciiTerminal";
 
+export { AsciiWindow } from "./components/AsciiWindow";
+export type { AsciiWindowProps } from "./components/AsciiWindow";
+
+export { AsciiLogViewer } from "./components/AsciiLogViewer";
+export type { AsciiLogViewerProps, AsciiLogEntry, AsciiLogLevel } from "./components/AsciiLogViewer";
+
+export { AsciiDiff } from "./components/AsciiDiff";
+export type { AsciiDiffProps, AsciiDiffLine, AsciiDiffLineType } from "./components/AsciiDiff";
+
+export { AsciiFileTree } from "./components/AsciiFileTree";
+export type { AsciiFileTreeProps, AsciiFileTreeNode } from "./components/AsciiFileTree";
+
+export { AsciiProcessTable } from "./components/AsciiProcessTable";
+export type { AsciiProcessTableProps, AsciiProcessRow } from "./components/AsciiProcessTable";
+
 export { AsciiKbd } from "./components/AsciiKbd";
 export type { AsciiKbdProps } from "./components/AsciiKbd";
 

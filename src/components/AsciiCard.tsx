@@ -1,10 +1,11 @@
 import React from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import type { BorderStyle } from "../chars";
+import { AsciiSurface } from "../internal/AsciiSurface";
 
 export interface AsciiCardProps {
   title?: string;
-  children?: string;
-  footer?: string;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
   className?: string;
@@ -20,42 +21,18 @@ export function AsciiCard({
   className,
   style,
 }: AsciiCardProps) {
-  const b = borders[border];
-  const inner = width - 2;
-
-  const lines: string[] = [];
-
-  // Top border
-  lines.push(b.tl + repeatChar(b.h, inner) + b.tr);
-
-  // Title
-  if (title) {
-    lines.push(b.v + pad(` ${title}`, inner) + b.v);
-    lines.push(b.lm + repeatChar(b.h, inner) + b.rm);
-  }
-
-  // Body
-  const bodyLines = children ? children.split("\n") : [];
-  if (bodyLines.length > 0) {
-    for (const line of bodyLines) {
-      lines.push(b.v + pad(` ${line}`, inner) + b.v);
-    }
-  } else {
-    lines.push(b.v + " ".repeat(inner) + b.v);
-  }
-
-  // Footer
-  if (footer) {
-    lines.push(b.lm + repeatChar(b.h, inner) + b.rm);
-    lines.push(b.v + pad(` ${footer}`, inner) + b.v);
-  }
-
-  // Bottom border
-  lines.push(b.bl + repeatChar(b.h, inner) + b.br);
-
   return (
-    <div className={`ascii-lib ascii-card ${className ?? ""}`.trim()} style={style}>
-      {lines.join("\n")}
-    </div>
+    <AsciiSurface
+      width={width}
+      border={border}
+      title={title}
+      footer={footer}
+      className={`ascii-card ${className ?? ""}`.trim()}
+      style={style}
+      bodyClassName="ascii-card-body"
+      footerClassName="ascii-card-footer"
+    >
+      {children}
+    </AsciiSurface>
   );
 }

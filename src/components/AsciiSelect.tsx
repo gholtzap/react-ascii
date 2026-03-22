@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useEffect, useId, useRef, useState } from "react";
+import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
+import { useDismissableLayer } from "../internal/useDismissableLayer";
 
 export interface AsciiSelectOption {
   value: string;
@@ -30,79 +32,88 @@ export function AsciiSelect({
   style,
 }: AsciiSelectProps) {
   const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(-1);
   const ref = useRef<HTMLDivElement>(null);
+  const listboxId = useId();
   const b = borders[border];
   const inner = width - 2;
 
-  const selected = options.find((o) => o.value === value);
+  const selected = options.find((option) => option.value === value);
   const displayText = selected ? selected.label : placeholder;
-
-  // Close on outside click — only when open
-  const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setOpen(false);
-    }
-  }, []);
+  const selectedIndex = options.findIndex((option) => option.value === value);
+  const {
+    activeIndex,
+    setActiveIndex,
+    activeItem,
+    moveNext,
+    movePrev,
+    moveFirst,
+    moveLast,
+    reset,
+  } = useAsciiListNavigation({
+    items: options,
+    loop: true,
+    initialIndex: selectedIndex >= 0 ? selectedIndex : 0,
+  });
 
   useEffect(() => {
     if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      reset(selectedIndex >= 0 ? selectedIndex : 0);
     }
-  }, [open, handleClickOutside]);
+  }, [open, reset, selectedIndex]);
 
-  // Set initial active index when opening
-  useEffect(() => {
-    if (open) {
-      const selectedIdx = options.findIndex((o) => o.value === value);
-      setActiveIndex(selectedIdx >= 0 ? selectedIdx : 0);
-    }
-  }, [open, options, value]);
+  useDismissableLayer({
+    open,
+    onDismiss: () => setOpen(false),
+    refs: [ref],
+  });
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (disabled) return;
 
-    switch (e.key) {
+    switch (event.key) {
       case "ArrowDown":
-        e.preventDefault();
+        event.preventDefault();
         if (!open) {
           setOpen(true);
-        } else {
-          setActiveIndex((i) => Math.min(i + 1, options.length - 1));
+          return;
         }
+        moveNext();
         break;
       case "ArrowUp":
-        e.preventDefault();
-        if (open) {
-          setActiveIndex((i) => Math.max(i - 1, 0));
+        event.preventDefault();
+        if (!open) {
+          setOpen(true);
+          return;
         }
+        movePrev();
         break;
       case "Home":
         if (open) {
-          e.preventDefault();
-          setActiveIndex(0);
+          event.preventDefault();
+          moveFirst();
         }
         break;
       case "End":
         if (open) {
-          e.preventDefault();
-          setActiveIndex(options.length - 1);
+          event.preventDefault();
+          moveLast();
         }
         break;
       case "Enter":
       case " ":
-        e.preventDefault();
-        if (open && activeIndex >= 0) {
-          onChange?.(options[activeIndex].value);
-          setOpen(false);
-        } else {
+        event.preventDefault();
+        if (!open) {
           setOpen(true);
+          return;
+        }
+        if (activeItem) {
+          onChange?.(activeItem.value);
+          setOpen(false);
         }
         break;
       case "Escape":
         if (open) {
-          e.preventDefault();
+          event.preventDefault();
           setOpen(false);
         }
         break;
@@ -110,8 +121,8 @@ export function AsciiSelect({
   };
 
   const arrow = open ? "^" : "v";
-  const triggerLine =
-    b.v + pad(` ${displayText}`, inner - 2) + ` ${arrow} ` + b.v;
+  const triggerLine = b.v + pad(` ${displayText}`, inner - 2) + ` ${arrow} ` + b.v;
+  const activeId = open && activeIndex >= 0 ? `${listboxId}-${activeIndex}` : undefined;
 
   return (
     <div
@@ -123,10 +134,11 @@ export function AsciiSelect({
       <button
         type="button"
         className="ascii-select-trigger"
-        onClick={() => !disabled && setOpen((o) => !o)}
+        onClick={() => !disabled && setOpen((current) => !current)}
         disabled={disabled}
         aria-expanded={open}
         aria-haspopup="listbox"
+        aria-controls={open ? listboxId : undefined}
       >
         {b.tl + repeatChar(b.h, inner) + b.tr}
         {"\n"}
@@ -136,21 +148,30 @@ export function AsciiSelect({
       </button>
 
       {open && (
-        <div className="ascii-select-dropdown" role="listbox" tabIndex={-1}>
+        <div
+          id={listboxId}
+          className="ascii-select-dropdown"
+          role="listbox"
+          tabIndex={-1}
+          aria-activedescendant={activeId}
+        >
           {b.tl + repeatChar(b.h, inner) + b.tr}
           {"\n"}
-          {options.map((opt, i) => {
-            const marker = opt.value === value ? ">" : " ";
-            const line = b.v + pad(`${marker} ${opt.label}`, inner) + b.v;
-            const isActive = i === activeIndex;
+          {options.map((option, index) => {
+            const marker = option.value === value ? ">" : " ";
+            const line = b.v + pad(`${marker} ${option.label}`, inner) + b.v;
+            const isActive = index === activeIndex;
+
             return (
-              <React.Fragment key={opt.value}>
+              <React.Fragment key={option.value}>
                 <div
+                  id={`${listboxId}-${index}`}
                   className={`ascii-select-option${isActive ? " ascii-select-option-active" : ""}`}
                   role="option"
-                  aria-selected={opt.value === value}
+                  aria-selected={option.value === value}
+                  onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => {
-                    onChange?.(opt.value);
+                    onChange?.(option.value);
                     setOpen(false);
                   }}
                 >

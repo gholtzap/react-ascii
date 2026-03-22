@@ -11,6 +11,7 @@
 /* ── Shared container ────────────────────────── */
 
 .ascii-box,
+.ascii-surface,
 .ascii-input-wrapper,
 .ascii-textarea-wrapper,
 .ascii-select-wrapper,
@@ -36,6 +37,7 @@
 }
 
 .ascii-box,
+.ascii-surface,
 .ascii-input-wrapper,
 .ascii-textarea-wrapper,
 .ascii-select-wrapper,
@@ -53,6 +55,7 @@
 }
 
 .ascii-box,
+.ascii-surface,
 .ascii-input-wrapper,
 .ascii-textarea-wrapper,
 .ascii-table,
@@ -71,6 +74,34 @@
 .ascii-textarea-wrapper,
 .ascii-select-wrapper {
   position: relative;
+}
+
+.ascii-surface {
+  position: relative;
+  white-space: normal;
+}
+
+.ascii-surface-shell {
+  display: block;
+  white-space: pre;
+}
+
+.ascii-surface-body,
+.ascii-surface-footer {
+  position: absolute;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ascii-surface-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ascii-surface-footer {
+  display: flex;
+  align-items: center;
 }
 
 /* ── Shared interactive reset ────────────────── */
@@ -303,10 +334,9 @@
 }
 
 .ascii-modal {
-  white-space: pre;
   position: relative;
   max-width: 100%;
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .ascii-modal-close {
@@ -751,9 +781,8 @@
 }
 
 .ascii-sheet {
-  white-space: pre;
   position: relative;
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .ascii-sheet-right {
@@ -791,15 +820,11 @@
 /* ── Alert Dialog ──────────────────────── */
 
 .ascii-alertdialog {
-  white-space: pre;
   position: relative;
   max-width: 100%;
 }
 
 .ascii-alertdialog-actions {
-  position: absolute;
-  bottom: 1lh;
-  left: 2ch;
   display: flex;
   gap: 1ch;
 }
@@ -1085,9 +1110,8 @@
 }
 
 .ascii-drawer {
-  white-space: pre;
   position: relative;
-  overflow-x: auto;
+  overflow: auto;
 }
 
 .ascii-drawer-right {
@@ -1424,6 +1448,118 @@
   left: 0;
   white-space: pre;
   z-index: 10000;
+}
+
+.ascii-card-body,
+.ascii-modal-body,
+.ascii-drawer-body,
+.ascii-sheet-body {
+  align-items: flex-start;
+}
+
+.ascii-card-footer,
+.ascii-window-footer,
+.ascii-alertdialog-footer {
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ascii-aspect-ratio-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ascii-window-body {
+  align-items: flex-start;
+}
+
+.ascii-logviewer-list,
+.ascii-diff-list,
+.ascii-filetree-list,
+.ascii-processtable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ascii-logviewer-line,
+.ascii-diff-line,
+.ascii-filetree-line,
+.ascii-processtable-header,
+.ascii-processtable-row {
+  white-space: pre;
+}
+
+.ascii-logviewer-list {
+  gap: 0.15rem;
+}
+
+.ascii-logviewer-level {
+  display: inline-block;
+  width: 5ch;
+}
+
+.ascii-logviewer-time {
+  display: inline-block;
+  width: 7ch;
+  opacity: 0.65;
+}
+
+.ascii-logviewer-source {
+  display: inline-block;
+  opacity: 0.7;
+}
+
+.ascii-logviewer-debug {
+  opacity: 0.75;
+}
+
+.ascii-logviewer-warn,
+.ascii-diff-remove {
+  filter: brightness(1.15);
+}
+
+.ascii-logviewer-error {
+  font-weight: 600;
+}
+
+.ascii-logviewer-success,
+.ascii-diff-add,
+.ascii-filetree-selected {
+  filter: brightness(1.25);
+}
+
+.ascii-diff-line {
+  display: flex;
+  gap: 1ch;
+}
+
+.ascii-diff-lineno {
+  display: inline-block;
+  width: 3ch;
+  opacity: 0.65;
+}
+
+.ascii-diff-marker {
+  display: inline-block;
+  width: 1ch;
+}
+
+.ascii-filetree-line {
+  display: block;
+}
+
+.ascii-processtable-header,
+.ascii-processtable-row {
+  display: grid;
+  grid-template-columns: 5ch 18ch 6ch 8ch 8ch 8ch;
+  column-gap: 1ch;
+}
+
+.ascii-processtable-header {
+  font-weight: 600;
 }
 
 .ascii-popover-top {

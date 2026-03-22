@@ -72,6 +72,7 @@ import {
   AsciiPagination,
 } from "ascii-lib";
 import "./App.css";
+import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
 
 const BANNER = `
     ___   _____ ______________   __    ________
@@ -590,6 +591,8 @@ LOG_LEVEL=info`,
           </div>
         </div>
       </div>
+
+      <DashboardFeatureShowcases />
 
       <div className="dash-kbd-hints">
         <span className="dim">Shortcuts:</span>
@@ -2105,6 +2108,8 @@ image: app:v2.4.1`}
         </div>
       </div>
 
+      <ComponentFeatureShowcases />
+
       <AsciiDivider width={80} border="double" className="divider-full" />
     </div>
   );
@@ -2154,7 +2159,7 @@ function App() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 71 components        │
+  │  5 border styles / 76 components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
         </pre>

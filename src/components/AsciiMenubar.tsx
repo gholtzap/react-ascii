@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useEffect, useRef, useState } from "react";
+import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
+import { useDismissableLayer } from "../internal/useDismissableLayer";
 
 export interface AsciiMenubarMenuItem {
   key: string;
@@ -30,67 +32,69 @@ export function AsciiMenubar({
   style,
 }: AsciiMenubarProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [activeItem, setActiveItem] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const b = borders[border];
 
-  const handleClickOutside = useCallback((e: MouseEvent) => {
-    if (ref.current && !ref.current.contains(e.target as Node)) {
-      setOpenMenu(null);
-    }
-  }, []);
+  useDismissableLayer({
+    open: Boolean(openMenu),
+    onDismiss: () => setOpenMenu(null),
+    refs: [ref],
+  });
+
+  const currentMenuIndex = menus.findIndex((menu) => menu.key === openMenu);
+  const currentMenu = currentMenuIndex >= 0 ? menus[currentMenuIndex] : undefined;
+  const actionItems = currentMenu?.items.filter((item) => !item.separator) ?? [];
+  const {
+    activeIndex,
+    setActiveIndex,
+    moveNext,
+    movePrev,
+    reset,
+  } = useAsciiListNavigation({
+    items: actionItems,
+    isDisabled: (item) => Boolean(item.disabled),
+    loop: true,
+  });
 
   useEffect(() => {
-    if (openMenu) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
-    }
-  }, [openMenu, handleClickOutside]);
+    if (openMenu) reset(0);
+  }, [openMenu, reset]);
 
-  useEffect(() => {
-    if (openMenu) setActiveItem(0);
-  }, [openMenu]);
-
-  const currentMenu = menus.find((m) => m.key === openMenu);
-  const actionItems = currentMenu?.items.filter((i) => !i.separator) ?? [];
   const dropdownWidth = currentMenu
-    ? Math.max(...currentMenu.items.map((i) => (i.separator ? 0 : i.label.length))) + 6
+    ? Math.max(...currentMenu.items.map((item) => (item.separator ? 0 : item.label.length)), 0) + 6
     : 0;
   const inner = dropdownWidth - 2;
 
-  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+  const handleMenuKeyDown = (event: React.KeyboardEvent) => {
     if (!openMenu || !currentMenu) return;
-    switch (e.key) {
+
+    switch (event.key) {
       case "ArrowDown":
-        e.preventDefault();
-        setActiveItem((i) => Math.min(i + 1, actionItems.length - 1));
+        event.preventDefault();
+        moveNext();
         break;
       case "ArrowUp":
-        e.preventDefault();
-        setActiveItem((i) => Math.max(i - 1, 0));
+        event.preventDefault();
+        movePrev();
         break;
-      case "ArrowRight": {
-        e.preventDefault();
-        const idx = menus.findIndex((m) => m.key === openMenu);
-        if (idx < menus.length - 1) setOpenMenu(menus[idx + 1].key);
+      case "ArrowRight":
+        event.preventDefault();
+        setOpenMenu(menus[(currentMenuIndex + 1) % menus.length]?.key ?? null);
         break;
-      }
-      case "ArrowLeft": {
-        e.preventDefault();
-        const idx = menus.findIndex((m) => m.key === openMenu);
-        if (idx > 0) setOpenMenu(menus[idx - 1].key);
+      case "ArrowLeft":
+        event.preventDefault();
+        setOpenMenu(menus[(currentMenuIndex - 1 + menus.length) % menus.length]?.key ?? null);
         break;
-      }
       case "Enter":
       case " ":
-        e.preventDefault();
-        if (activeItem >= 0 && !actionItems[activeItem]?.disabled) {
-          onSelect(openMenu, actionItems[activeItem].key);
+        event.preventDefault();
+        if (activeIndex >= 0 && !actionItems[activeIndex]?.disabled) {
+          onSelect(openMenu, actionItems[activeIndex].key);
           setOpenMenu(null);
         }
         break;
       case "Escape":
-        e.preventDefault();
+        event.preventDefault();
         setOpenMenu(null);
         break;
     }
@@ -113,54 +117,56 @@ export function AsciiMenubar({
               type="button"
               className={`ascii-menubar-trigger${openMenu === menu.key ? " ascii-menubar-trigger-active" : ""}`}
               onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
-              onMouseEnter={() => { if (openMenu) setOpenMenu(menu.key); }}
+              onMouseEnter={() => {
+                if (openMenu) setOpenMenu(menu.key);
+              }}
               aria-expanded={openMenu === menu.key}
               aria-haspopup="menu"
             >
               {` ${menu.label} `}
             </button>
-            {openMenu === menu.key && currentMenu && (() => {
-              actionIdx = 0;
-              return (
-                <div className="ascii-menubar-dropdown" role="menu">
-                  {b.tl + repeatChar(b.h, inner) + b.tr}
-                  {"\n"}
-                  {currentMenu.items.map((item, i) => {
-                    if (item.separator) {
-                      return (
-                        <React.Fragment key={`sep-${i}`}>
-                          {b.lm + repeatChar(b.h, inner) + b.rm}
-                          {"\n"}
-                        </React.Fragment>
-                      );
-                    }
-                    const curIdx = actionIdx++;
-                    const isActive = curIdx === activeItem;
-                    const marker = isActive ? ">" : " ";
-                    const line = b.v + pad(`${marker} ${item.label}`, inner) + b.v;
+            {openMenu === menu.key && currentMenu && (
+              <div className="ascii-menubar-dropdown" role="menu">
+                {b.tl + repeatChar(b.h, inner) + b.tr}
+                {"\n"}
+                {currentMenu.items.map((item, index) => {
+                  if (item.separator) {
                     return (
-                      <React.Fragment key={item.key}>
-                        <div
-                          className={`ascii-menubar-item${isActive ? " ascii-menubar-item-active" : ""}${item.disabled ? " ascii-menubar-item-disabled" : ""}`}
-                          role="menuitem"
-                          aria-disabled={item.disabled}
-                          onClick={() => {
-                            if (!item.disabled) {
-                              onSelect(menu.key, item.key);
-                              setOpenMenu(null);
-                            }
-                          }}
-                        >
-                          {line}
-                        </div>
+                      <React.Fragment key={`sep-${index}`}>
+                        {b.lm + repeatChar(b.h, inner) + b.rm}
                         {"\n"}
                       </React.Fragment>
                     );
-                  })}
-                  {b.bl + repeatChar(b.h, inner) + b.br}
-                </div>
-              );
-            })()}
+                  }
+
+                  const currentActionIdx = actionIdx++;
+                  const isActive = currentActionIdx === activeIndex;
+                  const marker = isActive ? ">" : " ";
+                  const line = b.v + pad(`${marker} ${item.label}`, inner) + b.v;
+
+                  return (
+                    <React.Fragment key={item.key}>
+                      <div
+                        className={`ascii-menubar-item${isActive ? " ascii-menubar-item-active" : ""}${item.disabled ? " ascii-menubar-item-disabled" : ""}`}
+                        role="menuitem"
+                        aria-disabled={item.disabled}
+                        onMouseEnter={() => setActiveIndex(currentActionIdx)}
+                        onClick={() => {
+                          if (!item.disabled) {
+                            onSelect(menu.key, item.key);
+                            setOpenMenu(null);
+                          }
+                        }}
+                      >
+                        {line}
+                      </div>
+                      {"\n"}
+                    </React.Fragment>
+                  );
+                })}
+                {b.bl + repeatChar(b.h, inner) + b.br}
+              </div>
+            )}
           </span>
         ))}
       </div>

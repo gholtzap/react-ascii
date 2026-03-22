@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef, useId } from "react";
-import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import React, { useEffect, useId, useRef, useState } from "react";
+import { borders, pad, repeatChar, type BorderStyle } from "../chars";
+import { AsciiPortal } from "../internal/AsciiPortal";
+import { useAsciiListNavigation } from "../internal/useAsciiListNavigation";
+import { useAsciiOverlay } from "../internal/useAsciiOverlay";
 
 export interface AsciiCommandItem {
   key: string;
@@ -34,70 +37,56 @@ export function AsciiCommandPalette({
   style,
 }: AsciiCommandPaletteProps) {
   const [query, setQuery] = useState("");
-  const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const previousFocusRef = useRef<HTMLElement | null>(null);
-  const inputId = useId();
+  const contentRef = useRef<HTMLDivElement>(null);
+  const listboxId = useId();
 
   const filtered = items.filter((item) =>
     item.label.toLowerCase().includes(query.toLowerCase())
   );
 
   const visible = filtered.slice(0, maxVisible);
+  const {
+    activeIndex,
+    activeItem,
+    moveNext,
+    movePrev,
+    reset,
+  } = useAsciiListNavigation({
+    items: visible,
+    loop: true,
+  });
+
+  useAsciiOverlay({
+    open,
+    onClose,
+    contentRef,
+    initialFocusRef: inputRef,
+  });
 
   useEffect(() => {
-    setActiveIndex(0);
-  }, [query]);
-
-  useEffect(() => {
-    if (open) {
-      previousFocusRef.current = document.activeElement as HTMLElement;
-      setQuery("");
-      setActiveIndex(0);
-      requestAnimationFrame(() => inputRef.current?.focus());
-    } else {
-      if (previousFocusRef.current) {
-        previousFocusRef.current.focus();
-        previousFocusRef.current = null;
-      }
-    }
+    if (!open) return;
+    setQuery("");
   }, [open]);
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (!open) return;
-      switch (e.key) {
-        case "Escape":
-          e.preventDefault();
-          onClose();
-          break;
-      }
-    },
-    [open, onClose]
-  );
-
   useEffect(() => {
-    if (open) {
-      document.addEventListener("keydown", handleKeyDown);
-      return () => document.removeEventListener("keydown", handleKeyDown);
-    }
-  }, [open, handleKeyDown]);
+    reset(0);
+  }, [query, reset]);
 
-  const handleInputKeyDown = (e: React.KeyboardEvent) => {
-    switch (e.key) {
+  const handleInputKeyDown = (event: React.KeyboardEvent) => {
+    switch (event.key) {
       case "ArrowDown":
-        e.preventDefault();
-        setActiveIndex((i) => Math.min(i + 1, visible.length - 1));
+        event.preventDefault();
+        moveNext();
         break;
       case "ArrowUp":
-        e.preventDefault();
-        setActiveIndex((i) => Math.max(i - 1, 0));
+        event.preventDefault();
+        movePrev();
         break;
       case "Enter":
-        e.preventDefault();
-        if (visible[activeIndex]) {
-          onSelect(visible[activeIndex].key);
+        event.preventDefault();
+        if (activeItem) {
+          onSelect(activeItem.key);
           onClose();
         }
         break;
@@ -108,84 +97,95 @@ export function AsciiCommandPalette({
 
   const b = borders[border];
   const inner = width - 2;
-
+  const activeId = activeIndex >= 0 ? `${listboxId}-${activeIndex}` : undefined;
   const topLine = b.tl + repeatChar(b.h, inner) + b.tr;
   const sepLine = b.lm + repeatChar(b.h, inner) + b.rm;
   const botLine = b.bl + repeatChar(b.h, inner) + b.br;
 
   return (
-    <div
-      ref={overlayRef}
-      className="ascii-lib ascii-cmdpalette-overlay"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Command palette"
-    >
-      <div className={`ascii-cmdpalette ${className ?? ""}`.trim()} style={style}>
-        {topLine}
-        {"\n"}
-        {b.v + " "}
-        <input
-          ref={inputRef}
-          id={inputId}
-          type="text"
-          className="ascii-cmdpalette-input"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={handleInputKeyDown}
-          placeholder={placeholder}
-          role="combobox"
-          aria-expanded={true}
-          aria-autocomplete="list"
-          style={{ width: `${inner - 2}ch` }}
-        />
-        {" " + b.v}
-        {"\n"}
-        {sepLine}
-        {"\n"}
-        {visible.length === 0 ? (
-          <>
-            {b.v + pad("  No results", inner) + b.v}
-            {"\n"}
-          </>
-        ) : (
-          visible.map((item, i) => {
-            const isActive = i === activeIndex;
-            const marker = isActive ? ">" : " ";
-            const shortcut = item.shortcut ? `  ${item.shortcut}` : "";
-            const labelSpace = inner - 2 - shortcut.length;
-            const label = item.label.length > labelSpace
-              ? item.label.slice(0, labelSpace - 1) + "…"
-              : item.label;
-            const line =
-              b.v +
-              pad(`${marker} ${label}`, inner - shortcut.length) +
-              shortcut +
-              b.v;
-
-            return (
-              <React.Fragment key={item.key}>
-                <div
-                  className={`ascii-cmdpalette-item${isActive ? " ascii-cmdpalette-item-active" : ""}`}
-                  role="option"
-                  aria-selected={isActive}
-                  onClick={() => {
-                    onSelect(item.key);
-                    onClose();
-                  }}
-                >
-                  {line}
-                </div>
+    <AsciiPortal>
+      <div
+        className="ascii-lib ascii-cmdpalette-overlay"
+        onClick={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
+        <div
+          ref={contentRef}
+          className={`ascii-cmdpalette ${className ?? ""}`.trim()}
+          style={style}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Command palette"
+          tabIndex={-1}
+        >
+          {topLine}
+          {"\n"}
+          {b.v + " "}
+          <input
+            ref={inputRef}
+            type="text"
+            className="ascii-cmdpalette-input"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={handleInputKeyDown}
+            placeholder={placeholder}
+            role="combobox"
+            aria-expanded={true}
+            aria-autocomplete="list"
+            aria-controls={listboxId}
+            aria-activedescendant={activeId}
+            style={{ width: `${inner - 2}ch` }}
+          />
+          {" " + b.v}
+          {"\n"}
+          {sepLine}
+          {"\n"}
+          <div id={listboxId} role="listbox">
+            {visible.length === 0 ? (
+              <>
+                {b.v + pad("  No results", inner) + b.v}
                 {"\n"}
-              </React.Fragment>
-            );
-          })
-        )}
-        {botLine}
+              </>
+            ) : (
+              visible.map((item, index) => {
+                const isActive = index === activeIndex;
+                const marker = isActive ? ">" : " ";
+                const shortcut = item.shortcut ? `  ${item.shortcut}` : "";
+                const labelSpace = inner - 2 - shortcut.length;
+                const label = item.label.length > labelSpace
+                  ? item.label.slice(0, labelSpace - 1) + "…"
+                  : item.label;
+                const line =
+                  b.v +
+                  pad(`${marker} ${label}`, inner - shortcut.length) +
+                  shortcut +
+                  b.v;
+
+                return (
+                  <React.Fragment key={item.key}>
+                    <div
+                      id={`${listboxId}-${index}`}
+                      className={`ascii-cmdpalette-item${isActive ? " ascii-cmdpalette-item-active" : ""}`}
+                      role="option"
+                      aria-selected={isActive}
+                      onMouseEnter={() => reset(index)}
+                      onClick={() => {
+                        onSelect(item.key);
+                        onClose();
+                      }}
+                    >
+                      {line}
+                    </div>
+                    {"\n"}
+                  </React.Fragment>
+                );
+              })
+            )}
+          </div>
+          {botLine}
+        </div>
       </div>
-    </div>
+    </AsciiPortal>
   );
 }

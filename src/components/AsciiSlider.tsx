@@ -29,7 +29,7 @@ export function AsciiSlider({
 }: AsciiSliderProps) {
   const id = useId();
   const trackRef = useRef<HTMLSpanElement>(null);
-  const dragging = useRef(false);
+  const activePointerId = useRef<number | null>(null);
 
   const range = max - min || 1;
   const ratio = Math.max(0, Math.min(1, (value - min) / range));
@@ -66,23 +66,29 @@ export function AsciiSlider({
     [trackWidth, range, min, onChange, clamp, disabled]
   );
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
       if (disabled) return;
       e.preventDefault();
-      dragging.current = true;
+      activePointerId.current = e.pointerId;
+      trackRef.current?.setPointerCapture?.(e.pointerId);
       updateFromX(e.clientX);
 
-      const handleMove = (ev: MouseEvent) => {
-        if (dragging.current) updateFromX(ev.clientX);
+      const handleMove = (ev: PointerEvent) => {
+        if (activePointerId.current === ev.pointerId) {
+          updateFromX(ev.clientX);
+        }
       };
-      const handleUp = () => {
-        dragging.current = false;
-        document.removeEventListener("mousemove", handleMove);
-        document.removeEventListener("mouseup", handleUp);
+      const handleUp = (ev: PointerEvent) => {
+        if (activePointerId.current !== ev.pointerId) return;
+        activePointerId.current = null;
+        document.removeEventListener("pointermove", handleMove);
+        document.removeEventListener("pointerup", handleUp);
+        document.removeEventListener("pointercancel", handleUp);
       };
-      document.addEventListener("mousemove", handleMove);
-      document.addEventListener("mouseup", handleUp);
+      document.addEventListener("pointermove", handleMove);
+      document.addEventListener("pointerup", handleUp);
+      document.addEventListener("pointercancel", handleUp);
     },
     [disabled, updateFromX]
   );
@@ -132,7 +138,7 @@ export function AsciiSlider({
         aria-label={label}
         aria-disabled={disabled}
         tabIndex={disabled ? -1 : 0}
-        onMouseDown={handleMouseDown}
+        onPointerDown={handlePointerDown}
         onKeyDown={handleKeyDown}
       >
         {track}

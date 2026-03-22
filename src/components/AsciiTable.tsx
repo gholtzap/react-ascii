@@ -71,11 +71,9 @@ export function AsciiTable({
   lines.push(makeRow(cols.map(() => ""), b.bl, b.bm, b.br, b.h));
 
   return (
-    <div className={`ascii-lib ascii-table ${className ?? ""}`.trim()} style={style} role="table" aria-label={ariaLabel}>
-      {/* Visual ASCII rendering */}
+    <div className={`ascii-lib ascii-table ${className ?? ""}`.trim()} style={style}>
       <span aria-hidden="true">{lines.join("\n")}</span>
-      {/* Accessible table structure for screen readers */}
-      <table className="ascii-sr-only" role="table">
+      <table className="ascii-sr-only" aria-label={ariaLabel}>
         <thead>
           <tr>
             {cols.map((c) => (
