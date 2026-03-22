@@ -94,6 +94,7 @@ function Dashboard() {
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [dashNav, setDashNav] = useState("overview");
   const [viewMode, setViewMode] = useState("expanded");
+  const [endpointPage, setEndpointPage] = useState(1);
   const sonner = useAsciiSonner();
 
   useEffect(() => {
@@ -112,6 +113,53 @@ function Dashboard() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
+
+  const envServices: Record<string, Array<{name: string; status: string; cpu: string; mem: string; pods: string}>> = {
+    production: [
+      { name: "api-gateway", status: "\u25CF healthy", cpu: "12%", mem: "256M", pods: "3/3" },
+      { name: "auth-service", status: "\u25CF healthy", cpu: "8%", mem: "128M", pods: "2/2" },
+      { name: "web-frontend", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "4/4" },
+      { name: "worker-queue", status: "\u25D0 scaling", cpu: "78%", mem: "512M", pods: "2/5" },
+      { name: "postgres-main", status: "\u25CF healthy", cpu: "22%", mem: "2.1G", pods: "1/1" },
+      { name: "redis-cache", status: "\u25CF healthy", cpu: "1%", mem: "48M", pods: "3/3" },
+    ],
+    staging: [
+      { name: "api-gateway", status: "\u25CF healthy", cpu: "5%", mem: "128M", pods: "1/1" },
+      { name: "auth-service", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "1/1" },
+      { name: "web-frontend", status: "\u25D0 starting", cpu: "1%", mem: "32M", pods: "1/2" },
+      { name: "worker-queue", status: "\u25CF healthy", cpu: "12%", mem: "128M", pods: "1/1" },
+    ],
+    development: [
+      { name: "api-gateway", status: "\u25CF running", cpu: "2%", mem: "64M", pods: "1/1" },
+      { name: "web-frontend", status: "\u25CF running", cpu: "1%", mem: "32M", pods: "1/1" },
+      { name: "postgres-dev", status: "\u25CF running", cpu: "4%", mem: "256M", pods: "1/1" },
+    ],
+  };
+
+  const envStats: Record<string, {requests: string; latency: string; errorRate: string; users: string; reqTrend: number; latTrend: number; errTrend: number; userTrend: number}> = {
+    production: { requests: "12,847", latency: "34ms", errorRate: "0.02%", users: "3,291", reqTrend: 4.2, latTrend: -12, errTrend: 0, userTrend: 18 },
+    staging: { requests: "1,204", latency: "52ms", errorRate: "0.15%", users: "84", reqTrend: 1.5, latTrend: 8, errTrend: 0.1, userTrend: -5 },
+    development: { requests: "47", latency: "120ms", errorRate: "2.4%", users: "3", reqTrend: 0, latTrend: 15, errTrend: 1.2, userTrend: 0 },
+  };
+
+  const currentServices = (envServices[envSelect] || envServices.production).filter(r => !searchVal || r.name.includes(searchVal));
+  const stats = envStats[envSelect] || envStats.production;
+
+  const allEndpoints = [
+    { route: "/api/health", p99: "2ms", rps: "840" },
+    { route: "/api/auth/*", p99: "48ms", rps: "320" },
+    { route: "/api/users/*", p99: "31ms", rps: "580" },
+    { route: "/api/deploy", p99: "1.2s", rps: "12" },
+    { route: "/api/metrics", p99: "8ms", rps: "200" },
+    { route: "/api/status", p99: "3ms", rps: "150" },
+    { route: "/api/config", p99: "12ms", rps: "45" },
+    { route: "/api/webhooks", p99: "84ms", rps: "90" },
+    { route: "/api/sessions", p99: "22ms", rps: "180" },
+    { route: "/api/events", p99: "15ms", rps: "260" },
+  ];
+  const endpointsPerPage = 3;
+  const totalEndpointPages = Math.ceil(allEndpoints.length / endpointsPerPage);
+  const pagedEndpoints = allEndpoints.slice((endpointPage - 1) * endpointsPerPage, endpointPage * endpointsPerPage);
 
   return (
     <div className="dashboard">
@@ -171,7 +219,7 @@ function Dashboard() {
           items={[
             { label: "Home" },
             { label: "Infrastructure" },
-            { label: "Production" },
+            { label: envSelect.charAt(0).toUpperCase() + envSelect.slice(1) },
           ]}
           separator=" / "
         />
@@ -217,12 +265,6 @@ function Dashboard() {
           value={envSelect}
           onChange={setEnvSelect}
         />
-        <AsciiInput
-          width={32}
-          placeholder="search services..."
-          value={searchVal}
-          onChange={(e) => setSearchVal(e.target.value)}
-        />
         <AsciiSwitch checked={autoRefresh} onChange={setAutoRefresh} label="auto-refresh" />
         <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} />
         <AsciiButtonGroup
@@ -245,37 +287,35 @@ function Dashboard() {
 
       <div className="dash-stats">
         <div className="green">
-          <AsciiStat label="Requests / min" value="12,847" trend={4.2} trendLabel="from last hour" width={28} />
-          <AsciiSparkline data={[40, 42, 38, 45, 50, 48, 52, 58, 55, 60, 62, 65]} aria-label="Request trend" />
+          <AsciiStat label="Requests / min" value={stats.requests} trend={stats.reqTrend} trendLabel="from last hour" width={28} sparkline={viewMode === "expanded" ? [40, 42, 38, 45, 50, 48, 52, 58, 55, 60, 62, 65] : undefined} />
         </div>
         <div className="blue">
-          <AsciiStat label="Avg Latency" value="34ms" trend={-12} trendLabel="from last hour" width={28} />
-          <AsciiSparkline data={[48, 45, 42, 38, 35, 36, 34, 33, 35, 34, 33, 34]} aria-label="Latency trend" />
+          <AsciiStat label="Avg Latency" value={stats.latency} trend={stats.latTrend} trendLabel="from last hour" width={28} sparkline={viewMode === "expanded" ? [48, 45, 42, 38, 35, 36, 34, 33, 35, 34, 33, 34] : undefined} />
         </div>
         <div className="green">
-          <AsciiStat label="Error Rate" value="0.02%" trend={0} trendLabel="stable" width={28} />
-          <AsciiSparkline data={[2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 2]} aria-label="Error rate trend" />
+          <AsciiStat label="Error Rate" value={stats.errorRate} trend={stats.errTrend} trendLabel="stable" width={28} sparkline={viewMode === "expanded" ? [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 2] : undefined} />
         </div>
         <div className="accent2">
-          <AsciiStat label="Active Users" value="3,291" trend={18} trendLabel="from yesterday" width={28} />
-          <AsciiSparkline data={[20, 22, 24, 25, 28, 30, 29, 31, 32, 30, 33, 33]} aria-label="User trend" />
+          <AsciiStat label="Active Users" value={stats.users} trend={stats.userTrend} trendLabel="from yesterday" width={28} sparkline={viewMode === "expanded" ? [20, 22, 24, 25, 28, 30, 29, 31, 32, 30, 33, 33] : undefined} />
         </div>
       </div>
 
-      <div className="dash-gauges">
-        <div className="green">
-          <AsciiGauge value={23} label="CPU" width={24} />
+      {viewMode === "expanded" && (
+        <div className="dash-gauges">
+          <div className="green">
+            <AsciiGauge value={23} label="CPU" width={24} />
+          </div>
+          <div className="blue">
+            <AsciiGauge value={67} label="Memory" width={24} border="double" />
+          </div>
+          <div className="warning">
+            <AsciiGauge value={87} label="web-02 MEM" width={24} border="bold" />
+          </div>
+          <div className="green">
+            <AsciiGauge value={42} label="Disk" width={24} />
+          </div>
         </div>
-        <div className="blue">
-          <AsciiGauge value={67} label="Memory" width={24} border="double" />
-        </div>
-        <div className="warning">
-          <AsciiGauge value={87} label="web-02 MEM" width={24} border="bold" />
-        </div>
-        <div className="green">
-          <AsciiGauge value={42} label="Disk" width={24} />
-        </div>
-      </div>
+      )}
 
       <div className="dash-deploy-section">
         <AsciiDivider width={72} border="single" label="DEPLOYMENT v2.5.0-rc.3" />
@@ -307,7 +347,15 @@ function Dashboard() {
 
       <div className="dash-grid">
         <div>
-          <h3 className="dash-section-title">Services</h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.5rem" }}>
+            <h3 className="dash-section-title" style={{ marginBottom: 0 }}>Services</h3>
+            <AsciiInput
+              width={24}
+              placeholder="search..."
+              value={searchVal}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchVal(e.target.value)}
+            />
+          </div>
           <div className="green">
             <AsciiTable
               columns={[
@@ -317,14 +365,7 @@ function Dashboard() {
                 { key: "mem", header: "MEM", width: 7, align: "right" },
                 { key: "pods", header: "PODS", width: 6, align: "right" },
               ]}
-              data={[
-                { name: "api-gateway", status: "● healthy", cpu: "12%", mem: "256M", pods: "3/3" },
-                { name: "auth-service", status: "● healthy", cpu: "8%", mem: "128M", pods: "2/2" },
-                { name: "web-frontend", status: "● healthy", cpu: "3%", mem: "64M", pods: "4/4" },
-                { name: "worker-queue", status: "◐ scaling", cpu: "78%", mem: "512M", pods: "2/5" },
-                { name: "postgres-main", status: "● healthy", cpu: "22%", mem: "2.1G", pods: "1/1" },
-                { name: "redis-cache", status: "● healthy", cpu: "1%", mem: "48M", pods: "3/3" },
-              ].filter(r => !searchVal || r.name.includes(searchVal))}
+              data={currentServices}
             />
           </div>
           <div style={{ marginTop: "0.5rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
@@ -491,17 +532,11 @@ function Dashboard() {
                 { key: "p99", header: "P99", width: 8, align: "right" },
                 { key: "rps", header: "RPS", width: 8, align: "right" },
               ]}
-              data={[
-                { route: "/api/health", p99: "2ms", rps: "840" },
-                { route: "/api/auth/*", p99: "48ms", rps: "320" },
-                { route: "/api/users/*", p99: "31ms", rps: "580" },
-                { route: "/api/deploy", p99: "1.2s", rps: "12" },
-                { route: "/api/metrics", p99: "8ms", rps: "200" },
-              ]}
+              data={pagedEndpoints}
             />
           </div>
           <div style={{ marginTop: "0.5rem" }}>
-            <AsciiPagination page={1} totalPages={4} onPageChange={() => {}} />
+            <AsciiPagination page={endpointPage} totalPages={totalEndpointPages} onPageChange={setEndpointPage} />
           </div>
         </div>
       </div>
@@ -1235,6 +1270,41 @@ image: app:v2.4.1`}
       </div>
 
       <AsciiDivider width={80} border="double" label="DATA VISUALIZATION" className="divider-full" />
+
+      <div className="section">
+        <h2 className="section-title">{"<AsciiStat>"}</h2>
+        <p className="section-desc">Metric cards with optional inline sparkline graphs.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiStat label="Revenue" value="$48,290" trend={12.5} trendLabel="from last month" width={28} sparkline={[10, 14, 18, 15, 22, 28, 25, 30, 35, 32, 38, 42]} />
+          </div>
+          <div className="blue">
+            <AsciiStat label="Latency" value="34ms" trend={-8} trendLabel="improved" width={28} />
+          </div>
+          <div className="accent2">
+            <AsciiStat label="Uptime" value="99.97%" trend={0} trendLabel="stable" width={28} border="double" sparkline={[99, 99, 100, 99, 100, 100, 99, 100, 100, 100, 99, 100]} />
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">{"<AsciiSparkline>"}</h2>
+        <p className="section-desc">Inline sparkline graphs using Unicode block characters.</p>
+        <div className="demo-row">
+          <div className="demo-col">
+            <span className="label">upward trend</span>
+            <span className="green"><AsciiSparkline data={[10, 12, 15, 14, 18, 22, 20, 25, 28, 30, 32, 35]} /></span>
+          </div>
+          <div className="demo-col">
+            <span className="label">volatile</span>
+            <span className="red"><AsciiSparkline data={[5, 20, 3, 18, 8, 25, 2, 22, 6, 19, 4, 21]} /></span>
+          </div>
+          <div className="demo-col">
+            <span className="label">stable</span>
+            <span className="blue"><AsciiSparkline data={[10, 11, 10, 10, 11, 10, 11, 10, 10, 11, 10, 10]} /></span>
+          </div>
+        </div>
+      </div>
 
       {/* ── Bar Chart ────────────────────────────── */}
       <div className="section">

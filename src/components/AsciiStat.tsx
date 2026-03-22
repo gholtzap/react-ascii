@@ -8,6 +8,7 @@ export interface AsciiStatProps {
   trendLabel?: string;
   border?: BorderStyle;
   width?: number;
+  sparkline?: number[];
   className?: string;
   style?: React.CSSProperties;
 }
@@ -19,6 +20,7 @@ export function AsciiStat({
   trendLabel,
   border = "single",
   width = 24,
+  sparkline,
   className,
   style,
 }: AsciiStatProps) {
@@ -39,6 +41,17 @@ export function AsciiStat({
   lines.push(b.v + pad(` ${value}`, inner) + b.v);
   if (trendStr) {
     lines.push(b.v + pad(` ${trendStr}`, inner) + b.v);
+  }
+  if (sparkline && sparkline.length > 0) {
+    const sparks = ["\u2581", "\u2582", "\u2583", "\u2584", "\u2585", "\u2586", "\u2587", "\u2588"];
+    const sMin = Math.min(...sparkline);
+    const sMax = Math.max(...sparkline);
+    const sRange = sMax - sMin || 1;
+    const bars = sparkline.map((v) => {
+      const n = (v - sMin) / sRange;
+      return sparks[Math.min(Math.round(n * 7), 7)];
+    });
+    lines.push(b.v + pad(` ${bars.join("")}`, inner) + b.v);
   }
   lines.push(b.bl + repeatChar(b.h, inner) + b.br);
 
