@@ -371,6 +371,34 @@ footer pre {
   white-space: pre;
 }
 
+.index-view {
+  max-width: 80ch;
+  margin: 0 auto;
+}
+
+.index-search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(38ch, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.index-item {
+  padding: 0.125rem 0;
+  font-family: inherit;
+}
+
+.index-alpha-list {
+  margin: 1.5rem 0;
+}
+
 @media (max-width: 600px) {
   .demo-header {
     margin-bottom: 1.5rem;

@@ -29,14 +29,14 @@ export function AsciiProgress({
   const clamped = Math.max(0, Math.min(100, value));
   const animatedValue = useAnimatedValue(clamped, 600, animate);
   const displayValue = animate ? animatedValue : clamped;
-  const barWidth = width - 2;
-  const filledCount = Math.round((displayValue / 100) * barWidth);
-  const emptyCount = barWidth - filledCount;
+  const barWidth = Math.max(0, width - 2);
+  const filledCount = Math.max(0, Math.min(barWidth, Math.round((displayValue / 100) * barWidth)));
+  const emptyCount = Math.max(0, barWidth - filledCount);
 
   let barStr: string;
   if (animate && filledCount > 0) {
     const leadingFull = Math.max(0, filledCount - 1);
-    const progress = displayValue / clamped;
+    const progress = clamped > 0 ? displayValue / clamped : 1;
     const stageIndex = Math.min(Math.floor(progress * FILL_STAGES.length), FILL_STAGES.length - 1);
     const leadingChar = filled;
     const tipChar = progress < 1 ? FILL_STAGES[stageIndex] : filled;

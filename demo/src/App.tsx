@@ -73,6 +73,7 @@ import {
   AsciiPagination,
   AsciiMatrixRain,
   AsciiScanLine,
+  AsciiFlameGraph,
 } from "ascii-lib";
 import "./App.css";
 import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
@@ -2502,8 +2503,155 @@ function AnimationsShowcase() {
 
 // ─── App ────────────────────────────────────────────────────
 
+function Index() {
+  const [search, setSearch] = useState("");
+
+  const allComponents = [
+    { name: "AsciiAccordion", category: "Layout" },
+    { name: "AsciiAlert", category: "Feedback" },
+    { name: "AsciiAlertDialog", category: "Overlay" },
+    { name: "AsciiAsciiText", category: "Typography" },
+    { name: "AsciiAspectRatio", category: "Layout" },
+    { name: "AsciiAvatar", category: "Data Display" },
+    { name: "AsciiBadge", category: "Data Display" },
+    { name: "AsciiBarChart", category: "Visualization" },
+    { name: "AsciiBox", category: "Layout" },
+    { name: "AsciiBreadcrumb", category: "Navigation" },
+    { name: "AsciiButton", category: "Form" },
+    { name: "AsciiButtonGroup", category: "Form" },
+    { name: "AsciiCalendar", category: "Form" },
+    { name: "AsciiCard", category: "Layout" },
+    { name: "AsciiCarousel", category: "Layout" },
+    { name: "AsciiCheckbox", category: "Form" },
+    { name: "AsciiCode", category: "Data Display" },
+    { name: "AsciiCollapsible", category: "Layout" },
+    { name: "AsciiCombobox", category: "Form" },
+    { name: "AsciiCommandPalette", category: "Navigation" },
+    { name: "AsciiContextMenu", category: "Overlay" },
+    { name: "AsciiDataTable", category: "Data Display" },
+    { name: "AsciiDatePicker", category: "Form" },
+    { name: "AsciiDependencyGraph", category: "Ops" },
+    { name: "AsciiDiff", category: "Ops" },
+    { name: "AsciiDirection", category: "Layout" },
+    { name: "AsciiDivider", category: "Layout" },
+    { name: "AsciiDrawer", category: "Overlay" },
+    { name: "AsciiDropdownMenu", category: "Overlay" },
+    { name: "AsciiEmpty", category: "Feedback" },
+    { name: "AsciiField", category: "Form" },
+    { name: "AsciiFileTree", category: "Ops" },
+    { name: "AsciiFlameGraph", category: "Ops" },
+    { name: "AsciiGauge", category: "Visualization" },
+    { name: "AsciiHeatmap", category: "Visualization" },
+    { name: "AsciiHoverCard", category: "Overlay" },
+    { name: "AsciiInput", category: "Form" },
+    { name: "AsciiInputGroup", category: "Form" },
+    { name: "AsciiInputOTP", category: "Form" },
+    { name: "AsciiInspector", category: "Ops" },
+    { name: "AsciiItem", category: "Data Display" },
+    { name: "AsciiKbd", category: "Data Display" },
+    { name: "AsciiLabel", category: "Form" },
+    { name: "AsciiLogViewer", category: "Ops" },
+    { name: "AsciiMatrixRain", category: "Effects" },
+    { name: "AsciiMenubar", category: "Navigation" },
+    { name: "AsciiModal", category: "Overlay" },
+    { name: "AsciiNativeSelect", category: "Form" },
+    { name: "AsciiNavigationMenu", category: "Navigation" },
+    { name: "AsciiPagination", category: "Navigation" },
+    { name: "AsciiPopover", category: "Overlay" },
+    { name: "AsciiProcessTable", category: "Ops" },
+    { name: "AsciiProgress", category: "Feedback" },
+    { name: "AsciiQueryPlan", category: "Ops" },
+    { name: "AsciiRackMap", category: "Ops" },
+    { name: "AsciiRadio", category: "Form" },
+    { name: "AsciiResizable", category: "Layout" },
+    { name: "AsciiScanLine", category: "Effects" },
+    { name: "AsciiScrollArea", category: "Layout" },
+    { name: "AsciiSelect", category: "Form" },
+    { name: "AsciiSequenceDiagram", category: "Ops" },
+    { name: "AsciiSheet", category: "Overlay" },
+    { name: "AsciiSidebar", category: "Navigation" },
+    { name: "AsciiSkeleton", category: "Feedback" },
+    { name: "AsciiSlider", category: "Form" },
+    { name: "AsciiSonner", category: "Feedback" },
+    { name: "AsciiSparkline", category: "Visualization" },
+    { name: "AsciiSplitPane", category: "Layout" },
+    { name: "AsciiStat", category: "Data Display" },
+    { name: "AsciiStatusGrid", category: "Ops" },
+    { name: "AsciiStepper", category: "Form" },
+    { name: "AsciiSwitch", category: "Form" },
+    { name: "AsciiTable", category: "Data Display" },
+    { name: "AsciiTabs", category: "Layout" },
+    { name: "AsciiTag", category: "Data Display" },
+    { name: "AsciiTerminal", category: "Ops" },
+    { name: "AsciiTextarea", category: "Form" },
+    { name: "AsciiTimeline", category: "Data Display" },
+    { name: "AsciiToast", category: "Feedback" },
+    { name: "AsciiToggle", category: "Form" },
+    { name: "AsciiToggleGroup", category: "Form" },
+    { name: "AsciiTooltip", category: "Overlay" },
+    { name: "AsciiTraceTimeline", category: "Ops" },
+    { name: "AsciiTree", category: "Data Display" },
+    { name: "AsciiTypography", category: "Typography" },
+    { name: "AsciiWindow", category: "Layout" },
+  ];
+
+  const q = search.toLowerCase();
+  const filtered = q
+    ? allComponents.filter(
+        (c) => c.name.toLowerCase().includes(q) || c.category.toLowerCase().includes(q)
+      )
+    : allComponents;
+
+  const categories = [...new Set(allComponents.map((c) => c.category))].sort();
+
+  return (
+    <div className="index-view">
+      <AsciiDivider width={80} border="double" label={`COMPONENT INDEX (${allComponents.length})`} className="divider-full" />
+
+      <div className="index-search">
+        <AsciiInput
+          label="filter:"
+          width={40}
+          placeholder="search components..."
+          value={search}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+        />
+        <span className="dim">{filtered.length} / {allComponents.length}</span>
+      </div>
+
+      <div className="index-grid">
+        {categories.map((cat) => {
+          const items = filtered.filter((c) => c.category === cat);
+          if (items.length === 0) return null;
+          return (
+            <AsciiBox key={cat} title={cat} width={38} border="single">
+              {items.map((c) => (
+                <div key={c.name} className="index-item">
+                  {"<"}{c.name}{" />"}
+                </div>
+              ))}
+            </AsciiBox>
+          );
+        })}
+      </div>
+
+      <AsciiDivider width={80} border="single" label="ALPHABETICAL" className="divider-full" />
+
+      <div className="index-alpha-list">
+        <AsciiTable
+          columns={[
+            { key: "name", header: "COMPONENT", width: 30 },
+            { key: "category", header: "CATEGORY", width: 16 },
+          ]}
+          data={filtered}
+        />
+      </div>
+    </div>
+  );
+}
+
 function App() {
-  const [view, setView] = useState<"dashboard" | "components">("dashboard");
+  const [view, setView] = useState<"dashboard" | "components" | "index">("dashboard");
   const [theme, setTheme] = useState("phosphor");
   const [density, setDensity] = useState("cozy");
 
@@ -2530,7 +2678,9 @@ function App() {
       />
 
       <main>
-        {view === "dashboard" ? <Dashboard /> : <Components />}
+        {view === "dashboard" && <Dashboard />}
+        {view === "components" && <Components />}
+        {view === "index" && <Index />}
       </main>
 
       <DemoFooter />
