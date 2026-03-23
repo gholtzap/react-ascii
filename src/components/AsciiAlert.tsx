@@ -1,5 +1,7 @@
 import React from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { useTypewriter } from "../internal/useTypewriter";
+import { useBorderDrawIn } from "../internal/useBorderDrawIn";
 
 export type AlertVariant = "info" | "success" | "warning" | "error";
 
@@ -15,6 +17,7 @@ export interface AsciiAlertProps {
   children: string;
   width?: number;
   border?: BorderStyle;
+  animate?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -24,6 +27,7 @@ export function AsciiAlert({
   children,
   width = 50,
   border = "single",
+  animate = false,
   className,
   style,
 }: AsciiAlertProps) {
@@ -31,10 +35,28 @@ export function AsciiAlert({
   const icon = variantIcons[variant];
   const inner = width - 2;
 
-  const lines: string[] = [];
-  lines.push(b.tl + repeatChar(b.h, inner) + b.tr);
-  lines.push(b.v + pad(` [${icon}] ${children}`, inner) + b.v);
-  lines.push(b.bl + repeatChar(b.h, inner) + b.br);
+  const { displayed } = useTypewriter(children, 25, animate);
+  const perimeter = (inner * 2) + 2;
+  const { progress, done: borderDone } = useBorderDrawIn(perimeter, 6, animate);
+
+  const visibleChars = Math.floor(progress * perimeter);
+  const topEdge = Math.min(visibleChars, inner);
+  const rightSide = Math.min(Math.max(visibleChars - inner, 0), 3);
+  const bottomEdge = Math.min(Math.max(visibleChars - inner - 3, 0), inner);
+  const leftSide = Math.min(Math.max(visibleChars - inner * 2 - 3, 0), 3);
+
+  const topLine = borderDone
+    ? b.tl + repeatChar(b.h, inner) + b.tr
+    : b.tl + repeatChar(b.h, topEdge) + " ".repeat(Math.max(0, inner - topEdge)) + (visibleChars > inner ? b.tr : " ");
+
+  const midContent = pad(` [${icon}] ${displayed}`, inner);
+  const midLine = (leftSide >= 2 ? b.v : " ") + midContent + (rightSide >= 2 ? b.v : " ");
+
+  const botLine = borderDone
+    ? b.bl + repeatChar(b.h, inner) + b.br
+    : (leftSide >= 3 ? b.bl : " ") + repeatChar(b.h, bottomEdge) + " ".repeat(Math.max(0, inner - bottomEdge)) + (rightSide >= 3 ? b.br : " ");
+
+  const lines = [topLine, midLine, botLine];
 
   const roleMap: Record<AlertVariant, string> = {
     info: "status",

@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from "react";
 
+export type SpinnerPreset = "default" | "braille" | "dots" | "blocks" | "arrows" | "bounce";
+
 export interface AsciiSpinnerProps {
   frames?: string[];
+  preset?: SpinnerPreset;
   interval?: number;
   label?: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
-const defaultFrames = ["|", "/", "-", "\\"];
+const PRESETS: Record<SpinnerPreset, string[]> = {
+  default: ["|", "/", "-", "\\"],
+  braille: ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"],
+  dots: ["⠄", "⠆", "⠇", "⠋", "⠙", "⠸", "⠰", "⠠"],
+  blocks: ["▖", "▘", "▝", "▗"],
+  arrows: ["←", "↖", "↑", "↗", "→", "↘", "↓", "↙"],
+  bounce: ["⠁", "⠂", "⠄", "⡀", "⢀", "⠠", "⠐", "⠈"],
+};
 
 export function AsciiSpinner({
-  frames = defaultFrames,
+  frames,
+  preset = "default",
   interval = 100,
   label,
   className,
   style,
 }: AsciiSpinnerProps) {
+  const activeFrames = frames ?? PRESETS[preset];
   const [index, setIndex] = useState(0);
   const [reducedMotion, setReducedMotion] = useState(false);
 
@@ -35,10 +47,10 @@ export function AsciiSpinner({
   useEffect(() => {
     if (reducedMotion) return;
     const timer = setInterval(() => {
-      setIndex((i) => (i + 1) % frames.length);
+      setIndex((i) => (i + 1) % activeFrames.length);
     }, interval);
     return () => clearInterval(timer);
-  }, [frames.length, interval, reducedMotion]);
+  }, [activeFrames.length, interval, reducedMotion]);
 
   return (
     <span
@@ -47,7 +59,7 @@ export function AsciiSpinner({
       role="status"
       aria-label={label ?? "Loading"}
     >
-      {frames[index]}{label ? ` ${label}` : ""}
+      {activeFrames[index]}{label ? ` ${label}` : ""}
     </span>
   );
 }

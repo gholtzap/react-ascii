@@ -1,5 +1,6 @@
 import React from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { useAnimatedValue } from "../internal/useAnimatedValue";
 
 export interface AsciiGaugeProps {
   value: number;
@@ -9,6 +10,7 @@ export interface AsciiGaugeProps {
   width?: number;
   border?: BorderStyle;
   showValue?: boolean;
+  animate?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -21,13 +23,17 @@ export function AsciiGauge({
   width = 30,
   border = "single",
   showValue = true,
+  animate = false,
   className,
   style,
 }: AsciiGaugeProps) {
   const b = borders[border];
   const inner = width - 2;
   const range = max - min || 1;
-  const ratio = Math.max(0, Math.min(1, (value - min) / range));
+
+  const animatedValue = useAnimatedValue(value, 800, animate);
+  const displayValue = animate ? animatedValue : value;
+  const ratio = Math.max(0, Math.min(1, (displayValue - min) / range));
 
   const arcChars = "▁▂▃▄▅▆▇█";
   const arcWidth = inner - 2;
@@ -59,7 +65,7 @@ export function AsciiGauge({
   lines.push(b.v + " " + needleLine + " " + b.v);
 
   if (showValue) {
-    const valStr = `${value}`;
+    const valStr = `${Math.round(displayValue)}`;
     const minStr = String(min);
     const maxStr = String(max);
     const scaleRow = ` ${minStr}${" ".repeat(Math.max(0, arcWidth - minStr.length - maxStr.length))}${maxStr} `;

@@ -1,0 +1,139 @@
+@keyframes ascii-border-shimmer {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.6); }
+  100% { filter: brightness(1); }
+}
+
+@keyframes ascii-border-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes ascii-cursor-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes ascii-scan-line {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+@keyframes ascii-crt-flicker {
+  0% { opacity: 1; }
+  5% { opacity: 0.96; }
+  10% { opacity: 1; }
+  15% { opacity: 0.98; }
+  92% { opacity: 1; }
+  95% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+@keyframes ascii-breathing {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+
+@keyframes ascii-skeleton-shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes ascii-noise-flicker {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.92; }
+  30% { opacity: 1; }
+  50% { opacity: 0.97; }
+  70% { opacity: 1; }
+  90% { opacity: 0.94; }
+}
+
+.ascii-animate-shimmer .ascii-surface-shell,
+.ascii-animate-shimmer > span:first-child {
+  animation: ascii-border-shimmer 2s ease-in-out infinite;
+}
+
+.ascii-animate-pulse .ascii-surface-shell,
+.ascii-animate-pulse > span:first-child {
+  animation: ascii-border-pulse 1.5s ease-in-out infinite;
+}
+
+.ascii-animate-breathing:focus-within {
+  animation: ascii-breathing 2s ease-in-out infinite;
+}
+
+.ascii-animate-cursor-blink .ascii-cursor {
+  animation: ascii-cursor-blink 1s step-end infinite;
+}
+
+.ascii-animate-crt {
+  animation: ascii-crt-flicker 4s ease-in-out infinite;
+}
+
+.ascii-animate-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.ascii-scan-line-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.4em;
+  pointer-events: none;
+  background: linear-gradient(transparent, color-mix(in srgb, currentColor 8%, transparent), transparent);
+  animation: ascii-scan-line 6s linear infinite;
+  z-index: 1;
+}
+
+.ascii-animate-noise {
+  animation: ascii-noise-flicker 3s ease-in-out infinite;
+}
+
+.ascii-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, currentColor 15%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: ascii-skeleton-shimmer-sweep 2s ease-in-out infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.ascii-btn-press {
+  transition: transform 0.08s ease-out;
+}
+
+.ascii-btn-press:active {
+  transform: scale(0.96);
+}
+
+.ascii-check-snap .ascii-check-box,
+.ascii-toggle-snap .ascii-toggle-track {
+  transition: filter 0.15s ease-out;
+}
+
+.ascii-check-snap:has(input:checked) .ascii-check-box {
+  filter: brightness(1.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ascii-animate-shimmer .ascii-surface-shell,
+  .ascii-animate-shimmer > span:first-child,
+  .ascii-animate-pulse .ascii-surface-shell,
+  .ascii-animate-pulse > span:first-child,
+  .ascii-animate-breathing:focus-within,
+  .ascii-animate-crt,
+  .ascii-animate-noise,
+  .ascii-skeleton-shimmer,
+  .ascii-scan-line-bar {
+    animation: none;
+  }
+
+  .ascii-btn-press:active {
+    transform: none;
+  }
+}

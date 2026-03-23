@@ -1,4 +1,5 @@
 import React from "react";
+import { useWaveReveal } from "../internal/useWaveReveal";
 
 const DENSITY_CHARS = [" ", "░", "▒", "▓", "█"];
 
@@ -8,6 +9,7 @@ export interface AsciiHeatmapProps {
   max?: number;
   xLabels?: string[];
   yLabels?: string[];
+  animate?: boolean;
   className?: string;
   style?: React.CSSProperties;
   "aria-label"?: string;
@@ -19,6 +21,7 @@ export function AsciiHeatmap({
   max: maxOverride,
   xLabels,
   yLabels,
+  animate = false,
   className,
   style,
   "aria-label": ariaLabel,
@@ -37,6 +40,9 @@ export function AsciiHeatmap({
   const max = maxOverride ?? derivedMax;
   const range = max - min || 1;
 
+  const cols = data[0]?.length ?? 0;
+  const waveProgress = useWaveReveal(data.length, cols, 30, animate);
+
   const yLabelWidth = yLabels ? Math.max(...yLabels.map((l) => l.length)) + 1 : 0;
 
   const lines: string[] = [];
@@ -48,7 +54,9 @@ export function AsciiHeatmap({
 
   for (let row = 0; row < data.length; row++) {
     const prefix = yLabels ? (yLabels[row] ?? "").padStart(yLabelWidth - 1) + " " : "";
-    const cells = data[row].map((v) => {
+    const cells = data[row].map((v, col) => {
+      const diag = row + col;
+      if (diag >= waveProgress) return " ";
       const normalized = (v - min) / range;
       const index = Math.min(
         Math.round(normalized * (DENSITY_CHARS.length - 1)),

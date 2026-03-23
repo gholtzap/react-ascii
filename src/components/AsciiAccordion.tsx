@@ -1,5 +1,6 @@
-import React, { useState, useId } from "react";
+import React, { useState, useId, useEffect } from "react";
 import { borders, repeatChar, pad, type BorderStyle } from "../chars";
+import { useReducedMotion } from "../internal/useReducedMotion";
 
 export interface AsciiAccordionItem {
   key: string;
@@ -12,8 +13,44 @@ export interface AsciiAccordionProps {
   width?: number;
   border?: BorderStyle;
   multiple?: boolean;
+  animate?: boolean;
   className?: string;
   style?: React.CSSProperties;
+}
+
+function AnimatedContent({
+  lines,
+  animate,
+}: {
+  lines: string[];
+  animate: boolean;
+}) {
+  const reduced = useReducedMotion();
+  const [visibleCount, setVisibleCount] = useState(animate && !reduced ? 0 : lines.length);
+
+  useEffect(() => {
+    if (!animate || reduced) { setVisibleCount(lines.length); return; }
+    setVisibleCount(0);
+    let count = 0;
+    const timer = setInterval(() => {
+      count++;
+      setVisibleCount(count);
+      if (count >= lines.length) clearInterval(timer);
+    }, 35);
+    return () => clearInterval(timer);
+  }, [lines.length, animate, reduced]);
+
+  return (
+    <>
+      {lines.slice(0, visibleCount).map((line, i) => (
+        <React.Fragment key={i}>
+          {line}
+          {i < visibleCount - 1 && "\n"}
+        </React.Fragment>
+      ))}
+      {visibleCount < lines.length && "\n" + " ".repeat(lines[0]?.length ?? 0)}
+    </>
+  );
 }
 
 export function AsciiAccordion({
@@ -21,6 +58,7 @@ export function AsciiAccordion({
   width = 50,
   border = "single",
   multiple = false,
+  animate = false,
   className,
   style,
 }: AsciiAccordionProps) {
@@ -51,13 +89,11 @@ export function AsciiAccordion({
 
         const parts: string[] = [];
 
-        // Top border (only for first item)
         if (i === 0) {
           parts.push(b.tl + repeatChar(b.h, inner) + b.tr);
           parts.push("\n");
         }
 
-        // Content lines
         const contentParts: string[] = [];
         if (isOpen) {
           contentParts.push(b.lm + repeatChar(b.h, inner) + b.rm);
@@ -67,7 +103,6 @@ export function AsciiAccordion({
           }
         }
 
-        // Separator or bottom
         const bottomLine = i < items.length - 1
           ? b.lm + repeatChar(b.h, inner) + b.rm
           : b.bl + repeatChar(b.h, inner) + b.br;
@@ -87,7 +122,11 @@ export function AsciiAccordion({
             {"\n"}
             {isOpen && (
               <div id={panelId} role="region" aria-labelledby={headerId}>
-                {contentParts.join("\n")}
+                {animate ? (
+                  <AnimatedContent lines={contentParts} animate={animate} />
+                ) : (
+                  contentParts.join("\n")
+                )}
                 {"\n"}
               </div>
             )}

@@ -1,4 +1,5 @@
-import React, { useId } from "react";
+import React, { useId, useState, useEffect } from "react";
+import { useReducedMotion } from "../internal/useReducedMotion";
 
 export interface AsciiToggleProps {
   checked?: boolean;
@@ -6,6 +7,7 @@ export interface AsciiToggleProps {
   label?: string;
   width?: number;
   disabled?: boolean;
+  animate?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -16,19 +18,44 @@ export function AsciiToggle({
   label,
   width = 10,
   disabled,
+  animate = false,
   className,
   style,
 }: AsciiToggleProps) {
   const id = useId();
   const trackWidth = Math.max(4, width);
-  const innerWidth = trackWidth - 2; // subtract brackets
+  const innerWidth = trackWidth - 2;
+  const reduced = useReducedMotion();
 
-  const filledCount = checked ? innerWidth - 1 : 0;
-  const emptyCount = innerWidth - 1 - filledCount;
+  const [slidePos, setSlidePos] = useState(checked ? innerWidth - 1 : 0);
 
-  const track = checked
-    ? `[${"\u2550".repeat(filledCount)}\u25CF${" ".repeat(emptyCount)}]`
-    : `[${" ".repeat(emptyCount)}\u25CF${"\u2550".repeat(filledCount)}]`;
+  useEffect(() => {
+    if (!animate || reduced) {
+      setSlidePos(checked ? innerWidth - 1 : 0);
+      return;
+    }
+    const target = checked ? innerWidth - 1 : 0;
+    if (slidePos === target) return;
+
+    const step = target > slidePos ? 1 : -1;
+    const timer = setInterval(() => {
+      setSlidePos((p) => {
+        const next = p + step;
+        if ((step > 0 && next >= target) || (step < 0 && next <= target)) {
+          clearInterval(timer);
+          return target;
+        }
+        return next;
+      });
+    }, 30);
+    return () => clearInterval(timer);
+  }, [checked, innerWidth, animate, reduced]);
+
+  const currentPos = animate && !reduced ? slidePos : (checked ? innerWidth - 1 : 0);
+  const beforeKnob = currentPos;
+  const afterKnob = innerWidth - 1 - currentPos;
+
+  const track = `[${"\u2550".repeat(beforeKnob)}\u25CF${" ".repeat(afterKnob)}]`;
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) return;
@@ -38,10 +65,12 @@ export function AsciiToggle({
     }
   };
 
+  const animClass = animate ? " ascii-toggle-snap" : "";
+
   return (
     <label
       htmlFor={id}
-      className={`ascii-lib ascii-toggle ${className ?? ""}`.trim()}
+      className={`ascii-lib ascii-toggle${animClass} ${className ?? ""}`.trim()}
       style={style}
     >
       <input

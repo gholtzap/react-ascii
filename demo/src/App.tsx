@@ -71,6 +71,8 @@ import {
   AsciiTag,
   AsciiSkeleton,
   AsciiPagination,
+  AsciiMatrixRain,
+  AsciiScanLine,
 } from "ascii-lib";
 import "./App.css";
 import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
@@ -261,7 +263,7 @@ function Dashboard() {
           onChange={setEnvSelect}
         />
         <AsciiSwitch checked={autoRefresh} onChange={setAutoRefresh} label="auto-refresh" />
-        <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} />
+        <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} animate />
         <AsciiButtonGroup
           items={[
             { key: "compact", label: "Compact" },
@@ -274,7 +276,7 @@ function Dashboard() {
 
       {!darkAlerts && (
         <div className="dash-alert-strip warning">
-          <AsciiAlert variant="warning" width={72}>
+          <AsciiAlert variant="warning" width={72} animate>
             Memory usage on web-02 at 87% — autoscaler triggered
           </AsciiAlert>
         </div>
@@ -298,16 +300,16 @@ function Dashboard() {
       {viewMode === "expanded" && (
         <div className="dash-gauges">
           <div className="green">
-            <AsciiGauge value={23} label="CPU" width={24} />
+            <AsciiGauge value={23} label="CPU" width={24} animate />
           </div>
           <div className="blue">
-            <AsciiGauge value={67} label="Memory" width={24} border="double" />
+            <AsciiGauge value={67} label="Memory" width={24} border="double" animate />
           </div>
           <div className="warning">
-            <AsciiGauge value={87} label="web-02 MEM" width={24} border="bold" />
+            <AsciiGauge value={87} label="web-02 MEM" width={24} border="bold" animate />
           </div>
           <div className="green">
-            <AsciiGauge value={42} label="Disk" width={24} />
+            <AsciiGauge value={42} label="Disk" width={24} animate />
           </div>
         </div>
       )}
@@ -316,7 +318,7 @@ function Dashboard() {
         <AsciiDivider width={72} border="single" label="DEPLOYMENT v2.5.0-rc.3" />
         <div className="dash-deploy-row">
           <div className="green">
-            <AsciiProgress value={deployProgress} width={50} aria-label="Deploy progress" />
+            <AsciiProgress value={deployProgress} width={50} aria-label="Deploy progress" animate />
           </div>
           <div className="dash-deploy-badges">
             <span className="green"><AsciiBadge>ROLLING</AsciiBadge></span>
@@ -327,10 +329,10 @@ function Dashboard() {
         </div>
         <div className="dash-deploy-actions">
           <div className="green">
-            <AsciiButton label="Deploy New" border="single" onClick={() => setDeployOpen(true)} />
+            <AsciiButton label="Deploy New" border="single" animate onClick={() => setDeployOpen(true)} />
           </div>
           <div className="red">
-            <AsciiButton label="Rollback" border="bold" onClick={() => { setDeployProgress(0); sonner.toast("Rolling back...", "info"); }} />
+            <AsciiButton label="Rollback" border="bold" animate onClick={() => { setDeployProgress(0); sonner.toast("Rolling back...", "info"); }} />
           </div>
           <div className="dim">
             <AsciiPopover content={"Strategy: rolling\nMax surge: 1\nMax unavail: 0\nTimeout: 600s"} width={26}>
@@ -381,6 +383,7 @@ function Dashboard() {
           <div className="green">
             <AsciiBarChart
               width={40}
+              animate
               bars={[
                 { label: "api-gw", value: 847 },
                 { label: "auth", value: 320 },
@@ -393,6 +396,7 @@ function Dashboard() {
           <h3 className="dash-section-title" style={{ marginTop: "1rem" }}>Weekly Activity</h3>
           <div className="blue">
             <AsciiHeatmap
+              animate
               data={[
                 [0, 1, 3, 5, 2, 0, 1, 4, 8, 6, 3, 1],
                 [1, 2, 4, 7, 3, 1, 2, 5, 9, 7, 4, 2],
@@ -558,6 +562,7 @@ spec:
             <AsciiAccordion
               width={40}
               border="single"
+              animate
               items={[
                 {
                   key: "env",
@@ -580,7 +585,7 @@ LOG_LEVEL=info`,
               ]}
             />
             <div style={{ marginTop: "0.75rem" }} className="dim">
-              <AsciiSkeleton width={38} lines={2} />
+              <AsciiSkeleton width={38} lines={2} shimmer />
             </div>
           </div>
         </div>
@@ -628,7 +633,7 @@ LOG_LEVEL=info`,
         placeholder="Search commands..."
       />
 
-      <AsciiSonner toasts={sonner.toasts} dismiss={sonner.dismiss} width={40} />
+      <AsciiSonner toasts={sonner.toasts} dismiss={sonner.dismiss} width={40} animate />
     </div>
   );
 }
@@ -765,11 +770,12 @@ function Components() {
             <AsciiButton
               label="Deploy"
               border="single"
+              animate
               onClick={() => setButtonClicks((c) => c + 1)}
             />
           </div>
           <div className="red">
-            <AsciiButton label="Cancel" border="bold" onClick={() => setButtonClicks(0)} />
+            <AsciiButton label="Cancel" border="bold" animate onClick={() => setButtonClicks(0)} />
           </div>
           <div className="blue">
             <AsciiButton label="Info" border="double" />
@@ -807,11 +813,13 @@ function Components() {
           <AsciiCheckbox
             label="Enable logging"
             checked={check1}
+            animate
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheck1(e.target.checked)}
           />
           <AsciiCheckbox
             label="Verbose mode"
             checked={check2}
+            animate
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheck2(e.target.checked)}
           />
           <AsciiCheckbox label="Read-only" checked disabled onChange={() => {}} />
@@ -846,10 +854,10 @@ function Components() {
         <p className="section-desc">On/off switches with sliding indicator.</p>
         <div className="demo-col" style={{ gap: "0.75rem" }}>
           <div className="green">
-            <AsciiToggle checked={toggle1} onChange={setToggle1} label="Dark mode" width={12} />
+            <AsciiToggle checked={toggle1} onChange={setToggle1} label="Dark mode" width={12} animate />
           </div>
           <div className="blue">
-            <AsciiToggle checked={toggle2} onChange={setToggle2} label="Notifications" width={12} />
+            <AsciiToggle checked={toggle2} onChange={setToggle2} label="Notifications" width={12} animate />
           </div>
           <div className="dim">
             <AsciiToggle checked disabled label="Locked" width={12} />
@@ -2190,7 +2198,304 @@ image: app:v2.4.1`}
 
       <ComponentFeatureShowcases />
 
+      <AsciiDivider width={80} border="double" label="ANIMATIONS" className="divider-full" />
+
+      <AnimationsShowcase />
+
       <AsciiDivider width={80} border="double" className="divider-full" />
+    </div>
+  );
+}
+
+// ─── Animations Showcase ─────────────────────────────────────
+
+function AnimationsShowcase() {
+  const [alertKey, setAlertKey] = useState(0);
+  const [barKey, setBarKey] = useState(0);
+  const [heatKey, setHeatKey] = useState(0);
+  const [flameKey, setFlameKey] = useState(0);
+  const [gaugeVal, setGaugeVal] = useState(25);
+  const [progressVal, setProgressVal] = useState(0);
+  const [animBox, setAnimBox] = useState(0);
+  const [sparkKey, setSparkKey] = useState(0);
+  const [collKey, setCollKey] = useState(0);
+  const [carouselKey, setCarouselKey] = useState(0);
+  const [toggleDemo, setToggleDemo] = useState(false);
+  const [checkDemo, setCheckDemo] = useState(false);
+
+  useEffect(() => {
+    if (progressVal >= 100) return;
+    const t = setTimeout(() => setProgressVal((p) => Math.min(100, p + 2)), 50);
+    return () => clearTimeout(t);
+  }, [progressVal]);
+
+  return (
+    <div className="components">
+
+      <div className="section">
+        <h2 className="section-title">Border Draw-In</h2>
+        <p className="section-desc">Boxes trace their border on mount. Click to replay.</p>
+        <div className="demo-row">
+          <div className="green" onClick={() => setAnimBox((k) => k + 1)} style={{ cursor: "pointer" }}>
+            <AsciiBox key={animBox} width={32} title="Draw-In" border="single" animate>
+              Borders animate in
+            </AsciiBox>
+          </div>
+          <div className="blue" onClick={() => setAnimBox((k) => k + 1)} style={{ cursor: "pointer" }}>
+            <AsciiBox key={`d-${animBox}`} width={32} title="Double" border="double" animate>
+              Click to replay
+            </AsciiBox>
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Typewriter + Border Animation</h2>
+        <p className="section-desc">Alert text types in while the border draws. Click to replay.</p>
+        <div className="demo-col" onClick={() => setAlertKey((k) => k + 1)} style={{ cursor: "pointer" }}>
+          <div className="green">
+            <AsciiAlert key={`s-${alertKey}`} variant="success" width={56} animate>
+              Deployment v2.5.1 completed successfully
+            </AsciiAlert>
+          </div>
+          <div className="warning">
+            <AsciiAlert key={`w-${alertKey}`} variant="warning" width={56} animate>
+              Memory usage approaching threshold
+            </AsciiAlert>
+          </div>
+          <div className="red">
+            <AsciiAlert key={`e-${alertKey}`} variant="error" width={56} animate>
+              Connection to database lost
+            </AsciiAlert>
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Bar Chart Grow</h2>
+        <p className="section-desc">Bars fill with ░▒▓█ progression. Click to replay.</p>
+        <div className="green" onClick={() => setBarKey((k) => k + 1)} style={{ cursor: "pointer" }}>
+          <AsciiBarChart
+            key={barKey}
+            width={50}
+            animate
+            bars={[
+              { label: "api-gw", value: 847 },
+              { label: "auth", value: 320 },
+              { label: "web", value: 580 },
+              { label: "worker", value: 1200 },
+              { label: "cache", value: 95 },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Gauge Sweep + Sparkline Trace</h2>
+        <p className="section-desc">Gauges animate to target value. Sparklines draw point-by-point.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiGauge key={gaugeVal} value={gaugeVal} label="CPU" width={28} animate />
+          </div>
+          <div className="blue">
+            <AsciiGauge key={`m-${gaugeVal}`} value={gaugeVal + 30} label="Memory" width={28} animate border="double" />
+          </div>
+          <div>
+            <AsciiButton label="Randomize" border="single" animate onClick={() => setGaugeVal(Math.floor(Math.random() * 90) + 5)} />
+          </div>
+        </div>
+        <div className="demo-row" style={{ marginTop: "0.5rem" }}>
+          <span className="label">Sparkline trace:</span>
+          <span className="green">
+            <AsciiSparkline key={sparkKey} data={[2, 4, 3, 7, 5, 8, 6, 9, 7, 10, 8, 12, 10, 14]} animate />
+          </span>
+          <span className="blue">
+            <AsciiSparkline key={`b-${sparkKey}`} data={[10, 8, 9, 6, 7, 4, 5, 3, 4, 2, 3, 1, 2, 1]} animate />
+          </span>
+          <AsciiButton label="Replay" border="single" onClick={() => setSparkKey((k) => k + 1)} />
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Heatmap Wave + Flame Graph Build</h2>
+        <p className="section-desc">Heatmap cells reveal in a diagonal wave. Flame stacks grow upward.</p>
+        <div className="demo-row">
+          <div className="blue" onClick={() => setHeatKey((k) => k + 1)} style={{ cursor: "pointer" }}>
+            <AsciiHeatmap
+              key={heatKey}
+              animate
+              data={[
+                [0, 1, 3, 5, 2, 0, 1, 4, 8, 6],
+                [1, 2, 4, 7, 3, 1, 2, 5, 9, 7],
+                [0, 1, 2, 4, 5, 3, 4, 6, 7, 5],
+                [2, 3, 5, 8, 6, 4, 3, 7, 10, 8],
+                [1, 2, 3, 6, 4, 2, 1, 4, 6, 5],
+              ]}
+              yLabels={["Mon", "Tue", "Wed", "Thu", "Fri"]}
+            />
+          </div>
+          <div className="green" onClick={() => setFlameKey((k) => k + 1)} style={{ cursor: "pointer" }}>
+            <AsciiFlameGraph
+              key={flameKey}
+              animate
+              frames={[
+                { key: "main", label: "main()", span: 100, depth: 0 },
+                { key: "handle", label: "handleReq()", span: 72, depth: 1, tone: "success" },
+                { key: "query", label: "dbQuery()", span: 45, depth: 2, tone: "warn" },
+                { key: "serial", label: "serialize()", span: 18, depth: 2 },
+                { key: "log", label: "logMetric()", span: 8, depth: 1 },
+              ]}
+              width={56}
+              height={5}
+              title="perf trace"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Progress Fill Animation</h2>
+        <p className="section-desc">Progress bar animates with ░▒▓█ fill stages.</p>
+        <div className="demo-col">
+          <div className="green">
+            <AsciiProgress value={progressVal} width={50} animate />
+          </div>
+          <div style={{ marginTop: "0.25rem" }}>
+            <AsciiButton label="Reset" border="single" onClick={() => setProgressVal(0)} />
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Button Press + Interactive Feedback</h2>
+        <p className="section-desc">Buttons show visual press effect. Toggles slide. Checkboxes snap.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiButton label="Press Me" border="single" animate onClick={() => {}} />
+          </div>
+          <div className="blue">
+            <AsciiButton label="Click!" border="double" animate onClick={() => {}} />
+          </div>
+          <div className="green">
+            <AsciiToggle checked={toggleDemo} onChange={setToggleDemo} label="Animated" width={12} animate />
+          </div>
+          <div className="blue">
+            <AsciiCheckbox label="Snap check" checked={checkDemo} animate onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCheckDemo(e.target.checked)} />
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Line-by-Line Reveal</h2>
+        <p className="section-desc">Accordion and collapsible content reveals line by line. Click to toggle.</p>
+        <div className="demo-row">
+          <div className="green" key={collKey}>
+            <AsciiAccordion
+              width={40}
+              animate
+              items={[
+                { key: "logs", title: "Server Logs", content: "2024-01-15 INFO Starting\n2024-01-15 INFO Ready\n2024-01-15 WARN Memory 85%" },
+                { key: "config", title: "Configuration", content: "host: 0.0.0.0\nport: 8080\nworkers: 4" },
+              ]}
+            />
+          </div>
+          <div className="blue" key={`c-${collKey}`}>
+            <AsciiCollapsible title="Click to expand" animate>
+              {"Line one appears first\nThen line two follows\nAnd finally line three\nContent reveals smoothly"}
+            </AsciiCollapsible>
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Carousel Transitions</h2>
+        <p className="section-desc">Characters scramble briefly during slide transitions.</p>
+        <div className="green" key={carouselKey}>
+          <AsciiCarousel
+            width={50}
+            height={4}
+            animate
+            items={[
+              { key: "1", content: "  Server Status: ONLINE\n  Uptime: 14d 6h 32m\n  Load: 0.42 0.38 0.35" },
+              { key: "2", content: "  Deploy v2.5.0-rc.3\n  Strategy: Rolling\n  Progress: 73% complete" },
+              { key: "3", content: "  Alert: MEM-HIGH\n  Node: web-02\n  Usage: 87% / 4GB" },
+            ]}
+          />
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Spinner Presets</h2>
+        <p className="section-desc">Multiple spinner styles: braille, dots, blocks, arrows, bounce.</p>
+        <div className="demo-row" style={{ gap: "2rem" }}>
+          <div className="green"><AsciiSpinner preset="default" label="default" /></div>
+          <div className="blue"><AsciiSpinner preset="braille" label="braille" /></div>
+          <div className="green"><AsciiSpinner preset="dots" label="dots" /></div>
+          <div className="red"><AsciiSpinner preset="blocks" label="blocks" /></div>
+          <div className="blue"><AsciiSpinner preset="arrows" label="arrows" /></div>
+          <div className="green"><AsciiSpinner preset="bounce" label="bounce" /></div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Skeleton Shimmer</h2>
+        <p className="section-desc">Loading skeletons with sweeping shimmer effect.</p>
+        <div className="demo-row">
+          <div className="dim">
+            <span className="label">pulse (default)</span>
+            <AsciiSkeleton width={30} lines={3} />
+          </div>
+          <div className="green">
+            <span className="label">shimmer sweep</span>
+            <AsciiSkeleton width={30} lines={3} shimmer />
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Ambient Effects</h2>
+        <p className="section-desc">CSS classes for CRT flicker, scan line, border shimmer, and pulse.</p>
+        <div className="demo-row">
+          <div className="green ascii-animate-shimmer">
+            <AsciiBox width={24} title="Shimmer" border="single">
+              Border shimmers
+            </AsciiBox>
+          </div>
+          <div className="blue ascii-animate-pulse">
+            <AsciiBox width={24} title="Pulse" border="double">
+              Border pulses
+            </AsciiBox>
+          </div>
+          <div className="green ascii-animate-crt">
+            <AsciiBox width={24} title="CRT" border="single">
+              CRT flicker
+            </AsciiBox>
+          </div>
+          <div className="dim ascii-animate-noise">
+            <AsciiBox width={24} title="Noise" border="ascii">
+              Noise flicker
+            </AsciiBox>
+          </div>
+        </div>
+      </div>
+
+      <div className="section">
+        <h2 className="section-title">Scan Line + Matrix Rain</h2>
+        <p className="section-desc">Scan line sweeps over content. Matrix rain as background/loading.</p>
+        <div className="demo-row">
+          <AsciiScanLine>
+            <div className="green">
+              <AsciiBox width={32} title="Monitored" border="single">
+                {"cpu: 23%\nmem: 1.2G\ndisk: 42G free\nnet: 847 req/s"}
+              </AsciiBox>
+            </div>
+          </AsciiScanLine>
+          <div className="green">
+            <AsciiMatrixRain width={30} height={8} speed={60} />
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }

@@ -260,6 +260,13 @@ export type { AsciiQueryPlanProps, AsciiQueryPlanStep, AsciiQueryPlanTone } from
 export { AsciiRackMap } from "./components/AsciiRackMap";
 export type { AsciiRackMapProps, AsciiRack, AsciiRackSlot, AsciiRackTone } from "./components/AsciiRackMap";
 
+export { AsciiMatrixRain } from "./components/AsciiMatrixRain";
+export type { AsciiMatrixRainProps } from "./components/AsciiMatrixRain";
+
+export { AsciiScanLine } from "./components/AsciiScanLine";
+export type { AsciiScanLineProps } from "./components/AsciiScanLine";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";
+export type { SpinnerPreset } from "./components/AsciiSpinner";
