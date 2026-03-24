@@ -5,6 +5,7 @@ export interface AsciiSwitchProps {
   onChange?: (checked: boolean) => void;
   label?: string;
   disabled?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -14,6 +15,7 @@ export function AsciiSwitch({
   onChange,
   label,
   disabled,
+  color,
   className,
   style,
 }: AsciiSwitchProps) {
@@ -33,7 +35,7 @@ export function AsciiSwitch({
     <label
       htmlFor={id}
       className={`ascii-lib ascii-switch ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <input
         type="checkbox"

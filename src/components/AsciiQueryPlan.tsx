@@ -22,6 +22,7 @@ export interface AsciiQueryPlanProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -33,6 +34,7 @@ export function AsciiQueryPlan({
   height = 6,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiQueryPlanProps) {
@@ -47,7 +49,7 @@ export function AsciiQueryPlan({
       border={border}
       footer={footer}
       className={`ascii-queryplan ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-queryplan-header">
         <span>{pad("OPERATION", operationWidth)}</span>

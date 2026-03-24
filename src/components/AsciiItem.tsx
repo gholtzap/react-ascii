@@ -8,6 +8,7 @@ export interface AsciiItemProps {
   selected?: boolean;
   disabled?: boolean;
   onClick?: () => void;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -20,6 +21,7 @@ export function AsciiItem({
   selected,
   disabled,
   onClick,
+  color,
   className,
   style,
 }: AsciiItemProps) {
@@ -47,7 +49,7 @@ export function AsciiItem({
   return (
     <div
       className={`ascii-lib ascii-item ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {content}
     </div>

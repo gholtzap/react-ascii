@@ -8,6 +8,7 @@ export interface AsciiStepperStep {
 export interface AsciiStepperProps {
   steps: AsciiStepperStep[];
   current: number;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -15,6 +16,7 @@ export interface AsciiStepperProps {
 export function AsciiStepper({
   steps,
   current,
+  color,
   className,
   style,
 }: AsciiStepperProps) {
@@ -46,7 +48,7 @@ export function AsciiStepper({
   return (
     <div
       className={`ascii-lib ascii-stepper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="navigation"
       aria-label="Progress steps"
     >

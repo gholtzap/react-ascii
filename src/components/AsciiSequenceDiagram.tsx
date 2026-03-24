@@ -22,6 +22,7 @@ export interface AsciiSequenceDiagramProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -80,6 +81,7 @@ export function AsciiSequenceDiagram({
   height = 6,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiSequenceDiagramProps) {
@@ -97,7 +99,7 @@ export function AsciiSequenceDiagram({
       border={border}
       footer={footer}
       className={`ascii-sequence ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-sequence-header">
         <span className="ascii-sequence-grid" style={{ inlineSize: `${gridWidth}ch` }}>{header}</span>

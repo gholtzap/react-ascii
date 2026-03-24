@@ -24,6 +24,7 @@ export interface AsciiProcessTableProps {
   sortBy?: "pid" | "name" | "cpu" | "memory" | "state";
   sortDirection?: "asc" | "desc";
   showSummary?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -70,6 +71,7 @@ export function AsciiProcessTable({
   sortBy = "cpu",
   sortDirection = "desc",
   showSummary = true,
+  color,
   className,
   style,
 }: AsciiProcessTableProps) {
@@ -109,7 +111,7 @@ export function AsciiProcessTable({
       border={border}
       footer={footer}
       className={`ascii-processtable ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {toolbar ? <div className="ascii-processtable-toolbar">{toolbar}</div> : null}
       {showSummary ? <div className="ascii-processtable-summary">{summary}</div> : null}

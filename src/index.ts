@@ -266,6 +266,12 @@ export type { AsciiMatrixRainProps } from "./components/AsciiMatrixRain";
 export { AsciiScanLine } from "./components/AsciiScanLine";
 export type { AsciiScanLineProps } from "./components/AsciiScanLine";
 
+export { AsciiTheme } from "./components/AsciiTheme";
+export type { AsciiThemeProps } from "./components/AsciiTheme";
+
+export { themes, densities, themeToCustomProperties, densityToCustomProperties } from "./themes";
+export type { ThemeVars, ThemePreset, DensityPreset, DensityVars } from "./themes";
+
 // Re-export types for customization
 export type { BorderStyle, BorderChars } from "./chars";
 export { borders } from "./chars";

@@ -7,6 +7,7 @@ export interface AsciiPaginationProps {
   onPageChange: (page: number) => void;
   border?: BorderStyle;
   siblingCount?: number;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -38,6 +39,7 @@ export function AsciiPagination({
   onPageChange,
   border = "single",
   siblingCount = 1,
+  color,
   className,
   style,
 }: AsciiPaginationProps) {
@@ -47,7 +49,7 @@ export function AsciiPagination({
   return (
     <nav
       className={`ascii-lib ascii-pagination ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       aria-label="Pagination"
     >
       <button

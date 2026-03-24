@@ -8,6 +8,7 @@ export interface AsciiCardProps {
   footer?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -18,6 +19,7 @@ export function AsciiCard({
   footer,
   width = 40,
   border = "single",
+  color,
   className,
   style,
 }: AsciiCardProps) {
@@ -28,7 +30,7 @@ export function AsciiCard({
       title={title}
       footer={footer}
       className={`ascii-card ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       bodyClassName="ascii-card-body"
       footerClassName="ascii-card-footer"
     >

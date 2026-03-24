@@ -16,6 +16,7 @@ export interface AsciiTreeProps {
   expandedIds?: string[];
   defaultExpandedIds?: string[];
   onExpandedIdsChange?: (ids: string[]) => void;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -125,6 +126,7 @@ export function AsciiTree({
   expandedIds,
   defaultExpandedIds,
   onExpandedIdsChange,
+  color,
   className,
   style,
 }: AsciiTreeProps) {
@@ -185,7 +187,7 @@ export function AsciiTree({
   return (
     <div
       className={`ascii-lib ascii-tree ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="tree"
       aria-label="Tree"
     >

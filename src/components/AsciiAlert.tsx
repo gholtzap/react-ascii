@@ -18,6 +18,7 @@ export interface AsciiAlertProps {
   width?: number;
   border?: BorderStyle;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -28,6 +29,7 @@ export function AsciiAlert({
   width = 50,
   border = "single",
   animate = false,
+  color,
   className,
   style,
 }: AsciiAlertProps) {
@@ -68,7 +70,7 @@ export function AsciiAlert({
   return (
     <div
       className={`ascii-lib ascii-alert ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role={roleMap[variant]}
     >
       {lines.join("\n")}

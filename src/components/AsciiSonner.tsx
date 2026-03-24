@@ -141,6 +141,7 @@ export interface AsciiSonnerContainerProps {
   width?: number;
   border?: BorderStyle;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -151,6 +152,7 @@ export function AsciiSonner({
   width = 40,
   border = "single",
   animate = false,
+  color,
   className,
   style,
 }: AsciiSonnerContainerProps) {
@@ -159,7 +161,7 @@ export function AsciiSonner({
   return (
     <div
       className={`ascii-lib ascii-sonner ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {toasts.map((t) => (
         <SonnerItem

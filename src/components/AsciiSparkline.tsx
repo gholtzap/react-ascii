@@ -8,6 +8,7 @@ export interface AsciiSparklineProps {
   min?: number;
   max?: number;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
   "aria-label"?: string;
@@ -18,6 +19,7 @@ export function AsciiSparkline({
   min: minOverride,
   max: maxOverride,
   animate = false,
+  color,
   className,
   style,
   "aria-label": ariaLabel,
@@ -54,7 +56,7 @@ export function AsciiSparkline({
   return (
     <span
       className={`ascii-lib ascii-sparkline ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="img"
       aria-label={ariaLabel ?? `Sparkline: ${data.join(", ")}`}
     >

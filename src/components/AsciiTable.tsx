@@ -13,6 +13,7 @@ export interface AsciiTableProps {
   data: Record<string, string | number>[];
   border?: BorderStyle;
   "aria-label"?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -22,6 +23,7 @@ export function AsciiTable({
   data,
   border = "single",
   "aria-label": ariaLabel,
+  color,
   className,
   style,
 }: AsciiTableProps) {
@@ -71,7 +73,7 @@ export function AsciiTable({
   lines.push(makeRow(cols.map(() => ""), b.bl, b.bm, b.br, b.h));
 
   return (
-    <div className={`ascii-lib ascii-table ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-table ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       <span aria-hidden="true">{lines.join("\n")}</span>
       <table className="ascii-sr-only" aria-label={ariaLabel}>
         <thead>

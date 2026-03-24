@@ -3,6 +3,7 @@ import React from "react";
 export interface AsciiAvatarProps {
   name: string;
   size?: "sm" | "md" | "lg";
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -19,6 +20,7 @@ function getInitials(name: string): string {
 export function AsciiAvatar({
   name,
   size = "md",
+  color,
   className,
   style,
 }: AsciiAvatarProps) {
@@ -40,7 +42,7 @@ export function AsciiAvatar({
   return (
     <span
       className={`ascii-lib ascii-avatar ascii-avatar-${size} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="img"
       aria-label={name}
     >

@@ -21,6 +21,7 @@ export interface AsciiSelectProps {
   side?: AsciiFloatingSide;
   align?: AsciiFloatingAlign;
   offset?: number;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -36,6 +37,7 @@ export function AsciiSelect({
   side = "bottom",
   align = "start",
   offset = 4,
+  color,
   className,
   style,
 }: AsciiSelectProps) {
@@ -160,7 +162,7 @@ export function AsciiSelect({
     <div
       ref={wrapperRef}
       className={`ascii-lib ascii-select-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <button
         id={triggerId}

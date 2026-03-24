@@ -25,6 +25,7 @@ export interface AsciiDiffProps {
   query?: string;
   collapseUnchangedAfter?: number;
   emptyMessage?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -87,6 +88,7 @@ export function AsciiDiff({
   query,
   collapseUnchangedAfter = 0,
   emptyMessage = "No diff lines",
+  color,
   className,
   style,
 }: AsciiDiffProps) {
@@ -103,7 +105,7 @@ export function AsciiDiff({
       border={border}
       footer={footer}
       className={`ascii-diff ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {toolbar ? <div className="ascii-diff-toolbar">{toolbar}</div> : null}
       <div className="ascii-diff-columns">

@@ -3,6 +3,7 @@ import React from "react";
 export interface AsciiScanLineProps {
   children: React.ReactNode;
   enabled?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -10,6 +11,7 @@ export interface AsciiScanLineProps {
 export function AsciiScanLine({
   children,
   enabled = true,
+  color,
   className,
   style,
 }: AsciiScanLineProps) {

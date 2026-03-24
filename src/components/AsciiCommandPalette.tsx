@@ -24,6 +24,7 @@ export interface AsciiCommandPaletteProps {
   emptyMessage?: string;
   ariaLabel?: string;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -168,6 +169,7 @@ export function AsciiCommandPalette({
   emptyMessage = "No results",
   ariaLabel = "Command palette",
   border = "round",
+  color,
   className,
   style,
 }: AsciiCommandPaletteProps) {
@@ -263,7 +265,7 @@ export function AsciiCommandPalette({
         <div
           ref={contentRef}
           className={`ascii-cmdpalette ${className ?? ""}`.trim()}
-          style={style}
+          style={color ? { ...style, color } : style}
           role="dialog"
           aria-modal="true"
           aria-label={ariaLabel}

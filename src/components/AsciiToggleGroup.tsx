@@ -13,6 +13,7 @@ export interface AsciiToggleGroupProps {
   onChange?: (value: string | string[]) => void;
   multiple?: boolean;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -23,6 +24,7 @@ export function AsciiToggleGroup({
   onChange,
   multiple = false,
   border = "single",
+  color,
   className,
   style,
 }: AsciiToggleGroupProps) {
@@ -55,7 +57,7 @@ export function AsciiToggleGroup({
   return (
     <div
       className={`ascii-lib ascii-toggle-group ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="group"
     >
       <span>{top}</span>

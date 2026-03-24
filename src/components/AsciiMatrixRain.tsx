@@ -6,6 +6,7 @@ export interface AsciiMatrixRainProps {
   height?: number;
   speed?: number;
   chars?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,6 +18,7 @@ export function AsciiMatrixRain({
   height = 10,
   speed = 80,
   chars = DEFAULT_CHARS,
+  color,
   className,
   style,
 }: AsciiMatrixRainProps) {

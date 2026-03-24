@@ -19,6 +19,7 @@ export interface AsciiFileTreeProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -62,6 +63,7 @@ export function AsciiFileTree({
   height = 8,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiFileTreeProps) {
@@ -75,7 +77,7 @@ export function AsciiFileTree({
       border={border}
       footer={footer}
       className={`ascii-filetree ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-filetree-list" role="tree" aria-label={title}>
         {lines.map((line) => (

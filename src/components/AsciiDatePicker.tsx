@@ -7,6 +7,7 @@ export interface AsciiDatePickerProps {
   onChange?: (date: Date) => void;
   border?: BorderStyle;
   width?: number;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -16,6 +17,7 @@ export function AsciiDatePicker({
   onChange,
   border = "single",
   width = 28,
+  color,
   className,
   style,
 }: AsciiDatePickerProps) {
@@ -52,7 +54,7 @@ export function AsciiDatePicker({
   return (
     <div
       className={`ascii-lib ascii-datepicker ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="group"
       aria-label={`Calendar: ${monthLabel}`}
     >

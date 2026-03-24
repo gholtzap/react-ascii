@@ -6,6 +6,7 @@ export interface AsciiCollapsibleProps {
   children: string;
   defaultOpen?: boolean;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -15,6 +16,7 @@ export function AsciiCollapsible({
   children,
   defaultOpen = false,
   animate = false,
+  color,
   className,
   style,
 }: AsciiCollapsibleProps) {
@@ -42,7 +44,7 @@ export function AsciiCollapsible({
   return (
     <div
       className={`ascii-lib ascii-collapsible ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <button
         type="button"

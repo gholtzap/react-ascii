@@ -24,6 +24,7 @@ export interface AsciiRackMapProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -42,6 +43,7 @@ export function AsciiRackMap({
   height = 4,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiRackMapProps) {
@@ -55,7 +57,7 @@ export function AsciiRackMap({
       border={border}
       footer={footer}
       className={`ascii-rackmap ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-rackmap-list" role="list" aria-label={title}>
         {visibleRacks.map((rack) => (

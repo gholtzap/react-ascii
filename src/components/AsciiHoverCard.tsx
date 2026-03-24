@@ -16,6 +16,7 @@ export interface AsciiHoverCardProps {
   border?: BorderStyle;
   asChild?: boolean;
   children: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -29,6 +30,7 @@ export function AsciiHoverCard({
   border = "single",
   asChild,
   children,
+  color,
   className,
   style,
 }: AsciiHoverCardProps) {
@@ -76,7 +78,7 @@ export function AsciiHoverCard({
   return (
     <span
       className={`ascii-lib ascii-hovercard-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {visible && (
         <AsciiPortal>

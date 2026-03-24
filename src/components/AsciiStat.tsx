@@ -9,6 +9,7 @@ export interface AsciiStatProps {
   border?: BorderStyle;
   width?: number;
   sparkline?: number[];
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -21,6 +22,7 @@ export function AsciiStat({
   border = "single",
   width = 24,
   sparkline,
+  color,
   className,
   style,
 }: AsciiStatProps) {
@@ -58,7 +60,7 @@ export function AsciiStat({
   return (
     <div
       className={`ascii-lib ascii-stat ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {lines.join("\n")}
     </div>

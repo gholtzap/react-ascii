@@ -5,6 +5,7 @@ export interface AsciiSkeletonProps {
   lines?: number;
   char?: string;
   shimmer?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -14,6 +15,7 @@ export function AsciiSkeleton({
   lines = 1,
   char = "░",
   shimmer = false,
+  color,
   className,
   style,
 }: AsciiSkeletonProps) {

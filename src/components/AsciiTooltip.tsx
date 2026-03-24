@@ -17,6 +17,7 @@ export interface AsciiTooltipProps {
   offset?: number;
   border?: BorderStyle;
   asChild?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -31,6 +32,7 @@ export function AsciiTooltip({
   offset = 4,
   border = "single",
   asChild,
+  color,
   className,
   style,
 }: AsciiTooltipProps) {
@@ -77,7 +79,7 @@ export function AsciiTooltip({
     );
 
   return (
-    <span className={`ascii-lib ascii-tooltip-wrapper ${className ?? ""}`.trim()} style={style}>
+    <span className={`ascii-lib ascii-tooltip-wrapper ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       {visible && (
         <AsciiPortal>
           <span

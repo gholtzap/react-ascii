@@ -19,6 +19,7 @@ export interface AsciiStatusGridProps {
   width?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -30,6 +31,7 @@ export function AsciiStatusGrid({
   width = 56,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiStatusGridProps) {
@@ -40,7 +42,7 @@ export function AsciiStatusGrid({
       title={title}
       footer={footer}
       className={`ascii-statusgrid ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       bodyClassName="ascii-statusgrid-body"
     >
       <div

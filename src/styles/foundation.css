@@ -1,3 +1,16 @@
+.ascii-theme {
+  background: var(--ascii-bg, transparent);
+  color: var(--ascii-fg, inherit);
+  font-family: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
+    "Source Code Pro", "SF Mono", Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+  font-size: var(--ascii-font-size, inherit);
+  line-height: var(--ascii-line-height, 1.4);
+  letter-spacing: var(--ascii-letter-spacing, 0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .ascii-lib {
   font-family: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
     "Source Code Pro", "SF Mono", Menlo, Monaco, Consolas, "Courier New",
@@ -7,6 +20,7 @@
   letter-spacing: var(--ascii-letter-spacing, 0);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--ascii-fg, inherit);
 }
 
 /* ── Shared container ────────────────────────── */

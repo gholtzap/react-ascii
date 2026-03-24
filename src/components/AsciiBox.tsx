@@ -9,6 +9,7 @@ export interface AsciiBoxProps {
   title?: string;
   padding?: number;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -20,6 +21,7 @@ export function AsciiBox({
   title,
   padding = 1,
   animate = false,
+  color,
   className,
   style,
 }: AsciiBoxProps) {
@@ -80,7 +82,7 @@ export function AsciiBox({
   ];
 
   return (
-    <div className={`ascii-lib ascii-box ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-box ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       <span>{topLine}</span>
       {"\n"}
       {formattedContentLines ? (

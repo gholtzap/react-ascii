@@ -45,12 +45,14 @@ const FONT: Record<string, string[]> = {
 
 export interface AsciiAsciiTextProps {
   text: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
 export function AsciiAsciiText({
   text,
+  color,
   className,
   style,
 }: AsciiAsciiTextProps) {
@@ -69,7 +71,7 @@ export function AsciiAsciiText({
   return (
     <div
       className={`ascii-lib ascii-asciitext ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="img"
       aria-label={text}
     >

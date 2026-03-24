@@ -4,6 +4,7 @@ import { useReducedMotion } from "../internal/useReducedMotion";
 export interface AsciiCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "style"> {
   label: string;
   animate?: boolean;
+  color?: string;
   style?: React.CSSProperties;
 }
 
@@ -11,6 +12,7 @@ export function AsciiCheckbox({
   label,
   checked,
   animate = false,
+  color,
   className,
   style,
   onChange,
@@ -52,7 +54,7 @@ export function AsciiCheckbox({
     <label
       htmlFor={inputId}
       className={`ascii-lib ascii-check${animClass} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <input type="checkbox" id={inputId} checked={checked} onChange={handleChange} {...rest} />
       <span className="ascii-check-box">[{marker}]</span>

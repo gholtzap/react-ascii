@@ -9,6 +9,7 @@ export interface AsciiBreadcrumbItem {
 export interface AsciiBreadcrumbProps {
   items: AsciiBreadcrumbItem[];
   separator?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -16,13 +17,14 @@ export interface AsciiBreadcrumbProps {
 export function AsciiBreadcrumb({
   items,
   separator = " > ",
+  color,
   className,
   style,
 }: AsciiBreadcrumbProps) {
   return (
     <nav
       className={`ascii-lib ascii-breadcrumb ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       aria-label="Breadcrumb"
     >
       <ol className="ascii-breadcrumb-list">

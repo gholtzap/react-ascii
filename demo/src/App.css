@@ -3,13 +3,13 @@
   margin-bottom: 2rem;
   white-space: pre;
   line-height: 1.2;
-  color: var(--accent);
+  color: var(--ascii-accent);
   max-width: 100%;
   overflow: hidden;
 }
 
 .demo-header .subtitle {
-  color: var(--dim);
+  color: var(--ascii-dim);
   margin-top: 0.5rem;
   font-size: 0.85rem;
   white-space: pre-wrap;
@@ -21,14 +21,14 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--ascii-border);
   padding-bottom: 1rem;
 }
 
 .view-tab {
   background: none;
   border: none;
-  color: var(--dim);
+  color: var(--ascii-dim);
   font: inherit;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -36,11 +36,11 @@
 }
 
 .view-tab:hover {
-  color: var(--fg);
+  color: var(--ascii-fg);
 }
 
 .view-tab-active {
-  color: var(--accent);
+  color: var(--ascii-accent);
 }
 
 .demo-controls {
@@ -49,10 +49,10 @@
   gap: 1rem;
   margin-bottom: 2rem;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--ascii-border);
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--surface) 86%, transparent), transparent 65%),
-    var(--surface);
+    linear-gradient(135deg, color-mix(in srgb, var(--ascii-surface) 86%, transparent), transparent 65%),
+    var(--ascii-surface);
 }
 
 .demo-control {
@@ -74,7 +74,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--ascii-border);
   flex-wrap: wrap;
   gap: 0.5rem;
 }
@@ -92,7 +92,7 @@
 }
 
 .dash-logo {
-  color: var(--accent);
+  color: var(--ascii-accent);
   font-weight: bold;
   letter-spacing: 0.05em;
 }
@@ -149,7 +149,7 @@
 }
 
 .dash-section-title {
-  color: var(--dim);
+  color: var(--ascii-dim);
   font-size: 0.8rem;
   font-weight: normal;
   text-transform: uppercase;
@@ -179,7 +179,7 @@
 .dash-nav {
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--ascii-border);
 }
 
 .dash-stats {
@@ -207,7 +207,7 @@
   align-items: center;
   font-size: 0.8rem;
   padding: 0.75rem 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--ascii-border);
 }
 
 .dash-split {
@@ -223,7 +223,7 @@
 }
 
 .accent2 {
-  color: var(--fg);
+  color: var(--ascii-fg);
 }
 
 /* ── Components showcase ───────────────── */
@@ -233,14 +233,14 @@
 }
 
 h2.section-title {
-  color: var(--accent);
+  color: var(--ascii-accent);
   margin-bottom: 0.25rem;
   font-size: 1rem;
   font-weight: normal;
 }
 
 .section-desc {
-  color: var(--dim);
+  color: var(--ascii-dim);
   font-size: 0.85rem;
   margin-bottom: 1rem;
 }
@@ -260,18 +260,18 @@ h2.section-title {
 }
 
 .label {
-  color: var(--dim);
+  color: var(--ascii-dim);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
-.green { color: var(--accent); }
-.red { color: var(--accent2); }
-.blue { color: var(--accent3); }
-.warning { color: var(--warning); }
-.dim { color: var(--dim); }
-.white { color: var(--fg); }
+.green { color: var(--ascii-accent); }
+.red { color: var(--ascii-accent2); }
+.blue { color: var(--ascii-accent3); }
+.warning { color: var(--ascii-warning); }
+.dim { color: var(--ascii-dim); }
+.white { color: var(--ascii-fg); }
 
 .ascii-lib {
   color: inherit;
@@ -290,20 +290,16 @@ h2.section-title {
 }
 
 .ascii-select-dropdown {
-  background: var(--bg);
-}
-
-.ascii-modal-overlay {
-  --ascii-overlay: var(--overlay);
+  background: var(--ascii-bg);
 }
 
 .divider-full {
-  color: var(--border);
+  color: var(--ascii-border);
   margin: 2rem 0;
 }
 
 .output {
-  color: var(--dim);
+  color: var(--ascii-dim);
   font-size: 0.8rem;
   margin-top: 0.5rem;
 }
@@ -355,7 +351,7 @@ h2.section-title {
 
 footer {
   text-align: center;
-  color: var(--dim);
+  color: var(--ascii-dim);
   margin-bottom: 2rem;
 }
 

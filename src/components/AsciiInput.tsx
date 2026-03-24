@@ -5,6 +5,7 @@ export interface AsciiInputProps extends Omit<React.InputHTMLAttributes<HTMLInpu
   label?: string;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   style?: React.CSSProperties;
 }
 
@@ -12,6 +13,7 @@ export function AsciiInput({
   label,
   width = 30,
   border = "single",
+  color,
   className,
   style,
   ...rest
@@ -25,7 +27,7 @@ export function AsciiInput({
   const botLine = b.bl + repeatChar(b.h, inner) + b.br;
 
   return (
-    <div className={`ascii-lib ascii-input-wrapper ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-input-wrapper ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       {label && (
         <>
           <label htmlFor={inputId}>{label}</label>

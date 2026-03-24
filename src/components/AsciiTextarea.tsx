@@ -6,6 +6,7 @@ export interface AsciiTextareaProps extends Omit<React.TextareaHTMLAttributes<HT
   width?: number;
   height?: number;
   border?: BorderStyle;
+  color?: string;
   style?: React.CSSProperties;
 }
 
@@ -14,6 +15,7 @@ export function AsciiTextarea({
   width = 40,
   height = 5,
   border = "single",
+  color,
   className,
   style,
   ...rest
@@ -28,7 +30,7 @@ export function AsciiTextarea({
   const sideLine = b.v;
 
   return (
-    <div className={`ascii-lib ascii-textarea-wrapper ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-textarea-wrapper ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       {label && (
         <>
           <label htmlFor={inputId}>{label}</label>

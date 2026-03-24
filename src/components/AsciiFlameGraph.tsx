@@ -22,6 +22,7 @@ export interface AsciiFlameGraphProps {
   border?: BorderStyle;
   footer?: React.ReactNode;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -38,6 +39,7 @@ export function AsciiFlameGraph({
   border = "single",
   footer,
   animate = false,
+  color,
   className,
   style,
 }: AsciiFlameGraphProps) {
@@ -88,7 +90,7 @@ export function AsciiFlameGraph({
       border={border}
       footer={footer}
       className={`ascii-flamegraph ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-flame-list" role="list" aria-label={title}>
         {visibleFrames.map((frame, idx) => {

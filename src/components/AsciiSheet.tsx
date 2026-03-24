@@ -13,6 +13,7 @@ export interface AsciiSheetProps {
   children?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -26,6 +27,7 @@ export function AsciiSheet({
   children,
   width = 40,
   border = "single",
+  color,
   className,
   style,
 }: AsciiSheetProps) {
@@ -40,7 +42,7 @@ export function AsciiSheet({
       width={width}
       border={border}
       className={className}
-      style={style}
+      style={color ? { ...style, color } : style}
       overlayClassName="ascii-sheet-overlay"
       panelClassName={`ascii-sheet ${positionClass}`}
       bodyClassName="ascii-sheet-body"

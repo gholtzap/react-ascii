@@ -10,6 +10,7 @@ export interface AsciiSliderProps {
   label?: string;
   showValue?: boolean;
   disabled?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -24,6 +25,7 @@ export function AsciiSlider({
   label,
   showValue = true,
   disabled,
+  color,
   className,
   style,
 }: AsciiSliderProps) {
@@ -120,7 +122,7 @@ export function AsciiSlider({
   return (
     <span
       className={`ascii-lib ascii-slider ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {label && (
         <label htmlFor={id} className="ascii-slider-label">

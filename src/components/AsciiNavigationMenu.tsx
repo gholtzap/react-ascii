@@ -12,6 +12,7 @@ export interface AsciiNavigationMenuProps {
   activeKey?: string;
   onSelect?: (key: string) => void;
   separator?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -21,13 +22,14 @@ export function AsciiNavigationMenu({
   activeKey,
   onSelect,
   separator = " | ",
+  color,
   className,
   style,
 }: AsciiNavigationMenuProps) {
   return (
     <nav
       className={`ascii-lib ascii-navmenu ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {items.map((item, i) => {
         const isActive = item.key === activeKey;

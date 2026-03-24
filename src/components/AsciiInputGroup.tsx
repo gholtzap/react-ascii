@@ -8,6 +8,7 @@ export interface AsciiInputGroupProps {
   width?: number;
   border?: BorderStyle;
   children: React.ReactElement;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -18,6 +19,7 @@ export function AsciiInputGroup({
   width = 36,
   border = "single",
   children,
+  color,
   className,
   style,
 }: AsciiInputGroupProps) {
@@ -33,7 +35,7 @@ export function AsciiInputGroup({
   return (
     <div
       className={`ascii-lib ascii-input-group ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <span>{topLine}</span>
       {"\n"}

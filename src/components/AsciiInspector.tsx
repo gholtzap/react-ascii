@@ -19,6 +19,7 @@ export interface AsciiInspectorProps {
   width?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -29,6 +30,7 @@ export function AsciiInspector({
   width = 52,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiInspectorProps) {
@@ -44,7 +46,7 @@ export function AsciiInspector({
       title={title}
       footer={footer}
       className={`ascii-inspector ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       bodyClassName="ascii-inspector-body"
     >
       {entries.map((entry, index) => {

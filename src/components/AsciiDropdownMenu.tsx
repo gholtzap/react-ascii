@@ -24,6 +24,7 @@ export interface AsciiDropdownMenuProps {
   offset?: number;
   border?: BorderStyle;
   asChild?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -38,6 +39,7 @@ export function AsciiDropdownMenu({
   offset = 4,
   border = "single",
   asChild,
+  color,
   className,
   style,
 }: AsciiDropdownMenuProps) {
@@ -152,7 +154,7 @@ export function AsciiDropdownMenu({
     <div
       ref={wrapperRef}
       className={`ascii-lib ascii-dropdown-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <AsciiTrigger
         asChild={asChild}

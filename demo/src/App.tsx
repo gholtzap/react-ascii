@@ -74,7 +74,9 @@ import {
   AsciiMatrixRain,
   AsciiScanLine,
   AsciiFlameGraph,
+  AsciiTheme,
 } from "ascii-lib";
+import type { ThemePreset, DensityPreset } from "ascii-lib";
 import "./App.css";
 import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
@@ -2652,29 +2654,18 @@ function Index() {
 
 function App() {
   const [view, setView] = useState<"dashboard" | "components" | "index">("dashboard");
-  const [theme, setTheme] = useState("phosphor");
-  const [density, setDensity] = useState("cozy");
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.dataset.demoTheme = theme;
-    root.dataset.demoDensity = density;
-
-    return () => {
-      delete root.dataset.demoTheme;
-      delete root.dataset.demoDensity;
-    };
-  }, [density, theme]);
+  const [theme, setTheme] = useState<ThemePreset>("phosphor");
+  const [density, setDensity] = useState<DensityPreset>("cozy");
 
   return (
-    <>
+    <AsciiTheme preset={theme} density={density}>
       <DemoHeader />
       <DemoViewSwitcher view={view} onChange={setView} />
       <DemoControls
         theme={theme}
         density={density}
-        onThemeChange={setTheme}
-        onDensityChange={setDensity}
+        onThemeChange={(t) => setTheme(t as ThemePreset)}
+        onDensityChange={(d) => setDensity(d as DensityPreset)}
       />
 
       <main>
@@ -2684,7 +2675,7 @@ function App() {
       </main>
 
       <DemoFooter />
-    </>
+    </AsciiTheme>
   );
 }
 

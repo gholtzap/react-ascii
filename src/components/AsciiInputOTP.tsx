@@ -7,6 +7,7 @@ export interface AsciiInputOTPProps {
   onChange?: (value: string) => void;
   border?: BorderStyle;
   separator?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,6 +18,7 @@ export function AsciiInputOTP({
   onChange,
   border = "single",
   separator = " ",
+  color,
   className,
   style,
 }: AsciiInputOTPProps) {
@@ -59,7 +61,7 @@ export function AsciiInputOTP({
   return (
     <div
       className={`ascii-lib ascii-input-otp ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="group"
       aria-label="One-time password"
     >

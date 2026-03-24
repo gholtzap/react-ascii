@@ -26,6 +26,7 @@ export interface AsciiDependencyGraphProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -45,6 +46,7 @@ export function AsciiDependencyGraph({
   height = 8,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiDependencyGraphProps) {
@@ -65,7 +67,7 @@ export function AsciiDependencyGraph({
       border={border}
       footer={footer}
       className={`ascii-dependencygraph ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-dependencygraph-list" role="list" aria-label={title}>
         {grouped.map(({ node, outgoing }) => (

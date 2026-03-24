@@ -19,6 +19,7 @@ export interface AsciiContextMenuProps {
   children: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -29,6 +30,7 @@ export function AsciiContextMenu({
   children,
   width = 24,
   border = "single",
+  color,
   className,
   style,
 }: AsciiContextMenuProps) {
@@ -119,7 +121,7 @@ export function AsciiContextMenu({
     <div
       ref={wrapperRef}
       className={`ascii-lib ascii-contextmenu-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       onContextMenu={handleContext}
     >
       {children}

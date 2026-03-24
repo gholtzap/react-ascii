@@ -39,6 +39,7 @@ export interface AsciiLogViewerProps {
   onBookmarkedIdsChange?: (ids: string[]) => void;
   onCopyLine?: (line: AsciiLogEntry) => void;
   emptyMessage?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -98,6 +99,7 @@ export function AsciiLogViewer({
   onBookmarkedIdsChange,
   onCopyLine,
   emptyMessage = "No log lines",
+  color,
   className,
   style,
 }: AsciiLogViewerProps) {
@@ -217,7 +219,7 @@ export function AsciiLogViewer({
       border={border}
       footer={footer}
       className={`ascii-logviewer ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {toolbar || selectable || copyable || bookmarkable ? (
         <div className="ascii-logviewer-toolbar">

@@ -22,6 +22,7 @@ export interface AsciiMenubarProps {
   menus: AsciiMenubarMenu[];
   onSelect: (menuKey: string, itemKey: string) => void;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -30,6 +31,7 @@ export function AsciiMenubar({
   menus,
   onSelect,
   border = "single",
+  color,
   className,
   style,
 }: AsciiMenubarProps) {
@@ -137,7 +139,7 @@ export function AsciiMenubar({
     <div
       ref={ref}
       className={`ascii-lib ascii-menubar ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="menubar"
       onKeyDown={handleMenuKeyDown}
     >

@@ -12,6 +12,7 @@ export interface AsciiTabsProps {
   activeKey: string;
   onTabChange: (key: string) => void;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -21,6 +22,7 @@ export function AsciiTabs({
   activeKey,
   onTabChange,
   border = "single",
+  color,
   className,
   style,
 }: AsciiTabsProps) {
@@ -79,7 +81,7 @@ export function AsciiTabs({
   };
 
   return (
-    <div className={`ascii-lib ascii-tabs ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-tabs ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       <div className="ascii-tab-bar" role="tablist" onKeyDown={handleKeyDown}>
         {tabHeaders.map((th) => {
           const isActive = th.key === activeKey;

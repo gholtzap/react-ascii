@@ -6,95 +6,9 @@
   padding: 0;
 }
 
-:root {
-  --bg: #0a0a0a;
-  --fg: #e0e0e0;
-  --dim: #666;
-  --accent: #00ff88;
-  --accent2: #ff6b6b;
-  --accent3: #6bb3ff;
-  --warning: #ffaa00;
-  --surface: #141414;
-  --border: #2a2a2a;
-  --overlay: rgba(0, 0, 0, 0.6);
-  --ascii-line-height: 1.4;
-  --ascii-letter-spacing: 0;
-  --ascii-font-size: inherit;
-}
-
-:root[data-demo-theme="phosphor"] {
-  --bg: #07140f;
-  --fg: #d7ffe8;
-  --dim: #6ea487;
-  --accent: #57ff9b;
-  --accent2: #ff8577;
-  --accent3: #86d4ff;
-  --warning: #ffd56f;
-  --surface: #0c1d16;
-  --border: #204333;
-  --overlay: rgba(3, 17, 12, 0.72);
-}
-
-:root[data-demo-theme="amber"] {
-  --bg: #181107;
-  --fg: #ffe0a8;
-  --dim: #b78a47;
-  --accent: #ffbf52;
-  --accent2: #ff8b5a;
-  --accent3: #ffd98a;
-  --warning: #fff17a;
-  --surface: #221709;
-  --border: #61401b;
-  --overlay: rgba(24, 17, 7, 0.76);
-}
-
-:root[data-demo-theme="paper"] {
-  --bg: #f5efe2;
-  --fg: #2e2419;
-  --dim: #7e6a52;
-  --accent: #6c5030;
-  --accent2: #9a4d37;
-  --accent3: #49667a;
-  --warning: #a87c1c;
-  --surface: #fbf7ef;
-  --border: #ccbda7;
-  --overlay: rgba(83, 66, 48, 0.18);
-}
-
-:root[data-demo-theme="mono"] {
-  --bg: #090909;
-  --fg: #f3f3f3;
-  --dim: #9d9d9d;
-  --accent: #f3f3f3;
-  --accent2: #c9c9c9;
-  --accent3: #d9d9d9;
-  --warning: #efefef;
-  --surface: #141414;
-  --border: #4b4b4b;
-  --overlay: rgba(0, 0, 0, 0.72);
-}
-
-:root[data-demo-density="compact"] {
-  --ascii-line-height: 1.24;
-  --ascii-letter-spacing: -0.01em;
-  --ascii-font-size: 0.94em;
-}
-
-:root[data-demo-density="cozy"] {
-  --ascii-line-height: 1.4;
-  --ascii-letter-spacing: 0;
-  --ascii-font-size: inherit;
-}
-
-:root[data-demo-density="roomy"] {
-  --ascii-line-height: 1.58;
-  --ascii-letter-spacing: 0.01em;
-  --ascii-font-size: 1.03em;
-}
-
 html {
-  background: var(--bg);
-  color: var(--fg);
+  background: var(--ascii-bg, #0a0a0a);
+  color: var(--ascii-fg, #e0e0e0);
   font-family: "Berkeley Mono", "JetBrains Mono", "Fira Code", "Cascadia Code",
     "SF Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 14px;

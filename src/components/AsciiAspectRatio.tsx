@@ -7,6 +7,7 @@ export interface AsciiAspectRatioProps {
   width?: number;
   border?: BorderStyle;
   children?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -16,6 +17,7 @@ export function AsciiAspectRatio({
   width = 40,
   border = "single",
   children,
+  color,
   className,
   style,
 }: AsciiAspectRatioProps) {
@@ -28,7 +30,7 @@ export function AsciiAspectRatio({
       border={border}
       minBodyRows={height}
       className={`ascii-aspect-ratio ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       bodyClassName="ascii-aspect-ratio-body"
     >
       {children}

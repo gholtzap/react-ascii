@@ -10,6 +10,7 @@ export interface AsciiModalProps {
   children?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -22,6 +23,7 @@ export function AsciiModal({
   children,
   width = 50,
   border = "double",
+  color,
   className,
   style,
 }: AsciiModalProps) {
@@ -34,7 +36,7 @@ export function AsciiModal({
       width={width}
       border={border}
       className={className}
-      style={style}
+      style={color ? { ...style, color } : style}
       overlayClassName="ascii-modal-overlay"
       panelClassName="ascii-modal"
       bodyClassName="ascii-modal-body"

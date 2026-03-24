@@ -5,6 +5,7 @@ export type AsciiDir = "ltr" | "rtl";
 export interface AsciiDirectionProps {
   dir: AsciiDir;
   children: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -12,13 +13,14 @@ export interface AsciiDirectionProps {
 export function AsciiDirection({
   dir,
   children,
+  color,
   className,
   style,
 }: AsciiDirectionProps) {
   return (
     <div
       className={`ascii-lib ascii-direction ${className ?? ""}`.trim()}
-      style={{ direction: dir, ...style }}
+      style={color ? { direction: dir, ...style, color } : { direction: dir, ...style }}
       dir={dir}
     >
       {children}

@@ -2,12 +2,14 @@ import React, { useId } from "react";
 
 export interface AsciiRadioProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type" | "style"> {
   label: string;
+  color?: string;
   style?: React.CSSProperties;
 }
 
 export function AsciiRadio({
   label,
   checked,
+  color,
   className,
   style,
   ...rest
@@ -20,7 +22,7 @@ export function AsciiRadio({
     <label
       htmlFor={inputId}
       className={`ascii-lib ascii-radio ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <input type="radio" id={inputId} checked={checked} {...rest} />
       <span className="ascii-radio-dot">({marker})</span>

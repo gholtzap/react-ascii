@@ -15,6 +15,7 @@ export interface AsciiSidebarProps {
   title?: string;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -26,6 +27,7 @@ export function AsciiSidebar({
   title,
   width = 28,
   border = "single",
+  color,
   className,
   style,
 }: AsciiSidebarProps) {
@@ -71,7 +73,7 @@ export function AsciiSidebar({
   return (
     <nav
       className={`ascii-lib ascii-sidebar ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       aria-label={title ?? "Sidebar navigation"}
     >
       {b.tl + repeatChar(b.h, inner) + b.tr}

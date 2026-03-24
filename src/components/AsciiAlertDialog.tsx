@@ -13,6 +13,7 @@ export interface AsciiAlertDialogProps {
   cancelLabel?: string;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -28,6 +29,7 @@ export function AsciiAlertDialog({
   cancelLabel = "Cancel",
   width = 50,
   border = "double",
+  color,
   className,
   style,
 }: AsciiAlertDialogProps) {
@@ -42,7 +44,7 @@ export function AsciiAlertDialog({
       width={width}
       border={border}
       className={className}
-      style={style}
+      style={color ? { ...style, color } : style}
       overlayClassName="ascii-modal-overlay"
       panelClassName="ascii-alertdialog"
       role="alertdialog"

@@ -8,6 +8,7 @@ export interface AsciiCodeProps {
   startLine?: number;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -19,6 +20,7 @@ export function AsciiCode({
   startLine = 1,
   width,
   border = "single",
+  color,
   className,
   style,
 }: AsciiCodeProps) {
@@ -57,7 +59,7 @@ export function AsciiCode({
   lines.push(b.bl + repeatChar(b.h, innerWidth) + b.br);
 
   return (
-    <div className={`ascii-lib ascii-code ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-code ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       <pre style={{ margin: 0, font: "inherit", lineHeight: "inherit" }}>
         {lines.join("\n")}
       </pre>

@@ -9,6 +9,7 @@ export interface AsciiProgressProps {
   showLabel?: boolean;
   animate?: boolean;
   "aria-label"?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -23,6 +24,7 @@ export function AsciiProgress({
   showLabel = true,
   animate = false,
   "aria-label": ariaLabel,
+  color,
   className,
   style,
 }: AsciiProgressProps) {
@@ -51,7 +53,7 @@ export function AsciiProgress({
   return (
     <div
       className={`ascii-lib ascii-progress ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}

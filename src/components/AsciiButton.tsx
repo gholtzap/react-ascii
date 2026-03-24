@@ -7,6 +7,7 @@ export interface AsciiButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLBu
   border?: BorderStyle;
   width?: number;
   animate?: boolean;
+  color?: string;
   style?: React.CSSProperties;
 }
 
@@ -15,6 +16,7 @@ export const AsciiButton = React.forwardRef<HTMLButtonElement, AsciiButtonProps>
   border = "single",
   width,
   animate = false,
+  color,
   className,
   style,
   onClick,
@@ -50,7 +52,7 @@ export const AsciiButton = React.forwardRef<HTMLButtonElement, AsciiButtonProps>
     <button
       ref={ref}
       className={`ascii-lib ascii-btn${animClasses} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       onClick={handleClick}
       {...rest}
     >

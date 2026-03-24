@@ -7,6 +7,7 @@ export interface AsciiEmptyProps {
   icon?: string;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,6 +18,7 @@ export function AsciiEmpty({
   icon = "( )",
   width = 40,
   border = "single",
+  color,
   className,
   style,
 }: AsciiEmptyProps) {
@@ -41,7 +43,7 @@ export function AsciiEmpty({
   return (
     <div
       className={`ascii-lib ascii-empty ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {lines.join("\n")}
     </div>

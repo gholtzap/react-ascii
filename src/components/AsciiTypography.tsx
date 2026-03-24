@@ -28,6 +28,7 @@ export interface AsciiTypographyProps {
   variant?: TypographyVariant;
   as?: React.ElementType;
   children: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -58,6 +59,7 @@ export function AsciiTypography({
   variant = "body",
   as,
   children,
+  color,
   className,
   style,
 }: AsciiTypographyProps) {
@@ -67,7 +69,7 @@ export function AsciiTypography({
   return (
     <Tag
       className={`ascii-lib ascii-typography ascii-typography-${variant} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {decorateContent(children, dec)}
     </Tag>

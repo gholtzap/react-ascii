@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   AsciiAspectRatio,
   AsciiBadge,
+  AsciiBox,
   AsciiButton,
   AsciiCard,
   AsciiCommandPalette,
@@ -28,6 +29,7 @@ import {
   AsciiStatusGrid,
   AsciiTag,
   AsciiTerminal,
+  AsciiTheme,
   AsciiTooltip,
   AsciiTraceTimeline,
   AsciiFlameGraph,
@@ -674,7 +676,89 @@ const featureShowcases = [
     renderDashboard: () => <RuntimePlanShowcase mode="dashboard" />,
     renderComponents: () => <RuntimePlanShowcase mode="components" />,
   },
+  {
+    id: "theming",
+    title: "AsciiTheme + color prop",
+    description: "First-class theming with AsciiTheme provider, 4 built-in presets, custom overrides, nestable scoped themes, and per-component color prop.",
+    renderDashboard: () => <ThemingShowcase mode="dashboard" />,
+    renderComponents: () => <ThemingShowcase mode="components" />,
+  },
 ] as const;
+
+function ThemingShowcase({ mode }: { mode: ShowcaseMode }) {
+  const w = mode === "dashboard" ? 44 : 56;
+
+  return (
+    <div className="feature-demo">
+      <div className="feature-inline">
+        <AsciiTheme preset="phosphor">
+          <AsciiBox width={w} title="phosphor" border="single">
+            <AsciiProgress value={72} width={w - 6} />
+            {"\n"}
+            <AsciiBadge>deploy</AsciiBadge>{" "}<AsciiButton label="Run" />
+          </AsciiBox>
+        </AsciiTheme>
+      </div>
+      <div className="feature-inline">
+        <AsciiTheme preset="amber">
+          <AsciiBox width={w} title="amber" border="single">
+            <AsciiProgress value={45} width={w - 6} />
+            {"\n"}
+            <AsciiBadge>staging</AsciiBadge>{" "}<AsciiButton label="Run" />
+          </AsciiBox>
+        </AsciiTheme>
+      </div>
+      <div className="feature-inline">
+        <AsciiTheme preset="paper">
+          <AsciiBox width={w} title="paper" border="single">
+            <AsciiProgress value={91} width={w - 6} />
+            {"\n"}
+            <AsciiBadge>release</AsciiBadge>{" "}<AsciiButton label="Run" />
+          </AsciiBox>
+        </AsciiTheme>
+      </div>
+      <div className="feature-inline">
+        <AsciiTheme preset="mono">
+          <AsciiBox width={w} title="mono" border="single">
+            <AsciiProgress value={60} width={w - 6} />
+            {"\n"}
+            <AsciiBadge>build</AsciiBadge>{" "}<AsciiButton label="Run" />
+          </AsciiBox>
+        </AsciiTheme>
+      </div>
+      {mode === "components" && (
+        <>
+          <div style={{ marginTop: "0.5rem" }} className="label">color prop</div>
+          <div className="feature-inline">
+            <AsciiButton label="Default" />
+            <AsciiButton label="Coral" color="#ff6b6b" />
+            <AsciiButton label="Cyan" color="#00e5ff" />
+            <AsciiButton label="Gold" color="#ffd700" />
+            <AsciiButton label="Violet" color="#b388ff" />
+          </div>
+          <div style={{ marginTop: "0.5rem" }} className="label">custom vars override</div>
+          <AsciiTheme preset="phosphor" vars={{ accent: "#ff00ff", fg: "#ffe0f0" }}>
+            <AsciiCard title="Custom accent" width={w}>
+              <AsciiStat label="Magic" value="100%" trend={42} width={20} />
+              <AsciiProgress value={88} width={w - 6} />
+            </AsciiCard>
+          </AsciiTheme>
+          <div style={{ marginTop: "0.5rem" }} className="label">nested scoped themes</div>
+          <AsciiTheme preset="phosphor">
+            <AsciiBox width={w} title="outer: phosphor">
+              {"Phosphor shell\n"}
+              <AsciiTheme preset="amber">
+                <AsciiBox width={w - 6} title="inner: amber">
+                  {"Amber island"}
+                </AsciiBox>
+              </AsciiTheme>
+            </AsciiBox>
+          </AsciiTheme>
+        </>
+      )}
+    </div>
+  );
+}
 
 export function DashboardFeatureShowcases() {
   return (

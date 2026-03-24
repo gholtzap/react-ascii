@@ -9,12 +9,14 @@ export interface AsciiTimelineEvent {
 
 export interface AsciiTimelineProps {
   events: AsciiTimelineEvent[];
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
 
 export function AsciiTimeline({
   events,
+  color,
   className,
   style,
 }: AsciiTimelineProps) {
@@ -42,7 +44,7 @@ export function AsciiTimeline({
   return (
     <div
       className={`ascii-lib ascii-timeline ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       {lines.join("\n")}
     </div>

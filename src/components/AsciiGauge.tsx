@@ -11,6 +11,7 @@ export interface AsciiGaugeProps {
   border?: BorderStyle;
   showValue?: boolean;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -24,6 +25,7 @@ export function AsciiGauge({
   border = "single",
   showValue = true,
   animate = false,
+  color,
   className,
   style,
 }: AsciiGaugeProps) {
@@ -78,7 +80,7 @@ export function AsciiGauge({
   return (
     <div
       className={`ascii-lib ascii-gauge ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="meter"
       aria-valuenow={value}
       aria-valuemin={min}

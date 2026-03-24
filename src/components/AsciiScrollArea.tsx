@@ -6,6 +6,7 @@ export interface AsciiScrollAreaProps {
   width?: number;
   height?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -15,6 +16,7 @@ export function AsciiScrollArea({
   width = 40,
   height = 10,
   border = "single",
+  color,
   className,
   style,
 }: AsciiScrollAreaProps) {
@@ -52,7 +54,7 @@ export function AsciiScrollArea({
   return (
     <div
       className={`ascii-lib ascii-scrollarea ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <span>{topLine}</span>
       {"\n"}

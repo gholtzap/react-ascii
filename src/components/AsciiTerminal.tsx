@@ -16,6 +16,7 @@ export interface AsciiTerminalProps {
   filterQuery?: string;
   searchQuery?: string;
   maxStoredLines?: number;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -34,6 +35,7 @@ export function AsciiTerminal({
   filterQuery,
   searchQuery,
   maxStoredLines = 200,
+  color,
   className,
   style,
 }: AsciiTerminalProps) {
@@ -128,7 +130,7 @@ export function AsciiTerminal({
   return (
     <div
       className={`ascii-lib ascii-terminal ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       onClick={() => inputRef.current?.focus()}
     >
       <div style={{ whiteSpace: "pre" }}>{topLine}</div>

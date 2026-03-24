@@ -13,6 +13,7 @@ export interface AsciiCarouselProps {
   height?: number;
   border?: BorderStyle;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -25,6 +26,7 @@ export function AsciiCarousel({
   height = 5,
   border = "single",
   animate = false,
+  color,
   className,
   style,
 }: AsciiCarouselProps) {
@@ -111,7 +113,7 @@ export function AsciiCarousel({
   return (
     <div
       className={`ascii-lib ascii-carousel ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="region"

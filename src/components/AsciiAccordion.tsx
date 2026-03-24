@@ -14,6 +14,7 @@ export interface AsciiAccordionProps {
   border?: BorderStyle;
   multiple?: boolean;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -59,6 +60,7 @@ export function AsciiAccordion({
   border = "single",
   multiple = false,
   animate = false,
+  color,
   className,
   style,
 }: AsciiAccordionProps) {
@@ -80,7 +82,7 @@ export function AsciiAccordion({
   };
 
   return (
-    <div className={`ascii-lib ascii-accordion ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-accordion ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       {items.map((item, i) => {
         const isOpen = openKeys.has(item.key);
         const arrow = isOpen ? "v" : ">";

@@ -6,11 +6,12 @@ export interface AsciiNativeSelectOption {
   label: string;
 }
 
-export interface AsciiNativeSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "style" | "width"> {
+export interface AsciiNativeSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectElement>, "style" | "width" | "color"> {
   options: AsciiNativeSelectOption[];
   label?: string;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   style?: React.CSSProperties;
 }
 
@@ -19,6 +20,7 @@ export function AsciiNativeSelect({
   label,
   width = 30,
   border = "single",
+  color,
   className,
   style,
   ...rest
@@ -32,7 +34,7 @@ export function AsciiNativeSelect({
   const botLine = b.bl + repeatChar(b.h, inner) + b.br;
 
   return (
-    <div className={`ascii-lib ascii-native-select ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-native-select ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       {label && (
         <>
           <label htmlFor={selectId}>{label}</label>

@@ -16,6 +16,7 @@ export interface AsciiComboboxProps {
   width?: number;
   border?: BorderStyle;
   disabled?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -28,6 +29,7 @@ export function AsciiCombobox({
   width = 30,
   border = "single",
   disabled,
+  color,
   className,
   style,
 }: AsciiComboboxProps) {
@@ -127,7 +129,7 @@ export function AsciiCombobox({
     <div
       ref={ref}
       className={`ascii-lib ascii-combobox-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       onKeyDown={handleKeyDown}
     >
       <div className="ascii-combobox-trigger">

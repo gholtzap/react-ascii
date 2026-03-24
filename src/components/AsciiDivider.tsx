@@ -5,6 +5,7 @@ export interface AsciiDividerProps {
   width?: number;
   border?: BorderStyle;
   label?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -13,6 +14,7 @@ export function AsciiDivider({
   width = 40,
   border = "single",
   label,
+  color,
   className,
   style,
 }: AsciiDividerProps) {
@@ -32,7 +34,7 @@ export function AsciiDivider({
   return (
     <div
       className={`ascii-lib ascii-divider ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="separator"
     >
       {line}

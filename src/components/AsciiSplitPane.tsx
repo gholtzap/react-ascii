@@ -7,7 +7,8 @@ interface AsciiSplitPanePanel {
   content: React.ReactNode;
 }
 
-export interface AsciiSplitPaneProps extends Omit<AsciiResizableProps, "left" | "right"> {
+export interface AsciiSplitPaneProps extends Omit<AsciiResizableProps, "left" | "right" | "color"> {
+  color?: string;
   leftPanel: AsciiSplitPanePanel;
   rightPanel: AsciiSplitPanePanel;
 }
@@ -29,12 +30,14 @@ function SplitPanePanel({
 export function AsciiSplitPane({
   leftPanel,
   rightPanel,
+  color,
   className,
   ...props
 }: AsciiSplitPaneProps) {
   return (
     <AsciiResizable
       {...props}
+      color={color}
       className={`ascii-splitpane ${className ?? ""}`.trim()}
       left={<SplitPanePanel {...leftPanel} />}
       right={<SplitPanePanel {...rightPanel} />}

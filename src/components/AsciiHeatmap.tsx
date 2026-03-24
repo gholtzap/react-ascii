@@ -10,6 +10,7 @@ export interface AsciiHeatmapProps {
   xLabels?: string[];
   yLabels?: string[];
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
   "aria-label"?: string;
@@ -22,6 +23,7 @@ export function AsciiHeatmap({
   xLabels,
   yLabels,
   animate = false,
+  color,
   className,
   style,
   "aria-label": ariaLabel,
@@ -70,7 +72,7 @@ export function AsciiHeatmap({
   return (
     <div
       className={`ascii-lib ascii-heatmap ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="img"
       aria-label={ariaLabel ?? "Heatmap"}
     >

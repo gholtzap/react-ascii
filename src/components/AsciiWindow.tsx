@@ -10,6 +10,7 @@ export interface AsciiWindowProps {
   height?: number;
   border?: BorderStyle;
   chrome?: "dots" | "ascii" | "none";
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -22,6 +23,7 @@ export function AsciiWindow({
   height = 8,
   border = "single",
   chrome = "dots",
+  color,
   className,
   style,
 }: AsciiWindowProps) {
@@ -39,7 +41,7 @@ export function AsciiWindow({
       footer={footer}
       minBodyRows={height}
       className={`ascii-window ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       bodyClassName="ascii-window-body"
       footerClassName="ascii-window-footer"
     >

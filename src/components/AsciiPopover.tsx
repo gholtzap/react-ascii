@@ -20,6 +20,7 @@ export interface AsciiPopoverProps {
   asChild?: boolean;
   ariaLabel?: string;
   children: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -34,6 +35,7 @@ export function AsciiPopover({
   asChild,
   ariaLabel = "Popover",
   children,
+  color,
   className,
   style,
 }: AsciiPopoverProps) {
@@ -74,7 +76,7 @@ export function AsciiPopover({
     <div
       ref={wrapperRef}
       className={`ascii-lib ascii-popover-wrapper ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <AsciiTrigger
         asChild={asChild}

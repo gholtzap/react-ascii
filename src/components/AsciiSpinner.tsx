@@ -7,6 +7,7 @@ export interface AsciiSpinnerProps {
   preset?: SpinnerPreset;
   interval?: number;
   label?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -25,6 +26,7 @@ export function AsciiSpinner({
   preset = "default",
   interval = 100,
   label,
+  color,
   className,
   style,
 }: AsciiSpinnerProps) {
@@ -55,7 +57,7 @@ export function AsciiSpinner({
   return (
     <span
       className={`ascii-lib ascii-spinner ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="status"
       aria-label={label ?? "Loading"}
     >

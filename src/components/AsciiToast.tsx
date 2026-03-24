@@ -18,6 +18,7 @@ export interface AsciiToastProps {
   border?: BorderStyle;
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -126,6 +127,7 @@ export function AsciiToast({
   border = "single",
   position = "top-right",
   animate = false,
+  color,
   className,
   style,
 }: AsciiToastProps) {
@@ -139,7 +141,7 @@ export function AsciiToast({
   return (
     <div
       className={`ascii-lib ascii-toast ascii-toast-${position} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       aria-label="Notifications"
     >
       {toasts.map((toast) => (

@@ -8,6 +8,7 @@ export interface AsciiToggleProps {
   width?: number;
   disabled?: boolean;
   animate?: boolean;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -19,6 +20,7 @@ export function AsciiToggle({
   width = 10,
   disabled,
   animate = false,
+  color,
   className,
   style,
 }: AsciiToggleProps) {
@@ -71,7 +73,7 @@ export function AsciiToggle({
     <label
       htmlFor={id}
       className={`ascii-lib ascii-toggle${animClass} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <input
         type="checkbox"

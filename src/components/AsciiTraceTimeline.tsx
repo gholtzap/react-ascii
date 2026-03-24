@@ -21,6 +21,7 @@ export interface AsciiTraceTimelineProps {
   height?: number;
   border?: BorderStyle;
   footer?: React.ReactNode;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -39,6 +40,7 @@ export function AsciiTraceTimeline({
   height = 8,
   border = "single",
   footer,
+  color,
   className,
   style,
 }: AsciiTraceTimelineProps) {
@@ -52,7 +54,7 @@ export function AsciiTraceTimeline({
       border={border}
       footer={footer}
       className={`ascii-trace ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <div className="ascii-trace-columns">
         <span>{pad("SPAN", 28)}</span>

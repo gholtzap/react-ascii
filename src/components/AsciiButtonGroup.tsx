@@ -12,6 +12,7 @@ export interface AsciiButtonGroupProps {
   value?: string;
   onChange?: (key: string) => void;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -21,6 +22,7 @@ export function AsciiButtonGroup({
   value,
   onChange,
   border = "single",
+  color,
   className,
   style,
 }: AsciiButtonGroupProps) {
@@ -48,7 +50,7 @@ export function AsciiButtonGroup({
   return (
     <div
       className={`ascii-lib ascii-button-group ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="group"
     >
       <span>{top}</span>

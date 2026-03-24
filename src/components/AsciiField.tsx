@@ -7,6 +7,7 @@ export interface AsciiFieldProps {
   hint?: string;
   required?: boolean;
   children: React.ReactElement;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -17,6 +18,7 @@ export function AsciiField({
   hint,
   required,
   children,
+  color,
   className,
   style,
 }: AsciiFieldProps) {
@@ -29,7 +31,7 @@ export function AsciiField({
   return (
     <div
       className={`ascii-lib ascii-field${error ? " ascii-field-error" : ""} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <label htmlFor={childId} className="ascii-field-label">
         {label}{required ? " *" : ""}

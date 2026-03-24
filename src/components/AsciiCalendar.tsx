@@ -7,6 +7,7 @@ export interface AsciiCalendarProps {
   onChange?: (date: Date) => void;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -16,6 +17,7 @@ export function AsciiCalendar({
   onChange,
   width = 28,
   border = "single",
+  color,
   className,
   style,
 }: AsciiCalendarProps) {
@@ -35,7 +37,7 @@ export function AsciiCalendar({
   return (
     <div
       className={`ascii-lib ascii-calendar ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
     >
       <span>{b.tl + repeatChar(b.h, inner) + b.tr}</span>
       {"\n"}

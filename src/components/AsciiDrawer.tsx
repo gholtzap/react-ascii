@@ -13,6 +13,7 @@ export interface AsciiDrawerProps {
   children?: React.ReactNode;
   width?: number;
   border?: BorderStyle;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -26,6 +27,7 @@ export function AsciiDrawer({
   children,
   width = 40,
   border = "single",
+  color,
   className,
   style,
 }: AsciiDrawerProps) {
@@ -40,7 +42,7 @@ export function AsciiDrawer({
       width={width}
       border={border}
       className={className}
-      style={style}
+      style={color ? { ...style, color } : style}
       overlayClassName="ascii-drawer-overlay"
       panelClassName={`ascii-drawer ${sideClass}`}
       bodyClassName="ascii-drawer-body"

@@ -33,6 +33,7 @@ export interface AsciiDataTableProps {
   defaultSelectedKeys?: string[];
   onSelectedKeysChange?: (keys: string[]) => void;
   onRowClick?: (row: Record<string, unknown>) => void;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -214,6 +215,7 @@ export function AsciiDataTable({
   defaultSelectedKeys = [],
   onSelectedKeysChange,
   onRowClick,
+  color,
   className,
   style,
 }: AsciiDataTableProps) {
@@ -432,7 +434,7 @@ export function AsciiDataTable({
   const makeStatusRow = (message: string) => b.v + pad(` ${message} `, totalInnerWidth) + b.v;
 
   return (
-    <div className={`ascii-lib ascii-datatable ${className ?? ""}`.trim()} style={style}>
+    <div className={`ascii-lib ascii-datatable ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
       <div className={`ascii-datatable-head${stickyHeader ? " ascii-datatable-head-sticky" : ""}`}>
         <span>{topLine}</span>
         {"\n"}

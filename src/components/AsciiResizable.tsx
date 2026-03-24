@@ -8,6 +8,7 @@ export interface AsciiResizableProps {
   minLeft?: number;
   minRight?: number;
   dividerChar?: string;
+  color?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -20,6 +21,7 @@ export function AsciiResizable({
   minLeft = 10,
   minRight = 10,
   dividerChar = "│",
+  color,
   className,
   style,
 }: AsciiResizableProps) {
@@ -64,6 +66,7 @@ export function AsciiResizable({
         display: "flex",
         width: width ? `${width}ch` : "100%",
         ...style,
+        ...(color ? { color } : undefined),
       }}
     >
       <div className="ascii-resizable-left" style={{ width: `${split}%`, overflow: "auto" }}>
