@@ -1,4 +1,5 @@
 import { AsciiButtonGroup } from "ascii-lib";
+import { demoComponentCount } from "./demoRegistry";
 
 const BANNER = `
     ___   _____ ______________   __    ________
@@ -104,7 +105,7 @@ export function DemoFooter() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 89 components        │
+  │  5 border styles / ${String(demoComponentCount).padEnd(2, " ")} components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
       </pre>
