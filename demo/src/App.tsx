@@ -46,6 +46,7 @@ import {
   AsciiDrawer,
   AsciiEmpty,
   AsciiField,
+  AsciiForm,
   AsciiHoverCard,
   AsciiInputGroup,
   AsciiInputOTP,
@@ -668,6 +669,12 @@ function Components() {
   const [comboVal, setComboVal] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [fieldVal, setFieldVal] = useState("");
+  const [formService, setFormService] = useState("api-gateway");
+  const [formEnv, setFormEnv] = useState("staging");
+  const [formNotes, setFormNotes] = useState("Roll through checkout after auth settles.");
+  const [formWindow, setFormWindow] = useState<Date | undefined>(new Date(2026, 3, 2));
+  const [formDryRun, setFormDryRun] = useState(true);
+  const [formOutput, setFormOutput] = useState("waiting for submit");
   const [otpVal, setOtpVal] = useState("");
   const [navKey, setNavKey] = useState("home");
   const [nativeVal, setNativeVal] = useState("usd");
@@ -1914,6 +1921,120 @@ image: app:v2.4.1`}
         </div>
       </div>
 
+      <div className="section">
+        <h2 className="section-title">{"<AsciiForm>"}</h2>
+        <p className="section-desc">Sectioned form surface with notices, summaries, and action bars.</p>
+        <div className="green">
+          <AsciiForm
+            title="Deploy Request"
+            width={72}
+            description="Compose multi-step operational forms from existing ASCII inputs without losing semantic form behavior."
+            status={<AsciiBadge variant="outline">{formDryRun ? "dry-run" : "live"}</AsciiBadge>}
+            summary={
+              <AsciiBox width={30} title="Preview" border="single">
+                {`service: ${formService}\nenv: ${formEnv}\nwindow: ${formWindow ? formWindow.toLocaleDateString() : "unset"}`}
+              </AsciiBox>
+            }
+            notices={[
+              {
+                key: "approval",
+                tone: "warn",
+                label: "gate",
+                message: "Two reviewers required before production rollout.",
+              },
+            ]}
+            sections={[
+              {
+                key: "target",
+                title: "Target",
+                description: "Choose the service and destination environment.",
+                columns: 2,
+                children: (
+                  <>
+                    <AsciiInput
+                      label="service:"
+                      width={28}
+                      value={formService}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFormService(event.target.value)}
+                    />
+                    <div style={{ display: "grid", gap: "0.25rem" }}>
+                      <AsciiLabel>environment</AsciiLabel>
+                      <AsciiSelect
+                        width={28}
+                        value={formEnv}
+                        onChange={setFormEnv}
+                        options={[
+                          { value: "staging", label: "Staging" },
+                          { value: "production", label: "Production" },
+                          { value: "development", label: "Development" },
+                        ]}
+                      />
+                    </div>
+                  </>
+                ),
+                aside: (
+                  <AsciiBox width={22} title="policy" border="single">
+                    {"owner: platform\nrisk: medium\nwindow: 15m"}
+                  </AsciiBox>
+                ),
+              },
+              {
+                key: "controls",
+                title: "Controls",
+                description: "Capture scheduling and operator notes.",
+                columns: 2,
+                children: (
+                  <>
+                    <AsciiTextarea
+                      label="notes:"
+                      width={32}
+                      height={4}
+                      value={formNotes}
+                      onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => setFormNotes(event.target.value)}
+                    />
+                    <div style={{ display: "grid", gap: "0.75rem" }}>
+                      <div style={{ display: "grid", gap: "0.25rem" }}>
+                        <AsciiLabel>maintenance window</AsciiLabel>
+                        <AsciiDatePicker value={formWindow} onChange={setFormWindow} width={28} />
+                      </div>
+                      <AsciiCheckbox
+                        label="Run verification only"
+                        checked={formDryRun}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => setFormDryRun(event.target.checked)}
+                      />
+                    </div>
+                  </>
+                ),
+              },
+            ]}
+            actions={(
+              <>
+                <AsciiButton
+                  label="Reset"
+                  type="button"
+                  border="single"
+                  onClick={() => {
+                    setFormService("api-gateway");
+                    setFormEnv("staging");
+                    setFormNotes("Roll through checkout after auth settles.");
+                    setFormWindow(new Date(2026, 3, 2));
+                    setFormDryRun(true);
+                    setFormOutput("draft reset");
+                  }}
+                />
+                <AsciiButton label="Queue Deploy" type="submit" border="double" />
+              </>
+            )}
+            footer={<span>{formOutput}</span>}
+            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+              event.preventDefault();
+              setFormOutput(`queued ${formService} -> ${formEnv}${formDryRun ? " [dry-run]" : ""}`);
+            }}
+          />
+        </div>
+        <div className="output">last submit: {formOutput}</div>
+      </div>
+
       {/* ── Hover Card ────────────────────────────── */}
       <div className="section">
         <h2 className="section-title">{"<AsciiHoverCard>"}</h2>
@@ -2540,6 +2661,7 @@ function Index() {
     { name: "AsciiDropdownMenu", category: "Overlay" },
     { name: "AsciiEmpty", category: "Feedback" },
     { name: "AsciiField", category: "Form" },
+    { name: "AsciiForm", category: "Form" },
     { name: "AsciiFileTree", category: "Ops" },
     { name: "AsciiFlameGraph", category: "Ops" },
     { name: "AsciiGauge", category: "Visualization" },
@@ -2573,6 +2695,7 @@ function Index() {
     { name: "AsciiSheet", category: "Overlay" },
     { name: "AsciiSidebar", category: "Navigation" },
     { name: "AsciiSkeleton", category: "Feedback" },
+    { name: "AsciiSpinner", category: "Feedback" },
     { name: "AsciiSlider", category: "Form" },
     { name: "AsciiSonner", category: "Feedback" },
     { name: "AsciiSparkline", category: "Visualization" },
@@ -2586,6 +2709,7 @@ function Index() {
     { name: "AsciiTag", category: "Data Display" },
     { name: "AsciiTerminal", category: "Ops" },
     { name: "AsciiTextarea", category: "Form" },
+    { name: "AsciiTheme", category: "Foundation" },
     { name: "AsciiTimeline", category: "Data Display" },
     { name: "AsciiToast", category: "Feedback" },
     { name: "AsciiToggle", category: "Form" },

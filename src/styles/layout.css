@@ -48,6 +48,153 @@
   align-items: flex-start;
 }
 
+.ascii-form-body {
+  align-items: stretch;
+}
+
+.ascii-form-native {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.ascii-form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+.ascii-form-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.ascii-form-description {
+  opacity: 0.72;
+}
+
+.ascii-form-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ascii-form-summary {
+  padding: 0.5rem 0.65rem;
+  border: 1px dashed currentColor;
+}
+
+.ascii-form-notices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ascii-form-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px dashed currentColor;
+}
+
+.ascii-form-notice-label {
+  min-width: 7ch;
+  opacity: 0.72;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ascii-form-notice-message {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ascii-form-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  border: none;
+  min-inline-size: 0;
+}
+
+.ascii-form-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.ascii-form-section {
+  display: grid;
+  gap: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed currentColor;
+}
+
+.ascii-form-section:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.ascii-form-section-split {
+  grid-template-columns: minmax(0, 1.8fr) minmax(14rem, 1fr);
+  align-items: start;
+}
+
+.ascii-form-section-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.ascii-form-section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ascii-form-section-title {
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+}
+
+.ascii-form-section-description {
+  opacity: 0.72;
+}
+
+.ascii-form-section-fields {
+  display: grid;
+  gap: 0.75rem 1rem;
+  align-items: start;
+}
+
+.ascii-form-section-aside {
+  min-width: 0;
+}
+
+.ascii-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ascii-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-top: 0.75rem;
+  border-top: 1px dashed currentColor;
+}
+
 .ascii-logviewer-list,
 .ascii-diff-list,
 .ascii-filetree-list,
@@ -295,6 +442,8 @@
 
 .ascii-statusgrid-info,
 .ascii-inspector-info,
+.ascii-form-neutral,
+.ascii-form-info,
 .ascii-trace-neutral,
 .ascii-dependencygraph-neutral {
   opacity: 0.92;
@@ -302,6 +451,7 @@
 
 .ascii-statusgrid-success,
 .ascii-inspector-success,
+.ascii-form-success,
 .ascii-trace-success,
 .ascii-dependencygraph-success {
   filter: brightness(1.18);
@@ -309,6 +459,7 @@
 
 .ascii-statusgrid-warn,
 .ascii-inspector-warn,
+.ascii-form-warn,
 .ascii-trace-warn,
 .ascii-dependencygraph-warn {
   filter: brightness(1.08);
@@ -316,9 +467,16 @@
 
 .ascii-statusgrid-error,
 .ascii-inspector-error,
+.ascii-form-error,
 .ascii-trace-error,
 .ascii-dependencygraph-error {
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .ascii-form-section-split {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Scroll Area ───────────────────────── */

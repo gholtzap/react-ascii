@@ -13,8 +13,11 @@ import {
   AsciiDrawer,
   AsciiDropdownMenu,
   AsciiFileTree,
+  AsciiForm,
   AsciiHoverCard,
+  AsciiInput,
   AsciiInspector,
+  AsciiLabel,
   AsciiLogViewer,
   AsciiModal,
   AsciiPopover,
@@ -27,11 +30,14 @@ import {
   AsciiSplitPane,
   AsciiStat,
   AsciiStatusGrid,
+  AsciiSelect,
   AsciiTag,
   AsciiTerminal,
+  AsciiTextarea,
   AsciiTheme,
   AsciiTooltip,
   AsciiTraceTimeline,
+  AsciiCheckbox,
   AsciiFlameGraph,
   AsciiWindow,
 } from "ascii-lib";
@@ -165,6 +171,116 @@ function AdaptiveOverlayShowcase() {
       </div>
       <div className="output">Auto-sized popups now accept full React content, not just strings.</div>
     </div>
+  );
+}
+
+function FormWorkflowShowcase({ mode }: { mode: ShowcaseMode }) {
+  const [service, setService] = useState("api-gateway");
+  const [environment, setEnvironment] = useState("staging");
+  const [notes, setNotes] = useState("Shift traffic after checkout and auth checks clear.");
+  const [verificationOnly, setVerificationOnly] = useState(true);
+  const [lastAction, setLastAction] = useState("draft synced 12:14");
+  const formWidth = mode === "dashboard" ? 58 : 72;
+  const fieldWidth = mode === "dashboard" ? 24 : 28;
+  const textareaWidth = mode === "dashboard" ? 48 : 60;
+  const checkWidth = mode === "dashboard" ? 20 : 24;
+
+  return (
+    <AsciiForm
+      title="Release Request"
+      width={formWidth}
+      description="Collect rollout intent, operator notes, and safety gates in one surface."
+      status={<AsciiBadge variant="outline">{verificationOnly ? "verify-only" : "live deploy"}</AsciiBadge>}
+      summary={
+        <div style={{ whiteSpace: "pre-wrap" }}>
+          <div>service: {service}</div>
+          <div>target: {environment}</div>
+          <div>mode: {verificationOnly ? "verification" : "rollout"}</div>
+        </div>
+      }
+      notices={[
+        {
+          key: "approval",
+          tone: "warn",
+          label: "gate",
+          message: "#platform-release approval required before production.",
+        },
+      ]}
+      sections={[
+        {
+          key: "target",
+          title: "Target",
+          description: "Route the change to the correct service and environment.",
+          columns: 2,
+          children: (
+            <>
+              <AsciiInput
+                label="service:"
+                width={fieldWidth}
+                value={service}
+                onChange={(event) => setService(event.target.value)}
+              />
+              <div style={{ display: "grid", gap: "0.25rem" }}>
+                <AsciiLabel>environment</AsciiLabel>
+                <AsciiSelect
+                  width={fieldWidth}
+                  value={environment}
+                  onChange={setEnvironment}
+                  options={[
+                    { value: "staging", label: "Staging" },
+                    { value: "production", label: "Production" },
+                    { value: "dev", label: "Development" },
+                  ]}
+                />
+              </div>
+            </>
+          ),
+          aside: (
+            <AsciiBox width={checkWidth} title="checks" border="single">
+              {"owner: platform\nwindow: 02:00\nrisk: low"}
+            </AsciiBox>
+          ),
+        },
+        {
+          key: "plan",
+          title: "Plan",
+          description: "Capture operator intent and safety mode for this rollout.",
+          children: (
+            <>
+              <AsciiTextarea
+                label="notes:"
+                width={textareaWidth}
+                height={3}
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+              />
+              <AsciiCheckbox
+                label="Run verification only"
+                checked={verificationOnly}
+                onChange={(event) => setVerificationOnly(event.target.checked)}
+              />
+            </>
+          ),
+        },
+      ]}
+      actions={(
+        <>
+          <AsciiButton
+            label="Save Draft"
+            border="single"
+            type="button"
+            onClick={() => setLastAction("draft synced 12:16")}
+          />
+          <AsciiButton
+            label="Queue Deploy"
+            border="double"
+            type="button"
+            onClick={() => setLastAction(`queued ${service} -> ${environment}`)}
+          />
+        </>
+      )}
+      footer={<span>{lastAction}</span>}
+    />
   );
 }
 
@@ -605,6 +721,13 @@ const featureShowcases = [
     description: "Tooltip, hover card, and popover now auto-size around React content and preserve composed trigger props.",
     renderDashboard: () => <AdaptiveOverlayShowcase />,
     renderComponents: () => <AdaptiveOverlayShowcase />,
+  },
+  {
+    id: "form",
+    title: "AsciiForm",
+    description: "Sectioned forms now support notices, summaries, action bars, and structured rollout workflows.",
+    renderDashboard: () => <FormWorkflowShowcase mode="dashboard" />,
+    renderComponents: () => <FormWorkflowShowcase mode="components" />,
   },
   {
     id: "terminal",

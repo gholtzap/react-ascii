@@ -104,7 +104,7 @@ export function DemoFooter() {
 {`  ┌─────────────────────────────────────────┐
   │  ascii-lib ~ every pixel is a character │
   │                                         │
-  │  5 border styles / 80 components        │
+  │  5 border styles / 89 components        │
   │  typescript / accessible / zero deps    │
   └─────────────────────────────────────────┘`}
       </pre>

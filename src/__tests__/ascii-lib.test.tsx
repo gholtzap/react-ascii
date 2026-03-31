@@ -11,6 +11,8 @@ import { AsciiDataTable } from "../components/AsciiDataTable";
 import { AsciiDatePicker } from "../components/AsciiDatePicker";
 import { AsciiDependencyGraph } from "../components/AsciiDependencyGraph";
 import { AsciiDropdownMenu } from "../components/AsciiDropdownMenu";
+import { AsciiForm } from "../components/AsciiForm";
+import { AsciiInput } from "../components/AsciiInput";
 import { AsciiLogViewer } from "../components/AsciiLogViewer";
 import { AsciiModal } from "../components/AsciiModal";
 import { AsciiPopover } from "../components/AsciiPopover";
@@ -207,6 +209,67 @@ describe("ascii-lib", () => {
 
     expect(container.textContent).toContain("March 2026");
     expect(container.textContent).toContain(">28");
+  });
+
+  test("renders named forms with structured sections and submit actions", async () => {
+    const user = userEvent.setup();
+    const onSubmit = vi.fn((event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+    });
+
+    render(
+      <AsciiForm
+        title="Deploy Request"
+        description="Review rollout details"
+        summary={<div>preview: api-gateway</div>}
+        notices={[
+          { key: "gate", tone: "warn", message: "Approval required" },
+        ]}
+        sections={[
+          {
+            key: "target",
+            title: "Target",
+            description: "Pick the release target.",
+            columns: 2,
+            children: (
+              <>
+                <AsciiInput label="Service" defaultValue="api-gateway" />
+                <AsciiInput label="Environment" defaultValue="staging" />
+              </>
+            ),
+            aside: <div>owner: platform</div>,
+          },
+        ]}
+        actions={<AsciiButton label="Queue" type="submit" border="single" />}
+        onSubmit={onSubmit}
+      />
+    );
+
+    expect(screen.getByRole("form", { name: "Deploy Request" })).toBeInTheDocument();
+    expect(screen.getByText("Target")).toBeInTheDocument();
+    expect(screen.getByText("Approval required")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /queue/i }));
+
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  test("disables form sections through the fieldset wrapper", () => {
+    render(
+      <AsciiForm
+        title="Disabled Form"
+        disabled
+        sections={[
+          {
+            key: "target",
+            title: "Target",
+            children: <AsciiInput label="Service" defaultValue="api-gateway" />,
+          },
+        ]}
+      />
+    );
+
+    expect(screen.getByLabelText("Service")).toBeDisabled();
   });
 
   test("renders grouped command sections and promotes recent commands", async () => {
