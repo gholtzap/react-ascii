@@ -2650,14 +2650,11 @@ function Index() {
       <div className="index-grid">
         {categories.map((cat) => {
           const items = filtered.filter((c) => c.category === cat);
+          const itemList = items.map((c) => `<${c.name} />`).join("\n");
           if (items.length === 0) return null;
           return (
             <AsciiBox key={cat} title={cat} width={38} border="single">
-              {items.map((c) => (
-                <div key={c.name} className="index-item">
-                  {"<"}{c.name}{" />"}
-                </div>
-              ))}
+              {itemList}
             </AsciiBox>
           );
         })}
