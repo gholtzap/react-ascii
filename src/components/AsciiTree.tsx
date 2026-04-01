@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { useControllableState } from "../internal/useControllableState";
 
 export interface AsciiTreeNode {
@@ -152,20 +152,9 @@ export function AsciiTree({
   });
   const itemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  useEffect(() => {
-    if (visibleNodes.length === 0) {
-      setResolvedSelectedId(undefined);
-      return;
-    }
-
-    if (resolvedSelectedId && visibleNodes.some((node) => node.id === resolvedSelectedId)) {
-      return;
-    }
-
-    setResolvedSelectedId(visibleNodes[0].id);
-  }, [resolvedSelectedId, setResolvedSelectedId, visibleNodes]);
-
-  const activeId = resolvedSelectedId ?? visibleNodes[0]?.id;
+  const activeId = resolvedSelectedId && visibleNodes.some((node) => node.id === resolvedSelectedId)
+    ? resolvedSelectedId
+    : visibleNodes[0]?.id;
 
   const focusNode = (id: string) => {
     itemRefs.current[id]?.focus();

@@ -137,22 +137,16 @@ export function AsciiLogViewer({
   );
 
   useEffect(() => {
-    if (!selectable || visibleLines.length === 0) return;
-
-    const selectedVisible = visibleLines.some((line, index) => getLineId(line, index) === resolvedSelectedId);
-
-    if (selectedVisible) return;
-
-    const lastVisibleId = getLineId(visibleLines[visibleLines.length - 1], visibleLines.length - 1);
-    setResolvedSelectedId(lastVisibleId);
-  }, [resolvedSelectedId, selectable, setResolvedSelectedId, visibleLines]);
-
-  useEffect(() => {
     if (!resolvedFollow || !listRef.current) return;
     listRef.current.scrollTop = listRef.current.scrollHeight;
   }, [resolvedFollow, visibleLines]);
 
-  const selectedLine = visibleLines.find((line, index) => getLineId(line, index) === resolvedSelectedId);
+  const resolvedVisibleSelectedId = !selectable || visibleLines.length === 0
+    ? undefined
+    : resolvedSelectedId && visibleLines.some((line, index) => getLineId(line, index) === resolvedSelectedId)
+      ? resolvedSelectedId
+      : getLineId(visibleLines[visibleLines.length - 1], visibleLines.length - 1);
+  const selectedLine = visibleLines.find((line, index) => getLineId(line, index) === resolvedVisibleSelectedId);
 
   const toggleBookmark = () => {
     if (!selectedLine) return;
@@ -181,7 +175,7 @@ export function AsciiLogViewer({
 
     const currentIndex = Math.max(
       0,
-      visibleLines.findIndex((line, index) => getLineId(line, index) === resolvedSelectedId)
+      visibleLines.findIndex((line, index) => getLineId(line, index) === resolvedVisibleSelectedId)
     );
 
     switch (event.key) {

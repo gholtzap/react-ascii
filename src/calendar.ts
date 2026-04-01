@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 export const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -35,39 +35,31 @@ export function buildWeeks(year: number, month: number): (number | null)[][] {
 }
 
 export function useCalendarNav(initial?: Date) {
-  const today = new Date();
-  const [viewYear, setViewYear] = useState(initial?.getFullYear() ?? today.getFullYear());
-  const [viewMonth, setViewMonth] = useState(initial?.getMonth() ?? today.getMonth());
-  const initialMonthKey = useMemo(
-    () => initial ? `${initial.getFullYear()}-${initial.getMonth()}` : null,
-    [initial]
-  );
-
-  useEffect(() => {
-    if (!initial) return;
-    setViewYear(initial.getFullYear());
-    setViewMonth(initial.getMonth());
-  }, [initialMonthKey, initial]);
+  const [fallbackDate] = useState(() => new Date());
+  const initialDate = initial ?? fallbackDate;
+  const initialMonthKey = `${initialDate.getFullYear()}-${initialDate.getMonth()}`;
+  const [navigation, setNavigation] = useState(() => ({
+    baseKey: initialMonthKey,
+    offset: 0,
+  }));
+  const monthOffset = navigation.baseKey === initialMonthKey ? navigation.offset : 0;
+  const viewDate = new Date(initialDate.getFullYear(), initialDate.getMonth() + monthOffset, 1);
+  const viewYear = viewDate.getFullYear();
+  const viewMonth = viewDate.getMonth();
 
   const prevMonth = useCallback(() => {
-    setViewMonth((m) => {
-      if (m === 0) {
-        setViewYear((y) => y - 1);
-        return 11;
-      }
-      return m - 1;
-    });
-  }, []);
+    setNavigation((current) => ({
+      baseKey: initialMonthKey,
+      offset: (current.baseKey === initialMonthKey ? current.offset : 0) - 1,
+    }));
+  }, [initialMonthKey]);
 
   const nextMonth = useCallback(() => {
-    setViewMonth((m) => {
-      if (m === 11) {
-        setViewYear((y) => y + 1);
-        return 0;
-      }
-      return m + 1;
-    });
-  }, []);
+    setNavigation((current) => ({
+      baseKey: initialMonthKey,
+      offset: (current.baseKey === initialMonthKey ? current.offset : 0) + 1,
+    }));
+  }, [initialMonthKey]);
 
   const monthLabel = `${MONTH_NAMES[viewMonth]} ${viewYear}`;
 

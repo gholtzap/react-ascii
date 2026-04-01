@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { borders, pad, repeatChar, type BorderStyle } from "../chars";
 import { useControllableState } from "../internal/useControllableState";
 
@@ -295,28 +295,17 @@ export function AsciiDataTable({
   });
 
   const totalPages = pageSize > 0 ? Math.max(1, Math.ceil(rowMeta.length / pageSize)) : 1;
-
-  useEffect(() => {
-    setPage((currentPage) => Math.min(currentPage, totalPages - 1));
-  }, [totalPages]);
+  const currentPage = Math.min(page, totalPages - 1);
 
   const pagedRows = pageSize > 0
-    ? rowMeta.slice(page * pageSize, (page + 1) * pageSize)
+    ? rowMeta.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
     : rowMeta;
   const pageIds = pagedRows.map((entry) => entry.id);
-
-  useEffect(() => {
-    if (pagedRows.length === 0) {
-      setActiveRowKey(null);
-      return;
-    }
-
-    if (activeRowKey && pagedRows.some((entry) => entry.id === activeRowKey)) {
-      return;
-    }
-
-    setActiveRowKey(pagedRows[0].id);
-  }, [activeRowKey, pagedRows]);
+  const resolvedActiveRowKey = pagedRows.length === 0
+    ? null
+    : activeRowKey && pagedRows.some((entry) => entry.id === activeRowKey)
+      ? activeRowKey
+      : pagedRows[0].id;
 
   const adjustColumnWidth = (columnKey: string, delta: number) => {
     const column = orderedColumns.find((entry) => entry.key === columnKey);
@@ -399,7 +388,7 @@ export function AsciiDataTable({
   const headerSep = makeLine(b.lm, b.mm, b.rm, b.h);
   const bottomLine = makeLine(b.bl, b.bm, b.br, b.h);
   const sortColumn = sortKey ? orderedColumns.find((column) => column.key === sortKey) : undefined;
-  const activeRowIndex = pagedRows.findIndex((entry) => entry.id === activeRowKey);
+  const activeRowIndex = pagedRows.findIndex((entry) => entry.id === resolvedActiveRowKey);
   const totalInnerWidth = (selectable ? 5 : 0)
     + resolvedColumnWidths.reduce((widthSum, columnWidth) => widthSum + columnWidth, 0)
     + Math.max(0, (selectable ? orderedColumns.length + 1 : orderedColumns.length) - 1);
@@ -516,7 +505,7 @@ export function AsciiDataTable({
               <button
                 key={entry.id}
                 type="button"
-                className={`ascii-datatable-row${entry.id === activeRowKey ? " ascii-datatable-row-active" : ""}${selected ? " ascii-datatable-row-selected" : ""}`}
+                className={`ascii-datatable-row${entry.id === resolvedActiveRowKey ? " ascii-datatable-row-active" : ""}${selected ? " ascii-datatable-row-selected" : ""}`}
                 onClick={() => {
                   setActiveRowKey(entry.id);
                   if (selectable) {
@@ -547,17 +536,17 @@ export function AsciiDataTable({
                 <button
                   type="button"
                   className="ascii-datatable-page-btn"
-                  disabled={page === 0}
-                  onClick={() => setPage((currentPage) => currentPage - 1)}
+                  disabled={currentPage === 0}
+                  onClick={() => setPage((previousPage) => previousPage - 1)}
                 >
                   {"[<]"}
                 </button>
-                <span>{` ${page + 1}/${totalPages} `}</span>
+                <span>{` ${currentPage + 1}/${totalPages} `}</span>
                 <button
                   type="button"
                   className="ascii-datatable-page-btn"
-                  disabled={page >= totalPages - 1}
-                  onClick={() => setPage((currentPage) => currentPage + 1)}
+                  disabled={currentPage >= totalPages - 1}
+                  onClick={() => setPage((previousPage) => previousPage + 1)}
                 >
                   {"[>]"}
                 </button>
