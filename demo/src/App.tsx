@@ -39,25 +39,240 @@ import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
 
+type DashboardEnvironment = "production" | "staging" | "development";
+type DashboardServiceRow = {
+  name: string;
+  status: string;
+  cpu: string;
+  mem: string;
+  pods: string;
+};
+type DashboardStats = {
+  requests: string;
+  latency: string;
+  errorRate: string;
+  users: string;
+  reqTrend: number;
+  latTrend: number;
+  errTrend: number;
+  userTrend: number;
+};
+
+const DASHBOARD_MENUS = [
+  {
+    key: "file",
+    label: "File",
+    items: [
+      { key: "export", label: "Export Report" },
+      { key: "print", label: "Print View" },
+      { key: "sep", label: "", separator: true },
+      { key: "quit", label: "Quit" },
+    ],
+  },
+  {
+    key: "view",
+    label: "View",
+    items: [
+      { key: "compact", label: "Compact" },
+      { key: "expanded", label: "Expanded" },
+      { key: "sep", label: "", separator: true },
+      { key: "refresh", label: "Force Refresh" },
+    ],
+  },
+  {
+    key: "deploy",
+    label: "Deploy",
+    items: [
+      { key: "new", label: "New Deploy" },
+      { key: "rollback", label: "Rollback" },
+      { key: "sep", label: "", separator: true },
+      { key: "history", label: "History" },
+    ],
+  },
+  {
+    key: "help",
+    label: "Help",
+    items: [
+      { key: "shortcuts", label: "Shortcuts" },
+      { key: "docs", label: "Documentation" },
+      { key: "about", label: "About NEXUS" },
+    ],
+  },
+] as const;
+
+const DASHBOARD_ACCOUNT_ITEMS = [
+  { key: "profile", label: "Profile" },
+  { key: "settings", label: "Settings" },
+  { key: "sep", label: "", separator: true },
+  { key: "logout", label: "Logout", danger: true },
+];
+
+const DASHBOARD_NAV_ITEMS = [
+  { key: "overview", label: "Overview" },
+  { key: "services", label: "Services" },
+  { key: "deploys", label: "Deployments" },
+  { key: "monitoring", label: "Monitoring" },
+];
+
+const DASHBOARD_ENV_OPTIONS = [
+  { value: "production", label: "production" },
+  { value: "staging", label: "staging" },
+  { value: "development", label: "development" },
+];
+
+const DASHBOARD_SERVICE_COLUMNS = [
+  { key: "name", header: "SERVICE", width: 16 },
+  { key: "status", header: "STATUS", width: 10 },
+  { key: "cpu", header: "CPU", width: 7, align: "right" as const },
+  { key: "mem", header: "MEM", width: 7, align: "right" as const },
+  { key: "pods", header: "PODS", width: 6, align: "right" as const },
+];
+
+const DASHBOARD_ENDPOINT_COLUMNS = [
+  { key: "route", header: "ROUTE", width: 20 },
+  { key: "p99", header: "P99", width: 8, align: "right" as const },
+  { key: "rps", header: "RPS", width: 8, align: "right" as const },
+];
+
+const DASHBOARD_TRAFFIC_BARS = [
+  { label: "api-gw", value: 847 },
+  { label: "auth", value: 320 },
+  { label: "web", value: 580 },
+  { label: "worker", value: 1200 },
+  { label: "cache", value: 95 },
+];
+
+const DASHBOARD_WEEKLY_ACTIVITY = [
+  [0, 1, 3, 5, 2, 0, 1, 4, 8, 6, 3, 1],
+  [1, 2, 4, 7, 3, 1, 2, 5, 9, 7, 4, 2],
+  [0, 1, 2, 4, 5, 3, 4, 6, 7, 5, 3, 1],
+  [2, 3, 5, 8, 6, 4, 3, 7, 10, 8, 5, 2],
+  [1, 2, 3, 6, 4, 2, 1, 4, 6, 5, 3, 1],
+  [0, 0, 1, 3, 2, 1, 0, 2, 4, 3, 2, 0],
+  [1, 1, 2, 4, 3, 2, 1, 3, 5, 4, 2, 1],
+];
+
+const DASHBOARD_ENV_SERVICES: Record<DashboardEnvironment, DashboardServiceRow[]> = {
+  production: [
+    { name: "api-gateway", status: "\u25CF healthy", cpu: "12%", mem: "256M", pods: "3/3" },
+    { name: "auth-service", status: "\u25CF healthy", cpu: "8%", mem: "128M", pods: "2/2" },
+    { name: "web-frontend", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "4/4" },
+    { name: "worker-queue", status: "\u25D0 scaling", cpu: "78%", mem: "512M", pods: "2/5" },
+    { name: "postgres-main", status: "\u25CF healthy", cpu: "22%", mem: "2.1G", pods: "1/1" },
+    { name: "redis-cache", status: "\u25CF healthy", cpu: "1%", mem: "48M", pods: "3/3" },
+  ],
+  staging: [
+    { name: "api-gateway", status: "\u25CF healthy", cpu: "5%", mem: "128M", pods: "1/1" },
+    { name: "auth-service", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "1/1" },
+    { name: "web-frontend", status: "\u25D0 starting", cpu: "1%", mem: "32M", pods: "1/2" },
+    { name: "worker-queue", status: "\u25CF healthy", cpu: "12%", mem: "128M", pods: "1/1" },
+  ],
+  development: [
+    { name: "api-gateway", status: "\u25CF running", cpu: "2%", mem: "64M", pods: "1/1" },
+    { name: "web-frontend", status: "\u25CF running", cpu: "1%", mem: "32M", pods: "1/1" },
+    { name: "postgres-dev", status: "\u25CF running", cpu: "4%", mem: "256M", pods: "1/1" },
+  ],
+};
+
+const DASHBOARD_ENV_STATS: Record<DashboardEnvironment, DashboardStats> = {
+  production: { requests: "12,847", latency: "34ms", errorRate: "0.02%", users: "3,291", reqTrend: 4.2, latTrend: -12, errTrend: 0, userTrend: 18 },
+  staging: { requests: "1,204", latency: "52ms", errorRate: "0.15%", users: "84", reqTrend: 1.5, latTrend: 8, errTrend: 0.1, userTrend: -5 },
+  development: { requests: "47", latency: "120ms", errorRate: "2.4%", users: "3", reqTrend: 0, latTrend: 15, errTrend: 1.2, userTrend: 0 },
+};
+
+const DASHBOARD_ENDPOINTS = [
+  { route: "/api/health", p99: "2ms", rps: "840" },
+  { route: "/api/auth/*", p99: "48ms", rps: "320" },
+  { route: "/api/users/*", p99: "31ms", rps: "580" },
+  { route: "/api/deploy", p99: "1.2s", rps: "12" },
+  { route: "/api/metrics", p99: "8ms", rps: "200" },
+  { route: "/api/status", p99: "3ms", rps: "150" },
+  { route: "/api/config", p99: "12ms", rps: "45" },
+  { route: "/api/webhooks", p99: "84ms", rps: "90" },
+  { route: "/api/sessions", p99: "22ms", rps: "180" },
+  { route: "/api/events", p99: "15ms", rps: "260" },
+];
+
+const DASHBOARD_COMMANDS = [
+  { key: "deploy", label: "New Deployment", group: "Deploy", shortcut: "D" },
+  { key: "rollback", label: "Rollback", group: "Deploy", shortcut: "R" },
+  { key: "logs", label: "View Logs", group: "Monitor" },
+  { key: "metrics", label: "View Metrics", group: "Monitor" },
+  { key: "scale", label: "Scale Service", group: "Services" },
+  { key: "restart", label: "Restart Service", group: "Services" },
+  { key: "config", label: "Edit Config", group: "Settings" },
+  { key: "alerts", label: "Alert Rules", group: "Settings" },
+];
+
+const DASHBOARD_DEPLOY_CONFIG = "Strategy: rolling\nMax surge: 1\nMax unavail: 0\nTimeout: 600s";
+const DASHBOARD_ENDPOINTS_PER_PAGE = 3;
+
+function DashboardDeploymentSection({
+  resetToken,
+  onOpenDeploy,
+  onRollback,
+}: {
+  resetToken: number;
+  onOpenDeploy: () => void;
+  onRollback: () => void;
+}) {
+  const [deployProgress, setDeployProgress] = useState(73);
+
+  useEffect(() => {
+    if (resetToken === 0) return;
+    setDeployProgress(0);
+  }, [resetToken]);
+
+  useEffect(() => {
+    if (deployProgress >= 100) return;
+    const timer = setTimeout(() => setDeployProgress((current) => Math.min(100, current + 1)), 600);
+    return () => clearTimeout(timer);
+  }, [deployProgress]);
+
+  return (
+    <div className="dash-deploy-section">
+      <AsciiDivider width={72} border="single" label="DEPLOYMENT v2.5.0-rc.3" />
+      <div className="dash-deploy-row">
+        <div className="green">
+          <AsciiProgress value={deployProgress} width={50} aria-label="Deploy progress" animate />
+        </div>
+        <div className="dash-deploy-badges">
+          <span className="green"><AsciiBadge>ROLLING</AsciiBadge></span>
+          <span className="dim"><AsciiBadge variant="outline">{`${deployProgress}%`}</AsciiBadge></span>
+          <span className="blue"><AsciiTag>k8s</AsciiTag></span>
+          <span className="green"><AsciiTag>us-east-1</AsciiTag></span>
+        </div>
+      </div>
+      <div className="dash-deploy-actions">
+        <div className="green">
+          <AsciiButton label="Deploy New" border="single" animate onClick={onOpenDeploy} />
+        </div>
+        <div className="red">
+          <AsciiButton label="Rollback" border="bold" animate onClick={onRollback} />
+        </div>
+        <div className="dim">
+          <AsciiPopover content={DASHBOARD_DEPLOY_CONFIG} width={26}>
+            [deploy config]
+          </AsciiPopover>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Dashboard() {
   const [deployOpen, setDeployOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("logs");
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [darkAlerts, setDarkAlerts] = useState(false);
   const [searchVal, setSearchVal] = useState("");
-  const [envSelect, setEnvSelect] = useState("production");
-  const [deployProgress, setDeployProgress] = useState(73);
+  const [envSelect, setEnvSelect] = useState<DashboardEnvironment>("production");
+  const [deployResetToken, setDeployResetToken] = useState(0);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [dashNav, setDashNav] = useState("overview");
   const [viewMode, setViewMode] = useState("expanded");
   const [endpointPage, setEndpointPage] = useState(1);
   const sonner = useAsciiSonner();
-
-  useEffect(() => {
-    if (deployProgress >= 100) return;
-    const t = setTimeout(() => setDeployProgress((p) => Math.min(100, p + 1)), 600);
-    return () => clearTimeout(t);
-  }, [deployProgress]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -70,101 +285,32 @@ function Dashboard() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  const envServices: Record<string, Array<{name: string; status: string; cpu: string; mem: string; pods: string}>> = {
-    production: [
-      { name: "api-gateway", status: "\u25CF healthy", cpu: "12%", mem: "256M", pods: "3/3" },
-      { name: "auth-service", status: "\u25CF healthy", cpu: "8%", mem: "128M", pods: "2/2" },
-      { name: "web-frontend", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "4/4" },
-      { name: "worker-queue", status: "\u25D0 scaling", cpu: "78%", mem: "512M", pods: "2/5" },
-      { name: "postgres-main", status: "\u25CF healthy", cpu: "22%", mem: "2.1G", pods: "1/1" },
-      { name: "redis-cache", status: "\u25CF healthy", cpu: "1%", mem: "48M", pods: "3/3" },
-    ],
-    staging: [
-      { name: "api-gateway", status: "\u25CF healthy", cpu: "5%", mem: "128M", pods: "1/1" },
-      { name: "auth-service", status: "\u25CF healthy", cpu: "3%", mem: "64M", pods: "1/1" },
-      { name: "web-frontend", status: "\u25D0 starting", cpu: "1%", mem: "32M", pods: "1/2" },
-      { name: "worker-queue", status: "\u25CF healthy", cpu: "12%", mem: "128M", pods: "1/1" },
-    ],
-    development: [
-      { name: "api-gateway", status: "\u25CF running", cpu: "2%", mem: "64M", pods: "1/1" },
-      { name: "web-frontend", status: "\u25CF running", cpu: "1%", mem: "32M", pods: "1/1" },
-      { name: "postgres-dev", status: "\u25CF running", cpu: "4%", mem: "256M", pods: "1/1" },
-    ],
+  const currentServices = DASHBOARD_ENV_SERVICES[envSelect].filter((service) => !searchVal || service.name.includes(searchVal));
+  const stats = DASHBOARD_ENV_STATS[envSelect];
+  const totalEndpointPages = Math.ceil(DASHBOARD_ENDPOINTS.length / DASHBOARD_ENDPOINTS_PER_PAGE);
+  const pagedEndpoints = DASHBOARD_ENDPOINTS.slice((endpointPage - 1) * DASHBOARD_ENDPOINTS_PER_PAGE, endpointPage * DASHBOARD_ENDPOINTS_PER_PAGE);
+
+  const openDeployModal = () => setDeployOpen(true);
+  const queueRollback = (message: string, variant: "success" | "info" = "info") => {
+    setDeployResetToken((current) => current + 1);
+    sonner.toast(message, variant);
   };
-
-  const envStats: Record<string, {requests: string; latency: string; errorRate: string; users: string; reqTrend: number; latTrend: number; errTrend: number; userTrend: number}> = {
-    production: { requests: "12,847", latency: "34ms", errorRate: "0.02%", users: "3,291", reqTrend: 4.2, latTrend: -12, errTrend: 0, userTrend: 18 },
-    staging: { requests: "1,204", latency: "52ms", errorRate: "0.15%", users: "84", reqTrend: 1.5, latTrend: 8, errTrend: 0.1, userTrend: -5 },
-    development: { requests: "47", latency: "120ms", errorRate: "2.4%", users: "3", reqTrend: 0, latTrend: 15, errTrend: 1.2, userTrend: 0 },
-  };
-
-  const currentServices = (envServices[envSelect] || envServices.production).filter(r => !searchVal || r.name.includes(searchVal));
-  const stats = envStats[envSelect] || envStats.production;
-
-  const allEndpoints = [
-    { route: "/api/health", p99: "2ms", rps: "840" },
-    { route: "/api/auth/*", p99: "48ms", rps: "320" },
-    { route: "/api/users/*", p99: "31ms", rps: "580" },
-    { route: "/api/deploy", p99: "1.2s", rps: "12" },
-    { route: "/api/metrics", p99: "8ms", rps: "200" },
-    { route: "/api/status", p99: "3ms", rps: "150" },
-    { route: "/api/config", p99: "12ms", rps: "45" },
-    { route: "/api/webhooks", p99: "84ms", rps: "90" },
-    { route: "/api/sessions", p99: "22ms", rps: "180" },
-    { route: "/api/events", p99: "15ms", rps: "260" },
-  ];
-  const endpointsPerPage = 3;
-  const totalEndpointPages = Math.ceil(allEndpoints.length / endpointsPerPage);
-  const pagedEndpoints = allEndpoints.slice((endpointPage - 1) * endpointsPerPage, endpointPage * endpointsPerPage);
 
   return (
     <div className="dashboard">
       <div className="dash-menubar green">
         <AsciiMenubar
-          menus={[
-            {
-              key: "file",
-              label: "File",
-              items: [
-                { key: "export", label: "Export Report" },
-                { key: "print", label: "Print View" },
-                { key: "sep", label: "", separator: true },
-                { key: "quit", label: "Quit" },
-              ],
-            },
-            {
-              key: "view",
-              label: "View",
-              items: [
-                { key: "compact", label: "Compact" },
-                { key: "expanded", label: "Expanded" },
-                { key: "sep", label: "", separator: true },
-                { key: "refresh", label: "Force Refresh" },
-              ],
-            },
-            {
-              key: "deploy",
-              label: "Deploy",
-              items: [
-                { key: "new", label: "New Deploy" },
-                { key: "rollback", label: "Rollback" },
-                { key: "sep", label: "", separator: true },
-                { key: "history", label: "History" },
-              ],
-            },
-            {
-              key: "help",
-              label: "Help",
-              items: [
-                { key: "shortcuts", label: "Shortcuts" },
-                { key: "docs", label: "Documentation" },
-                { key: "about", label: "About NEXUS" },
-              ],
-            },
-          ]}
+          menus={DASHBOARD_MENUS}
           onSelect={(_: string, itemKey: string) => {
-            if (itemKey === "new") setDeployOpen(true);
-            if (itemKey === "rollback") setDeployProgress(0);
+            if (itemKey === "new") {
+              openDeployModal();
+              sonner.toast(`Action: ${itemKey}`, "info");
+              return;
+            }
+            if (itemKey === "rollback") {
+              queueRollback(`Action: ${itemKey}`);
+              return;
+            }
             sonner.toast(`Action: ${itemKey}`, "info");
           }}
         />
@@ -184,12 +330,7 @@ function Dashboard() {
           <AsciiDropdownMenu
             trigger="admin ▾"
             width={20}
-            items={[
-              { key: "profile", label: "Profile" },
-              { key: "settings", label: "Settings" },
-              { key: "sep", label: "", separator: true },
-              { key: "logout", label: "Logout", danger: true },
-            ]}
+            items={DASHBOARD_ACCOUNT_ITEMS}
             onSelect={(key: string) => sonner.toast(`${key}`, "info")}
           />
           <AsciiSpinner frames={["◠", "◡"]} interval={800} label="" />
@@ -199,12 +340,7 @@ function Dashboard() {
 
       <div className="dash-nav">
         <AsciiNavigationMenu
-          items={[
-            { key: "overview", label: "Overview" },
-            { key: "services", label: "Services" },
-            { key: "deploys", label: "Deployments" },
-            { key: "monitoring", label: "Monitoring" },
-          ]}
+          items={DASHBOARD_NAV_ITEMS}
           activeKey={dashNav}
           onSelect={setDashNav}
         />
@@ -213,13 +349,9 @@ function Dashboard() {
       <div className="dash-controls">
         <AsciiSelect
           width={24}
-          options={[
-            { value: "production", label: "production" },
-            { value: "staging", label: "staging" },
-            { value: "development", label: "development" },
-          ]}
+          options={DASHBOARD_ENV_OPTIONS}
           value={envSelect}
-          onChange={setEnvSelect}
+          onChange={(value) => setEnvSelect(value as DashboardEnvironment)}
         />
         <AsciiSwitch checked={autoRefresh} onChange={setAutoRefresh} label="auto-refresh" />
         <AsciiToggle checked={darkAlerts} onChange={setDarkAlerts} label="mute alerts" width={10} animate />
@@ -273,33 +405,11 @@ function Dashboard() {
         </div>
       )}
 
-      <div className="dash-deploy-section">
-        <AsciiDivider width={72} border="single" label="DEPLOYMENT v2.5.0-rc.3" />
-        <div className="dash-deploy-row">
-          <div className="green">
-            <AsciiProgress value={deployProgress} width={50} aria-label="Deploy progress" animate />
-          </div>
-          <div className="dash-deploy-badges">
-            <span className="green"><AsciiBadge>ROLLING</AsciiBadge></span>
-            <span className="dim"><AsciiBadge variant="outline">{`${deployProgress}%`}</AsciiBadge></span>
-            <span className="blue"><AsciiTag>k8s</AsciiTag></span>
-            <span className="green"><AsciiTag>us-east-1</AsciiTag></span>
-          </div>
-        </div>
-        <div className="dash-deploy-actions">
-          <div className="green">
-            <AsciiButton label="Deploy New" border="single" animate onClick={() => setDeployOpen(true)} />
-          </div>
-          <div className="red">
-            <AsciiButton label="Rollback" border="bold" animate onClick={() => { setDeployProgress(0); sonner.toast("Rolling back...", "info"); }} />
-          </div>
-          <div className="dim">
-            <AsciiPopover content={"Strategy: rolling\nMax surge: 1\nMax unavail: 0\nTimeout: 600s"} width={26}>
-              [deploy config]
-            </AsciiPopover>
-          </div>
-        </div>
-      </div>
+      <DashboardDeploymentSection
+        resetToken={deployResetToken}
+        onOpenDeploy={openDeployModal}
+        onRollback={() => queueRollback("Rolling back...")}
+      />
 
       <div className="dash-grid">
         <div>
@@ -314,13 +424,7 @@ function Dashboard() {
           </div>
           <div className="green">
             <AsciiTable
-              columns={[
-                { key: "name", header: "SERVICE", width: 16 },
-                { key: "status", header: "STATUS", width: 10 },
-                { key: "cpu", header: "CPU", width: 7, align: "right" },
-                { key: "mem", header: "MEM", width: 7, align: "right" },
-                { key: "pods", header: "PODS", width: 6, align: "right" },
-              ]}
+              columns={DASHBOARD_SERVICE_COLUMNS}
               data={currentServices}
             />
           </div>
@@ -343,28 +447,14 @@ function Dashboard() {
             <AsciiBarChart
               width={40}
               animate
-              bars={[
-                { label: "api-gw", value: 847 },
-                { label: "auth", value: 320 },
-                { label: "web", value: 580 },
-                { label: "worker", value: 1200 },
-                { label: "cache", value: 95 },
-              ]}
+              bars={DASHBOARD_TRAFFIC_BARS}
             />
           </div>
           <h3 className="dash-section-title" style={{ marginTop: "1rem" }}>Weekly Activity</h3>
           <div className="blue">
             <AsciiHeatmap
               animate
-              data={[
-                [0, 1, 3, 5, 2, 0, 1, 4, 8, 6, 3, 1],
-                [1, 2, 4, 7, 3, 1, 2, 5, 9, 7, 4, 2],
-                [0, 1, 2, 4, 5, 3, 4, 6, 7, 5, 3, 1],
-                [2, 3, 5, 8, 6, 4, 3, 7, 10, 8, 5, 2],
-                [1, 2, 3, 6, 4, 2, 1, 4, 6, 5, 3, 1],
-                [0, 0, 1, 3, 2, 1, 0, 2, 4, 3, 2, 0],
-                [1, 1, 2, 4, 3, 2, 1, 3, 5, 4, 2, 1],
-              ]}
+              data={DASHBOARD_WEEKLY_ACTIVITY}
               yLabels={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
               aria-label="Weekly request heatmap"
             />
@@ -485,11 +575,7 @@ function Dashboard() {
           <h3 className="dash-section-title">Endpoints</h3>
           <div className="green">
             <AsciiTable
-              columns={[
-                { key: "route", header: "ROUTE", width: 20 },
-                { key: "p99", header: "P99", width: 8, align: "right" },
-                { key: "rps", header: "RPS", width: 8, align: "right" },
-              ]}
+              columns={DASHBOARD_ENDPOINT_COLUMNS}
               data={pagedEndpoints}
             />
           </div>
@@ -575,20 +661,18 @@ LOG_LEVEL=info`,
         onClose={() => setCmdPaletteOpen(false)}
         onSelect={(key: string) => {
           setCmdPaletteOpen(false);
-          if (key === "deploy") setDeployOpen(true);
-          if (key === "rollback") setDeployProgress(0);
+          if (key === "deploy") {
+            openDeployModal();
+            sonner.toast(`Executed: ${key}`, "success");
+            return;
+          }
+          if (key === "rollback") {
+            queueRollback(`Executed: ${key}`, "success");
+            return;
+          }
           sonner.toast(`Executed: ${key}`, "success");
         }}
-        items={[
-          { key: "deploy", label: "New Deployment", group: "Deploy", shortcut: "D" },
-          { key: "rollback", label: "Rollback", group: "Deploy", shortcut: "R" },
-          { key: "logs", label: "View Logs", group: "Monitor" },
-          { key: "metrics", label: "View Metrics", group: "Monitor" },
-          { key: "scale", label: "Scale Service", group: "Services" },
-          { key: "restart", label: "Restart Service", group: "Services" },
-          { key: "config", label: "Edit Config", group: "Settings" },
-          { key: "alerts", label: "Alert Rules", group: "Settings" },
-        ]}
+        items={DASHBOARD_COMMANDS}
         placeholder="Search commands..."
       />
 
