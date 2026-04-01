@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test, vi } from "vitest";
+import { AsciiBarChart } from "../components/AsciiBarChart";
 import { AsciiBadge } from "../components/AsciiBadge";
 import { AsciiButton } from "../components/AsciiButton";
 import { AsciiCalendar } from "../components/AsciiCalendar";
@@ -374,6 +375,43 @@ describe("ascii-lib", () => {
 
     await user.click(screen.getByRole("button", { name: "[copy]" }));
     expect(onCopyLine).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not restart animated bar charts when rerendered with equal bar values", () => {
+    vi.useFakeTimers();
+    try {
+      const bars = [
+        { label: "api-gw", value: 847 },
+        { label: "auth", value: 320 },
+        { label: "web", value: 580 },
+      ];
+
+      const { container, rerender } = render(
+        <AsciiBarChart width={32} animate bars={bars} />
+      );
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      const stableOutput = container.textContent;
+
+      rerender(
+        <AsciiBarChart
+          width={32}
+          animate
+          bars={[
+            { label: "api-gw", value: 847 },
+            { label: "auth", value: 320 },
+            { label: "web", value: 580 },
+          ]}
+        />
+      );
+
+      expect(container.textContent).toBe(stableOutput);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   test("renders dependency graphs consistently", () => {

@@ -39,6 +39,7 @@ export function AsciiBarChart({
 
   const reduced = useReducedMotion();
   const [progress, setProgress] = useState(animate && !reduced ? 0 : 1);
+  const animationKey = bars.map((bar) => `${bar.label}\u0000${bar.value}\u0000${bar.color ?? ""}`).join("\u0001");
 
   useEffect(() => {
     if (!animate || reduced) { setProgress(1); return; }
@@ -51,7 +52,7 @@ export function AsciiBarChart({
       if (step >= totalSteps) clearInterval(timer);
     }, 40);
     return () => clearInterval(timer);
-  }, [animate, reduced, bars]);
+  }, [animate, reduced, animationKey]);
 
   const b = borders[border];
   const inner = width - 2;
