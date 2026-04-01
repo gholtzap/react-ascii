@@ -1,4 +1,4 @@
-import { AsciiDivider } from "ascii-lib";
+import { AsciiDivider } from "../../src/components/AsciiDivider";
 import { featureShowcases } from "./featureShowcaseRegistry";
 
 export function DashboardFeatureShowcases() {

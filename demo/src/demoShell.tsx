@@ -1,4 +1,4 @@
-import { AsciiButtonGroup } from "ascii-lib";
+import { AsciiButtonGroup } from "../../src/components/AsciiButtonGroup";
 import { demoComponentCount } from "./demoRegistry";
 
 const BANNER = `

@@ -1,45 +1,43 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  AsciiAspectRatio,
-  AsciiBadge,
-  AsciiBox,
-  AsciiButton,
-  AsciiCard,
-  AsciiCommandPalette,
-  AsciiDataTable,
-  AsciiDependencyGraph,
-  AsciiDiff,
-  AsciiDrawer,
-  AsciiDropdownMenu,
-  AsciiFileTree,
-  AsciiForm,
-  AsciiHoverCard,
-  AsciiInput,
-  AsciiInspector,
-  AsciiLabel,
-  AsciiLogViewer,
-  AsciiModal,
-  AsciiPopover,
-  AsciiProcessTable,
-  AsciiProgress,
-  AsciiQueryPlan,
-  AsciiRackMap,
-  AsciiSequenceDiagram,
-  AsciiSheet,
-  AsciiSplitPane,
-  AsciiStat,
-  AsciiStatusGrid,
-  AsciiSelect,
-  AsciiTag,
-  AsciiTerminal,
-  AsciiTextarea,
-  AsciiTheme,
-  AsciiTooltip,
-  AsciiTraceTimeline,
-  AsciiCheckbox,
-  AsciiFlameGraph,
-  AsciiWindow,
-} from "ascii-lib";
+import { AsciiAspectRatio } from "../../src/components/AsciiAspectRatio";
+import { AsciiBadge } from "../../src/components/AsciiBadge";
+import { AsciiBox } from "../../src/components/AsciiBox";
+import { AsciiButton } from "../../src/components/AsciiButton";
+import { AsciiCard } from "../../src/components/AsciiCard";
+import { AsciiCheckbox } from "../../src/components/AsciiCheckbox";
+import { AsciiCommandPalette } from "../../src/components/AsciiCommandPalette";
+import { AsciiDataTable } from "../../src/components/AsciiDataTable";
+import { AsciiDependencyGraph } from "../../src/components/AsciiDependencyGraph";
+import { AsciiDiff } from "../../src/components/AsciiDiff";
+import { AsciiDrawer } from "../../src/components/AsciiDrawer";
+import { AsciiDropdownMenu } from "../../src/components/AsciiDropdownMenu";
+import { AsciiFileTree } from "../../src/components/AsciiFileTree";
+import { AsciiFlameGraph } from "../../src/components/AsciiFlameGraph";
+import { AsciiForm } from "../../src/components/AsciiForm";
+import { AsciiHoverCard } from "../../src/components/AsciiHoverCard";
+import { AsciiInput } from "../../src/components/AsciiInput";
+import { AsciiInspector } from "../../src/components/AsciiInspector";
+import { AsciiLabel } from "../../src/components/AsciiLabel";
+import { AsciiLogViewer } from "../../src/components/AsciiLogViewer";
+import { AsciiModal } from "../../src/components/AsciiModal";
+import { AsciiPopover } from "../../src/components/AsciiPopover";
+import { AsciiProcessTable } from "../../src/components/AsciiProcessTable";
+import { AsciiProgress } from "../../src/components/AsciiProgress";
+import { AsciiQueryPlan } from "../../src/components/AsciiQueryPlan";
+import { AsciiRackMap } from "../../src/components/AsciiRackMap";
+import { AsciiSelect } from "../../src/components/AsciiSelect";
+import { AsciiSequenceDiagram } from "../../src/components/AsciiSequenceDiagram";
+import { AsciiSheet } from "../../src/components/AsciiSheet";
+import { AsciiSplitPane } from "../../src/components/AsciiSplitPane";
+import { AsciiStat } from "../../src/components/AsciiStat";
+import { AsciiStatusGrid } from "../../src/components/AsciiStatusGrid";
+import { AsciiTag } from "../../src/components/AsciiTag";
+import { AsciiTerminal } from "../../src/components/AsciiTerminal";
+import { AsciiTextarea } from "../../src/components/AsciiTextarea";
+import { AsciiTheme } from "../../src/components/AsciiTheme";
+import { AsciiTooltip } from "../../src/components/AsciiTooltip";
+import { AsciiTraceTimeline } from "../../src/components/AsciiTraceTimeline";
+import { AsciiWindow } from "../../src/components/AsciiWindow";
 
 export type ShowcaseMode = "dashboard" | "components";
 

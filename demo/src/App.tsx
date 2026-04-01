@@ -1,83 +1,80 @@
 import { useState, useEffect } from "react";
-import {
-  AsciiBox,
-  AsciiButton,
-  AsciiInput,
-  AsciiCheckbox,
-  AsciiRadio,
-  AsciiSelect,
-  AsciiTable,
-  AsciiTabs,
-  AsciiAccordion,
-  AsciiModal,
-  AsciiAlert,
-  AsciiBadge,
-  AsciiProgress,
-  AsciiSpinner,
-  AsciiTooltip,
-  AsciiDivider,
-  AsciiCard,
-  AsciiTree,
-  AsciiToggle,
-  AsciiCode,
-  AsciiTextarea,
-  AsciiBarChart,
-  AsciiHeatmap,
-  AsciiGauge,
-  AsciiSlider,
-  AsciiStepper,
-  AsciiDatePicker,
-  AsciiTerminal,
-  AsciiKbd,
-  AsciiAsciiText,
-  AsciiResizable,
-  AsciiSplitPane,
-  AsciiSheet,
-  AsciiAlertDialog,
-  AsciiAspectRatio,
-  AsciiButtonGroup,
-  AsciiCalendar,
-  AsciiCarousel,
-  AsciiCollapsible,
-  AsciiCombobox,
-  AsciiContextMenu,
-  AsciiDataTable,
-  AsciiDirection,
-  AsciiDrawer,
-  AsciiEmpty,
-  AsciiField,
-  AsciiForm,
-  AsciiHoverCard,
-  AsciiInputGroup,
-  AsciiInputOTP,
-  AsciiItem,
-  AsciiLabel,
-  AsciiMenubar,
-  AsciiNativeSelect,
-  AsciiNavigationMenu,
-  AsciiPopover,
-  AsciiScrollArea,
-  AsciiSonner,
-  useAsciiSonner,
-  AsciiSwitch,
-  AsciiToggleGroup,
-  AsciiTypography,
-  AsciiStat,
-  AsciiSparkline,
-  AsciiTimeline,
-  AsciiAvatar,
-  AsciiCommandPalette,
-  AsciiDropdownMenu,
-  AsciiBreadcrumb,
-  AsciiTag,
-  AsciiSkeleton,
-  AsciiPagination,
-  AsciiMatrixRain,
-  AsciiScanLine,
-  AsciiFlameGraph,
-  AsciiTheme,
-} from "ascii-lib";
-import type { ThemePreset, DensityPreset } from "ascii-lib";
+import { AsciiAccordion } from "../../src/components/AsciiAccordion";
+import { AsciiAlert } from "../../src/components/AsciiAlert";
+import { AsciiAlertDialog } from "../../src/components/AsciiAlertDialog";
+import { AsciiAsciiText } from "../../src/components/AsciiAsciiText";
+import { AsciiAspectRatio } from "../../src/components/AsciiAspectRatio";
+import { AsciiAvatar } from "../../src/components/AsciiAvatar";
+import { AsciiBadge } from "../../src/components/AsciiBadge";
+import { AsciiBarChart } from "../../src/components/AsciiBarChart";
+import { AsciiBox } from "../../src/components/AsciiBox";
+import { AsciiBreadcrumb } from "../../src/components/AsciiBreadcrumb";
+import { AsciiButton } from "../../src/components/AsciiButton";
+import { AsciiButtonGroup } from "../../src/components/AsciiButtonGroup";
+import { AsciiCalendar } from "../../src/components/AsciiCalendar";
+import { AsciiCard } from "../../src/components/AsciiCard";
+import { AsciiCarousel } from "../../src/components/AsciiCarousel";
+import { AsciiCheckbox } from "../../src/components/AsciiCheckbox";
+import { AsciiCode } from "../../src/components/AsciiCode";
+import { AsciiCollapsible } from "../../src/components/AsciiCollapsible";
+import { AsciiCombobox } from "../../src/components/AsciiCombobox";
+import { AsciiCommandPalette } from "../../src/components/AsciiCommandPalette";
+import { AsciiContextMenu } from "../../src/components/AsciiContextMenu";
+import { AsciiDataTable } from "../../src/components/AsciiDataTable";
+import { AsciiDatePicker } from "../../src/components/AsciiDatePicker";
+import { AsciiDirection } from "../../src/components/AsciiDirection";
+import { AsciiDivider } from "../../src/components/AsciiDivider";
+import { AsciiDrawer } from "../../src/components/AsciiDrawer";
+import { AsciiDropdownMenu } from "../../src/components/AsciiDropdownMenu";
+import { AsciiEmpty } from "../../src/components/AsciiEmpty";
+import { AsciiField } from "../../src/components/AsciiField";
+import { AsciiFlameGraph } from "../../src/components/AsciiFlameGraph";
+import { AsciiForm } from "../../src/components/AsciiForm";
+import { AsciiGauge } from "../../src/components/AsciiGauge";
+import { AsciiHeatmap } from "../../src/components/AsciiHeatmap";
+import { AsciiHoverCard } from "../../src/components/AsciiHoverCard";
+import { AsciiInput } from "../../src/components/AsciiInput";
+import { AsciiInputGroup } from "../../src/components/AsciiInputGroup";
+import { AsciiInputOTP } from "../../src/components/AsciiInputOTP";
+import { AsciiItem } from "../../src/components/AsciiItem";
+import { AsciiKbd } from "../../src/components/AsciiKbd";
+import { AsciiLabel } from "../../src/components/AsciiLabel";
+import { AsciiMatrixRain } from "../../src/components/AsciiMatrixRain";
+import { AsciiMenubar } from "../../src/components/AsciiMenubar";
+import { AsciiModal } from "../../src/components/AsciiModal";
+import { AsciiNativeSelect } from "../../src/components/AsciiNativeSelect";
+import { AsciiNavigationMenu } from "../../src/components/AsciiNavigationMenu";
+import { AsciiPagination } from "../../src/components/AsciiPagination";
+import { AsciiPopover } from "../../src/components/AsciiPopover";
+import { AsciiProgress } from "../../src/components/AsciiProgress";
+import { AsciiRadio } from "../../src/components/AsciiRadio";
+import { AsciiResizable } from "../../src/components/AsciiResizable";
+import { AsciiScanLine } from "../../src/components/AsciiScanLine";
+import { AsciiScrollArea } from "../../src/components/AsciiScrollArea";
+import { AsciiSelect } from "../../src/components/AsciiSelect";
+import { AsciiSheet } from "../../src/components/AsciiSheet";
+import { AsciiSkeleton } from "../../src/components/AsciiSkeleton";
+import { AsciiSlider } from "../../src/components/AsciiSlider";
+import { AsciiSonner, useAsciiSonner } from "../../src/components/AsciiSonner";
+import { AsciiSparkline } from "../../src/components/AsciiSparkline";
+import { AsciiSpinner } from "../../src/components/AsciiSpinner";
+import { AsciiSplitPane } from "../../src/components/AsciiSplitPane";
+import { AsciiStat } from "../../src/components/AsciiStat";
+import { AsciiStepper } from "../../src/components/AsciiStepper";
+import { AsciiSwitch } from "../../src/components/AsciiSwitch";
+import { AsciiTable } from "../../src/components/AsciiTable";
+import { AsciiTabs } from "../../src/components/AsciiTabs";
+import { AsciiTag } from "../../src/components/AsciiTag";
+import { AsciiTerminal } from "../../src/components/AsciiTerminal";
+import { AsciiTextarea } from "../../src/components/AsciiTextarea";
+import { AsciiTheme } from "../../src/components/AsciiTheme";
+import { AsciiTimeline } from "../../src/components/AsciiTimeline";
+import { AsciiToggle } from "../../src/components/AsciiToggle";
+import { AsciiToggleGroup } from "../../src/components/AsciiToggleGroup";
+import { AsciiTooltip } from "../../src/components/AsciiTooltip";
+import { AsciiTree } from "../../src/components/AsciiTree";
+import { AsciiTypography } from "../../src/components/AsciiTypography";
+import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
 import { demoComponents, filterDemoComponents, getDemoComponentCategories } from "./demoRegistry";
 import { ComponentFeatureShowcases, DashboardFeatureShowcases } from "./featureShowcases";
