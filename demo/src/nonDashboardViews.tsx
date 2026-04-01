@@ -54,8 +54,14 @@ import { AsciiSlider } from "../../src/components/AsciiSlider";
 import { AsciiSonner, useAsciiSonner } from "../../src/components/AsciiSonner";
 import { AsciiSparkline } from "../../src/components/AsciiSparkline";
 import { AsciiSpinner } from "../../src/components/AsciiSpinner";
+import { AsciiSplitPane } from "../../src/components/AsciiSplitPane";
+import { AsciiStat } from "../../src/components/AsciiStat";
+import { AsciiStepper } from "../../src/components/AsciiStepper";
 import { AsciiTable } from "../../src/components/AsciiTable";
+import { AsciiSwitch } from "../../src/components/AsciiSwitch";
 import { AsciiTabs } from "../../src/components/AsciiTabs";
+import { AsciiTerminal } from "../../src/components/AsciiTerminal";
+import { AsciiTextarea } from "../../src/components/AsciiTextarea";
 import { AsciiToggle } from "../../src/components/AsciiToggle";
 import { AsciiToggleGroup } from "../../src/components/AsciiToggleGroup";
 import { AsciiTooltip } from "../../src/components/AsciiTooltip";
@@ -2050,4 +2056,3 @@ export function IndexView() {
     </div>
   );
 }
-

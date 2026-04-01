@@ -32,7 +32,7 @@ export function AsciiSkeleton({
   return (
     <div
       className={`ascii-lib ascii-skeleton${shimmerClass} ${className ?? ""}`.trim()}
-      style={style}
+      style={color ? { ...style, color } : style}
       role="status"
       aria-label="Loading"
     >

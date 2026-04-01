@@ -18,7 +18,7 @@ export function AsciiScanLine({
   return (
     <div
       className={`${enabled ? "ascii-animate-scan" : ""} ${className ?? ""}`.trim()}
-      style={{ display: "inline-block", ...style }}
+      style={color ? { display: "inline-block", color, ...style } : { display: "inline-block", ...style }}
     >
       {enabled && <div className="ascii-scan-line-bar" />}
       {children}

@@ -8,9 +8,9 @@ export interface AsciiTableColumn {
   align?: "left" | "center" | "right";
 }
 
-export interface AsciiTableProps {
+export interface AsciiTableProps<T extends object = Record<string, unknown>> {
   columns: AsciiTableColumn[];
-  data: Record<string, string | number>[];
+  data: T[];
   border?: BorderStyle;
   "aria-label"?: string;
   color?: string;
@@ -18,7 +18,7 @@ export interface AsciiTableProps {
   style?: React.CSSProperties;
 }
 
-export function AsciiTable({
+export function AsciiTable<T extends object>({
   columns,
   data,
   border = "single",
@@ -26,12 +26,12 @@ export function AsciiTable({
   color,
   className,
   style,
-}: AsciiTableProps) {
+}: AsciiTableProps<T>) {
   const b = borders[border];
+  const getCellValue = (row: T, key: string) => (row as Record<string, unknown>)[key];
 
-  // Calculate column widths
   const cols = columns.map((col) => {
-    const dataWidths = data.map((row) => String(row[col.key] ?? "").length);
+    const dataWidths = data.map((row) => String(getCellValue(row, col.key) ?? "").length);
     const maxData = Math.max(col.header.length, ...dataWidths);
     return {
       ...col,
@@ -55,21 +55,12 @@ export function AsciiTable({
 
   const lines: string[] = [];
 
-  // Top border
   lines.push(makeRow(cols.map(() => ""), b.tl, b.tm, b.tr, b.h));
-
-  // Header row
   lines.push(makeDataRow(cols.map((c) => c.header)));
-
-  // Header separator
   lines.push(makeRow(cols.map(() => ""), b.lm, b.mm, b.rm, b.h));
-
-  // Data rows
   for (const row of data) {
-    lines.push(makeDataRow(cols.map((c) => String(row[c.key] ?? ""))));
+    lines.push(makeDataRow(cols.map((c) => String(getCellValue(row, c.key) ?? ""))));
   }
-
-  // Bottom border
   lines.push(makeRow(cols.map(() => ""), b.bl, b.bm, b.br, b.h));
 
   return (
@@ -87,7 +78,7 @@ export function AsciiTable({
           {data.map((row, ri) => (
             <tr key={ri}>
               {cols.map((c) => (
-                <td key={c.key}>{String(row[c.key] ?? "")}</td>
+                <td key={c.key}>{String(getCellValue(row, c.key) ?? "")}</td>
               ))}
             </tr>
           ))}

@@ -1,4 +1,5 @@
-import React, { RefObject, useId, useRef } from "react";
+import React, { useId, useRef } from "react";
+import type { RefObject } from "react";
 import type { BorderStyle } from "../chars";
 import { AsciiPortal } from "./AsciiPortal";
 import { AsciiSurface } from "./AsciiSurface";

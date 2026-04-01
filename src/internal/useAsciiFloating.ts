@@ -1,4 +1,5 @@
-import { CSSProperties, RefObject, useCallback, useEffect, useState } from "react";
+import type { CSSProperties, RefObject } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSafeLayoutEffect } from "./useSafeLayoutEffect";
 
 export type AsciiFloatingSide = "top" | "bottom" | "left" | "right";

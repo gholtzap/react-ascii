@@ -21,12 +21,12 @@ export const AsciiTrigger = React.forwardRef<HTMLElement, AsciiTriggerProps>(fun
   ...rest
 }, ref) {
   if (asChild && React.isValidElement(children)) {
-    const child = children as React.ReactElement<Record<string, unknown> & { ref?: React.Ref<HTMLElement> }>;
-    const childRef = child.props.ref;
+    const child = children as React.ReactElement<Record<string, unknown>>;
+    const childRef = (child.props as Record<string, unknown> & { ref?: React.Ref<HTMLElement> }).ref;
 
     return cloneElementWithMergedProps(child, {
       ...rest,
-      ref: composeRefs(childRef, ref),
+      ref: composeRefs<HTMLElement>(childRef, ref) as React.Ref<HTMLElement>,
       className,
       onClick,
       onFocus,

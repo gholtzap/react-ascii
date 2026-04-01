@@ -1,4 +1,4 @@
-import React, { useId, useRef } from "react";
+import React, { useRef } from "react";
 import type { BorderStyle } from "../chars";
 import { AsciiDialogFrame } from "../internal/AsciiDialogFrame";
 

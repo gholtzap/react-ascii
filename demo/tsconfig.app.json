@@ -25,7 +25,10 @@
     "noUncheckedSideEffectImports": true,
     "baseUrl": ".",
     "paths": {
-      "ascii-lib": ["../src/index.ts"]
+      "ascii-lib": ["../src/index.ts"],
+      "react": ["../node_modules/@types/react/index.d.ts"],
+      "react-dom": ["../node_modules/@types/react-dom/index.d.ts"],
+      "react/jsx-runtime": ["../node_modules/@types/react/jsx-runtime.d.ts"]
     }
   },
   "include": ["src"]

@@ -15,11 +15,11 @@ export interface AsciiMenubarMenuItem {
 export interface AsciiMenubarMenu {
   key: string;
   label: string;
-  items: AsciiMenubarMenuItem[];
+  items: readonly AsciiMenubarMenuItem[];
 }
 
 export interface AsciiMenubarProps {
-  menus: AsciiMenubarMenu[];
+  menus: readonly AsciiMenubarMenu[];
   onSelect: (menuKey: string, itemKey: string) => void;
   border?: BorderStyle;
   color?: string;

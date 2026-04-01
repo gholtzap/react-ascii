@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { AsciiAlert } from "../../src/components/AsciiAlert";
+import { AsciiAccordion } from "../../src/components/AsciiAccordion";
 import { AsciiAvatar } from "../../src/components/AsciiAvatar";
 import { AsciiBadge } from "../../src/components/AsciiBadge";
 import { AsciiBarChart } from "../../src/components/AsciiBarChart";

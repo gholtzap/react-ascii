@@ -78,13 +78,13 @@ export function AsciiMatrixRain({
   }, [width, height, speed, chars, reduced]);
 
   if (reduced) {
-    return (
-      <div
-        className={`ascii-lib ascii-matrix-rain ${className ?? ""}`.trim()}
-        style={{ display: "inline-block", whiteSpace: "pre", ...style }}
-        aria-hidden="true"
-      >
-        {Array.from({ length: height }, () => "░".repeat(width)).join("\n")}
+  return (
+    <div
+      className={`ascii-lib ascii-matrix-rain ${className ?? ""}`.trim()}
+      style={color ? { display: "inline-block", whiteSpace: "pre", color, ...style } : { display: "inline-block", whiteSpace: "pre", ...style }}
+      aria-hidden="true"
+    >
+      {Array.from({ length: height }, () => "░".repeat(width)).join("\n")}
       </div>
     );
   }
@@ -92,7 +92,7 @@ export function AsciiMatrixRain({
   return (
     <div
       className={`ascii-lib ascii-matrix-rain ${className ?? ""}`.trim()}
-      style={{ display: "inline-block", whiteSpace: "pre", ...style }}
+      style={color ? { display: "inline-block", whiteSpace: "pre", color, ...style } : { display: "inline-block", whiteSpace: "pre", ...style }}
       aria-hidden="true"
     >
       {grid.map((row) => row.join("")).join("\n")}

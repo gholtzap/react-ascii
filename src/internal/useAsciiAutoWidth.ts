@@ -1,4 +1,5 @@
-import { ReactNode, RefObject, useEffect, useRef, useState } from "react";
+import type { ReactNode, RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface UseAsciiAutoWidthOptions {
   content: ReactNode;
