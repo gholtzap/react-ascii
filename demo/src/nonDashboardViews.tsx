@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { AsciiAccordion } from "../../src/components/AsciiAccordion";
 import { AsciiAlert } from "../../src/components/AsciiAlert";
 import { AsciiAlertDialog } from "../../src/components/AsciiAlertDialog";
@@ -61,7 +61,7 @@ import { AsciiToggleGroup } from "../../src/components/AsciiToggleGroup";
 import { AsciiTooltip } from "../../src/components/AsciiTooltip";
 import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
-import { demoComponents, filterDemoComponents, getDemoComponentCategories } from "./demoRegistry";
+import { demoComponents, filterDemoComponents } from "./demoRegistry";
 
 const LazyComponentFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.ComponentFeatureShowcases })));
 
@@ -1988,8 +1988,28 @@ function AnimationsShowcase() {
 
 export function IndexView() {
   const [search, setSearch] = useState("");
-  const filtered = filterDemoComponents(search);
-  const categories = getDemoComponentCategories(demoComponents);
+  const deferredSearch = useDeferredValue(search);
+  const { filtered, groupedCategories } = useMemo(() => {
+    const nextFiltered = filterDemoComponents(deferredSearch);
+    const groups = new Map<string, string[]>();
+
+    for (const component of nextFiltered) {
+      const itemList = groups.get(component.category);
+
+      if (itemList) {
+        itemList.push(`<${component.name} />`);
+        continue;
+      }
+
+      groups.set(component.category, [`<${component.name} />`]);
+    }
+
+    return {
+      filtered: nextFiltered,
+      groupedCategories: [...groups.entries()].sort(([left], [right]) => left.localeCompare(right)),
+    };
+  }, [deferredSearch]);
+  const isStale = search !== deferredSearch;
 
   return (
     <div className="index-view">
@@ -2006,14 +2026,11 @@ export function IndexView() {
         <span className="dim">{filtered.length} / {demoComponents.length}</span>
       </div>
 
-      <div className="index-grid">
-        {categories.map((cat) => {
-          const items = filtered.filter((c) => c.category === cat);
-          const itemList = items.map((c) => `<${c.name} />`).join("\n");
-          if (items.length === 0) return null;
+      <div className="index-grid" aria-busy={isStale} style={isStale ? { opacity: 0.7 } : undefined}>
+        {groupedCategories.map(([category, items]) => {
           return (
-            <AsciiBox key={cat} title={cat} width={38} border="single">
-              {itemList}
+            <AsciiBox key={category} title={category} width={38} border="single">
+              {items.join("\n")}
             </AsciiBox>
           );
         })}
@@ -2033,5 +2050,4 @@ export function IndexView() {
     </div>
   );
 }
-
 
