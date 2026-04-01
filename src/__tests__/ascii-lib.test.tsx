@@ -6,6 +6,7 @@ import { AsciiBarChart } from "../components/AsciiBarChart";
 import { AsciiBadge } from "../components/AsciiBadge";
 import { AsciiButton } from "../components/AsciiButton";
 import { AsciiCalendar } from "../components/AsciiCalendar";
+import { AsciiCard } from "../components/AsciiCard";
 import { AsciiCarousel } from "../components/AsciiCarousel";
 import { AsciiCommandPalette } from "../components/AsciiCommandPalette";
 import { AsciiDataTable } from "../components/AsciiDataTable";
@@ -411,6 +412,110 @@ describe("ascii-lib", () => {
       expect(container.textContent).toBe(stableOutput);
     } finally {
       vi.useRealTimers();
+    }
+  });
+
+  test("keeps measured surfaces stable when rerendered with equal react content", async () => {
+    const originalResizeObserver = globalThis.ResizeObserver;
+    const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "offsetHeight");
+
+    class ResizeObserverMock {
+      callback: ResizeObserverCallback;
+
+      constructor(callback: ResizeObserverCallback) {
+        this.callback = callback;
+      }
+
+      observe() {
+        this.callback([], this as unknown as ResizeObserver);
+      }
+
+      unobserve() {}
+
+      disconnect() {}
+    }
+
+    Object.defineProperty(HTMLElement.prototype, "offsetHeight", {
+      configurable: true,
+      get() {
+        const className = typeof this.className === "string" ? this.className : "";
+
+        if (className.includes("ascii-surface-body")) return 88;
+        if (className.includes("ascii-surface-footer")) return 44;
+
+        return 22;
+      },
+    });
+
+    Object.defineProperty(globalThis, "ResizeObserver", {
+      configurable: true,
+      value: ResizeObserverMock,
+      writable: true,
+    });
+
+    try {
+      const { container, rerender } = render(
+        <AsciiCard
+          title="Deploy Card"
+          footer={
+            <div>
+              <div>owner: platform</div>
+              <div>window: 02:00</div>
+            </div>
+          }
+        >
+          <div>
+            <div>service: api-gateway</div>
+            <div>batch: 03 / 10</div>
+            <div>risk: low</div>
+          </div>
+        </AsciiCard>
+      );
+
+      await waitFor(() => {
+        const shell = container.querySelector(".ascii-surface-shell");
+
+        expect(shell?.textContent?.split("\n").length).toBeGreaterThan(9);
+      });
+
+      const shell = container.querySelector(".ascii-surface-shell");
+      const stableShell = shell?.textContent;
+
+      rerender(
+        <AsciiCard
+          title="Deploy Card"
+          footer={
+            <div>
+              <div>owner: platform</div>
+              <div>window: 02:00</div>
+            </div>
+          }
+        >
+          <div>
+            <div>service: api-gateway</div>
+            <div>batch: 03 / 10</div>
+            <div>risk: low</div>
+          </div>
+        </AsciiCard>
+      );
+
+      expect(container.querySelector(".ascii-surface-shell")?.textContent).toBe(stableShell);
+    } finally {
+      if (originalOffsetHeight) {
+        Object.defineProperty(HTMLElement.prototype, "offsetHeight", originalOffsetHeight);
+      } else {
+        Reflect.deleteProperty(HTMLElement.prototype, "offsetHeight");
+      }
+
+      if (originalResizeObserver) {
+        Object.defineProperty(globalThis, "ResizeObserver", {
+          configurable: true,
+          value: originalResizeObserver,
+          writable: true,
+        });
+      } else {
+        Reflect.deleteProperty(globalThis, "ResizeObserver");
+      }
     }
   });
 

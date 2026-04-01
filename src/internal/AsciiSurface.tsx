@@ -89,14 +89,6 @@ export function AsciiSurface({
     return () => observer.disconnect();
   }, [footer, lineHeight, minBodyRows, minFooterRows]);
 
-  useEffect(() => {
-    setBodyRows(getInitialRows(children, minBodyRows));
-  }, [children, minBodyRows]);
-
-  useEffect(() => {
-    setFooterRows(getInitialRows(footer, minFooterRows));
-  }, [footer, minFooterRows]);
-
   const b = borders[border];
   const inner = width - 2;
   const bodySpacerRows = bodyRows + padding * 2;
