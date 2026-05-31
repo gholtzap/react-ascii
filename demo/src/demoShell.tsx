@@ -10,8 +10,8 @@ const BANNER = `
 `;
 
 interface DemoViewSwitcherProps {
-  view: "dashboard" | "components" | "index";
-  onChange: (view: "dashboard" | "components" | "index") => void;
+  view: "dashboard" | "components" | "docs" | "index";
+  onChange: (view: "dashboard" | "components" | "docs" | "index") => void;
 }
 
 interface DemoControlsProps {
@@ -49,6 +49,12 @@ export function DemoViewSwitcher({ view, onChange }: DemoViewSwitcherProps) {
         onClick={() => onChange("components")}
       >
         {"[ Components ]"}
+      </button>
+      <button
+        className={`view-tab ${view === "docs" ? "view-tab-active" : ""}`}
+        onClick={() => onChange("docs")}
+      >
+        {"[ Docs ]"}
       </button>
       <button
         className={`view-tab ${view === "index" ? "view-tab-active" : ""}`}

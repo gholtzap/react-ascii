@@ -68,6 +68,7 @@ import { AsciiTooltip } from "../../src/components/AsciiTooltip";
 import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
 import { demoComponents, filterDemoComponents } from "./demoRegistry";
+import { docsCategories, docsComponentCount } from "./docsCatalog";
 
 const LazyComponentFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.ComponentFeatureShowcases })));
 
@@ -113,6 +114,23 @@ export function ComponentsView() {
 
   return (
     <div className="components">
+
+      <div className="section">
+        <h2 className="section-title">Docs Playground</h2>
+        <p className="section-desc">The Docs tab now exposes searchable component guidance, usage examples, props, and accessibility notes.</p>
+        <div className="demo-row">
+          <div className="green">
+            <AsciiBox width={40} title="Coverage" border="single">
+              {`${docsComponentCount} component docs\n${docsCategories.length} categories\nlive in the Docs tab`}
+            </AsciiBox>
+          </div>
+          <div className="blue">
+            <AsciiBox width={42} title="Use It For" border="single">
+              {"imports\nprops\naccessibility\nstarting examples"}
+            </AsciiBox>
+          </div>
+        </div>
+      </div>
 
       <AsciiDivider width={80} border="double" label="LAYOUT" className="divider-full" />
 

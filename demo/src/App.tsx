@@ -39,6 +39,7 @@ import { AsciiTree } from "../../src/components/AsciiTree";
 import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
+import { docsCategories, docsComponentCount } from "./docsCatalog";
 
 type DashboardEnvironment = "production" | "staging" | "development";
 type DashboardServiceRow = {
@@ -366,6 +367,18 @@ function Dashboard() {
         />
       </div>
 
+      <div className="dash-docs-strip">
+        <div>
+          <h3 className="dash-section-title">Docs Playground</h3>
+          <div className="dim">Searchable per-component docs are available from the Docs tab.</div>
+        </div>
+        <div className="dash-docs-metrics">
+          <span className="green"><AsciiBadge>{`${docsComponentCount} components`}</AsciiBadge></span>
+          <span className="blue"><AsciiTag>{`${docsCategories.length} categories`}</AsciiTag></span>
+          <AsciiKbd keys={["Docs"]} />
+        </div>
+      </div>
+
       {!darkAlerts && (
         <div className="dash-alert-strip warning">
           <AsciiAlert variant="warning" width={72} animate>
@@ -684,10 +697,11 @@ LOG_LEVEL=info`,
 
 const LazyDashboardFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.DashboardFeatureShowcases })));
 const LazyComponentsView = lazy(() => import("./nonDashboardViews").then((module) => ({ default: module.ComponentsView })));
+const LazyDocsView = lazy(() => import("./docsView").then((module) => ({ default: module.DocsView })));
 const LazyIndexView = lazy(() => import("./nonDashboardViews").then((module) => ({ default: module.IndexView })));
 
 function App() {
-  const [view, setView] = useState<"dashboard" | "components" | "index">("dashboard");
+  const [view, setView] = useState<"dashboard" | "components" | "docs" | "index">("dashboard");
   const [theme, setTheme] = useState<ThemePreset>("phosphor");
   const [density, setDensity] = useState<DensityPreset>("cozy");
 
@@ -707,6 +721,11 @@ function App() {
         {view === "components" && (
           <Suspense fallback={<div className="dim">loading components...</div>}>
             <LazyComponentsView />
+          </Suspense>
+        )}
+        {view === "docs" && (
+          <Suspense fallback={<div className="dim">loading docs...</div>}>
+            <LazyDocsView />
           </Suspense>
         )}
         {view === "index" && (

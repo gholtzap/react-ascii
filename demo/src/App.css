@@ -104,6 +104,23 @@
   gap: 1rem;
 }
 
+.dash-docs-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--ascii-border);
+  border-bottom: 1px solid var(--ascii-border);
+}
+
+.dash-docs-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .dash-toggles {
   display: flex;
   flex-direction: column;
@@ -394,6 +411,100 @@ footer pre {
   margin: 1.5rem 0;
 }
 
+.docs-view {
+  width: 100%;
+}
+
+.docs-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.docs-hero-stats,
+.docs-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.docs-controls {
+  margin-bottom: 1.5rem;
+}
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: minmax(26ch, 32ch) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.docs-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 72vh;
+  overflow: auto;
+  padding-right: 0.5rem;
+}
+
+.docs-nav-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ascii-dim);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+}
+
+.docs-nav-item span:last-child {
+  font-size: 0.75rem;
+}
+
+.docs-nav-item:hover,
+.docs-nav-item-active {
+  border-color: var(--ascii-border);
+  color: var(--ascii-accent);
+}
+
+.docs-detail {
+  min-width: 0;
+}
+
+.docs-detail-header,
+.docs-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.docs-detail-header {
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.docs-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.docs-example {
+  display: grid;
+  grid-template-columns: minmax(18ch, 28ch) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: flex-start;
+}
+
 @media (max-width: 600px) {
   .demo-header {
     margin-bottom: 1.5rem;
@@ -426,5 +537,21 @@ footer pre {
 
   .dash-feature-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dash-docs-strip,
+  .docs-hero,
+  .docs-example {
+    flex-direction: column;
+  }
+
+  .docs-layout,
+  .docs-example {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .docs-sidebar {
+    max-height: 18rem;
   }
 }
