@@ -68,7 +68,7 @@ import { AsciiTooltip } from "../../src/components/AsciiTooltip";
 import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
 import { demoComponents, filterDemoComponents } from "./demoRegistry";
-import { docsCategories, docsComponentCount } from "./docsCatalog";
+import { docsComponentCount, generatedDocsPropCount, generatedDocsPropTableCount } from "./docsCatalog";
 import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
 import { docsRecipeCount, docsRecipes } from "./docsRecipes";
 
@@ -124,7 +124,7 @@ export function ComponentsView() {
           <DocsPlaygroundSummary />
           <div className="green">
             <AsciiBox width={40} title="Coverage" border="single">
-              {`${docsComponentCount} component docs\n${docsCategories.length} categories\nlive in the Docs tab`}
+              {`${docsComponentCount} component docs\n${generatedDocsPropTableCount} generated prop tables\n${generatedDocsPropCount} TypeScript props`}
             </AsciiBox>
           </div>
           <div className="blue">
