@@ -70,7 +70,13 @@ function LivePlayground({ componentName }: { componentName: string }) {
     }
 
     if (componentName === "AsciiInput") {
-      return `<AsciiInput label=${literal(inputLabel)} width={${inputWidth}} placeholder=${literal(inputPlaceholder)} value={value} onChange={(event) => setValue(event.target.value)} />`;
+      return `<AsciiInput
+  label=${literal(inputLabel)}
+  width={${inputWidth}}
+  placeholder=${literal(inputPlaceholder)}
+  value={value}
+  onChange={(event) => setValue(event.target.value)}
+/>`;
     }
 
     if (componentName === "AsciiProgress") {
@@ -78,7 +84,9 @@ function LivePlayground({ componentName }: { componentName: string }) {
     }
 
     if (componentName === "AsciiAlert") {
-      return `<AsciiAlert variant=${literal(alertVariant)} width={52}>${alertMessage}</AsciiAlert>`;
+      return `<AsciiAlert variant=${literal(alertVariant)} width={52}>
+  ${alertMessage}
+</AsciiAlert>`;
     }
 
     if (componentName === "AsciiBadge") {
@@ -136,19 +144,24 @@ function LivePlayground({ componentName }: { componentName: string }) {
       </div>
 
       <div className="docs-playground-preview">
-        <AsciiBox title="Preview" width={58} border="single">
-          {componentName === "AsciiButton" && <AsciiButton label={buttonLabel} border={buttonBorder as BorderStyle} animate={buttonAnimate} />}
-          {componentName === "AsciiInput" && <AsciiInput label={inputLabel} width={inputWidth} placeholder={inputPlaceholder} value="" onChange={() => {}} />}
-          {componentName === "AsciiProgress" && <AsciiProgress value={progressValue} width={42} aria-label="Task progress" />}
-          {componentName === "AsciiAlert" && <AsciiAlert variant={alertVariant as AlertVariant} width={52}>{alertMessage}</AsciiAlert>}
-          {componentName === "AsciiBadge" && <AsciiBadge>{badgeLabel}</AsciiBadge>}
-        </AsciiBox>
+        <div className="docs-preview-panel">
+          <div className="label">preview</div>
+          <div className="docs-preview-stage">
+            {componentName === "AsciiButton" && <AsciiButton label={buttonLabel} border={buttonBorder as BorderStyle} animate={buttonAnimate} />}
+            {componentName === "AsciiInput" && <AsciiInput label={inputLabel} width={inputWidth} placeholder={inputPlaceholder} value="" onChange={() => {}} />}
+            {componentName === "AsciiProgress" && <AsciiProgress value={progressValue} width={42} aria-label="Task progress" />}
+            {componentName === "AsciiAlert" && <AsciiAlert variant={alertVariant as AlertVariant} width={52}>{alertMessage}</AsciiAlert>}
+            {componentName === "AsciiBadge" && <AsciiBadge>{badgeLabel}</AsciiBadge>}
+          </div>
+        </div>
         <div className="docs-code-actions">
           <AsciiButton label={copied ? "Copied" : "Copy JSX"} border="single" onClick={copyCode} />
         </div>
-        <AsciiCode title="generated.tsx" border="single">
-          {code}
-        </AsciiCode>
+        <div className="docs-code-panel">
+          <AsciiCode title="generated.tsx" border="single">
+            {code}
+          </AsciiCode>
+        </div>
       </div>
     </div>
   );
