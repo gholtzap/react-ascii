@@ -265,7 +265,7 @@ export function DocsView() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [selectedName, setSelectedName] = useState("AsciiButton");
-  const [selectedRecipeId, setSelectedRecipeId] = useState("incident-console");
+  const [selectedRecipeId, setSelectedRecipeId] = useState("ops-dashboard");
   const deferredSearch = useDeferredValue(search);
   const filtered = useMemo(() => filterDocsComponents(deferredSearch, category), [deferredSearch, category]);
   const selected = getDocsComponent(selectedName);
@@ -337,6 +337,12 @@ export function DocsView() {
             </AsciiBox>
             <AsciiBox title="Outcomes" width={48} border="single">
               {selectedRecipe.outcomes.map((outcome) => `- ${outcome}`).join("\n")}
+            </AsciiBox>
+            <AsciiBox title="Screen Structure" width={42} border="single">
+              {selectedRecipe.structure.map((item) => `- ${item}`).join("\n")}
+            </AsciiBox>
+            <AsciiBox title="Workflow Actions" width={48} border="single">
+              {selectedRecipe.actions.map((action) => `- ${action}`).join("\n")}
             </AsciiBox>
           </div>
           <div className="docs-recipe-code">
