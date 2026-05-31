@@ -1,13 +1,20 @@
 import { useDeferredValue, useMemo, useState } from "react";
+import { AsciiAlert, type AlertVariant } from "../../src/components/AsciiAlert";
 import { AsciiBadge } from "../../src/components/AsciiBadge";
 import { AsciiBox } from "../../src/components/AsciiBox";
+import { AsciiButton } from "../../src/components/AsciiButton";
 import { AsciiButtonGroup } from "../../src/components/AsciiButtonGroup";
 import { AsciiCode } from "../../src/components/AsciiCode";
 import { AsciiDivider } from "../../src/components/AsciiDivider";
 import { AsciiEmpty } from "../../src/components/AsciiEmpty";
 import { AsciiInput } from "../../src/components/AsciiInput";
+import { AsciiProgress } from "../../src/components/AsciiProgress";
+import { AsciiSelect } from "../../src/components/AsciiSelect";
+import { AsciiSlider } from "../../src/components/AsciiSlider";
+import { AsciiSwitch } from "../../src/components/AsciiSwitch";
 import { AsciiTable } from "../../src/components/AsciiTable";
 import { AsciiTag } from "../../src/components/AsciiTag";
+import type { BorderStyle } from "../../src/chars";
 import { docsCategories, docsComponentCount, filterDocsComponents, getDocsComponent } from "./docsCatalog";
 
 const categoryItems = [
@@ -21,6 +28,130 @@ const propColumns = [
   { key: "defaultValue", header: "DEFAULT", width: 12 },
   { key: "description", header: "DESCRIPTION", width: 42 },
 ];
+
+const borderOptions = [
+  { key: "single", label: "single" },
+  { key: "double", label: "double" },
+  { key: "bold", label: "bold" },
+  { key: "round", label: "round" },
+  { key: "ascii", label: "ascii" },
+];
+
+const alertVariantOptions = [
+  { value: "info", label: "info" },
+  { value: "success", label: "success" },
+  { value: "warning", label: "warning" },
+  { value: "error", label: "error" },
+];
+
+function literal(value: string) {
+  return JSON.stringify(value);
+}
+
+function LivePlayground({ componentName }: { componentName: string }) {
+  const [buttonLabel, setButtonLabel] = useState("Deploy");
+  const [buttonBorder, setButtonBorder] = useState("single");
+  const [buttonAnimate, setButtonAnimate] = useState(true);
+  const [inputLabel, setInputLabel] = useState("filter:");
+  const [inputPlaceholder, setInputPlaceholder] = useState("search logs...");
+  const [inputWidth, setInputWidth] = useState(36);
+  const [progressValue, setProgressValue] = useState(64);
+  const [alertVariant, setAlertVariant] = useState("warning");
+  const [alertMessage, setAlertMessage] = useState("Memory usage crossed 80%");
+  const [badgeLabel, setBadgeLabel] = useState("healthy");
+  const [copied, setCopied] = useState(false);
+
+  const supported = ["AsciiButton", "AsciiInput", "AsciiProgress", "AsciiAlert", "AsciiBadge"].includes(componentName);
+
+  const code = useMemo(() => {
+    if (componentName === "AsciiButton") {
+      return `<AsciiButton label=${literal(buttonLabel)} border=${literal(buttonBorder)}${buttonAnimate ? " animate" : ""} />`;
+    }
+
+    if (componentName === "AsciiInput") {
+      return `<AsciiInput label=${literal(inputLabel)} width={${inputWidth}} placeholder=${literal(inputPlaceholder)} value={value} onChange={(event) => setValue(event.target.value)} />`;
+    }
+
+    if (componentName === "AsciiProgress") {
+      return `<AsciiProgress value={${progressValue}} width={42} aria-label="Task progress" />`;
+    }
+
+    if (componentName === "AsciiAlert") {
+      return `<AsciiAlert variant=${literal(alertVariant)} width={52}>${alertMessage}</AsciiAlert>`;
+    }
+
+    if (componentName === "AsciiBadge") {
+      return `<AsciiBadge>${badgeLabel}</AsciiBadge>`;
+    }
+
+    return "";
+  }, [alertMessage, alertVariant, badgeLabel, buttonAnimate, buttonBorder, buttonLabel, componentName, inputLabel, inputPlaceholder, inputWidth, progressValue]);
+
+  const copyCode = async () => {
+    if (!code) return;
+    await navigator.clipboard?.writeText(code);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  };
+
+  if (!supported) {
+    return (
+      <AsciiEmpty
+        title="No live controls yet"
+        description="This docs page still includes use cases, props, accessibility notes, and examples."
+      />
+    );
+  }
+
+  return (
+    <div className="docs-playground">
+      <div className="docs-playground-controls">
+        {componentName === "AsciiButton" && (
+          <>
+            <AsciiInput label="label:" width={30} value={buttonLabel} onChange={(event) => setButtonLabel(event.target.value)} />
+            <AsciiButtonGroup items={borderOptions} value={buttonBorder} onChange={(value) => setButtonBorder(value as string)} />
+            <AsciiSwitch checked={buttonAnimate} onChange={setButtonAnimate} label="animate" />
+          </>
+        )}
+        {componentName === "AsciiInput" && (
+          <>
+            <AsciiInput label="label:" width={28} value={inputLabel} onChange={(event) => setInputLabel(event.target.value)} />
+            <AsciiInput label="placeholder:" width={36} value={inputPlaceholder} onChange={(event) => setInputPlaceholder(event.target.value)} />
+            <AsciiSlider label="width" value={inputWidth} min={24} max={54} width={30} onChange={setInputWidth} />
+          </>
+        )}
+        {componentName === "AsciiProgress" && (
+          <AsciiSlider label="value" value={progressValue} min={0} max={100} width={42} onChange={setProgressValue} />
+        )}
+        {componentName === "AsciiAlert" && (
+          <>
+            <AsciiSelect options={alertVariantOptions} value={alertVariant} onChange={setAlertVariant} width={24} />
+            <AsciiInput label="message:" width={44} value={alertMessage} onChange={(event) => setAlertMessage(event.target.value)} />
+          </>
+        )}
+        {componentName === "AsciiBadge" && (
+          <AsciiInput label="label:" width={30} value={badgeLabel} onChange={(event) => setBadgeLabel(event.target.value)} />
+        )}
+      </div>
+
+      <div className="docs-playground-preview">
+        <AsciiBox title="Preview" width={58} border="single">
+          {componentName === "AsciiButton" && <AsciiButton label={buttonLabel} border={buttonBorder as BorderStyle} animate={buttonAnimate} />}
+          {componentName === "AsciiInput" && <AsciiInput label={inputLabel} width={inputWidth} placeholder={inputPlaceholder} value="" onChange={() => {}} />}
+          {componentName === "AsciiProgress" && <AsciiProgress value={progressValue} width={42} aria-label="Task progress" />}
+          {componentName === "AsciiAlert" && <AsciiAlert variant={alertVariant as AlertVariant} width={52}>{alertMessage}</AsciiAlert>}
+          {componentName === "AsciiBadge" && <AsciiBadge>{badgeLabel}</AsciiBadge>}
+        </AsciiBox>
+        <div className="docs-code-actions">
+          <AsciiButton label={copied ? "Copied" : "Copy JSX"} border="single" onClick={copyCode} />
+        </div>
+        <AsciiCode title="generated.tsx" border="single">
+          {code}
+        </AsciiCode>
+      </div>
+    </div>
+  );
+}
 
 export function DocsView() {
   const [search, setSearch] = useState("");
@@ -109,6 +240,9 @@ export function DocsView() {
 
           <AsciiDivider width={72} border="single" label="PROPS" />
           <AsciiTable columns={propColumns} data={selected.props} />
+
+          <AsciiDivider width={72} border="single" label="LIVE PLAYGROUND" />
+          <LivePlayground componentName={selected.name} />
 
           <AsciiDivider width={72} border="single" label="EXAMPLES" />
           <div className="docs-examples">
