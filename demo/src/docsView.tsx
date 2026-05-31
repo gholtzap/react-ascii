@@ -18,6 +18,7 @@ import { AsciiTextarea } from "../../src/components/AsciiTextarea";
 import { AsciiTheme } from "../../src/components/AsciiTheme";
 import type { BorderStyle } from "../../src/chars";
 import type { DensityPreset, ThemePreset } from "../../src/themes";
+import { accessibilityContractRows } from "./accessibilityContract";
 import { docsCategories, docsComponentCount, filterDocsComponents, getDocsComponent } from "./docsCatalog";
 import { docsRecipes, getDocsRecipe } from "./docsRecipes";
 
@@ -31,6 +32,13 @@ const propColumns = [
   { key: "type", header: "TYPE", width: 28 },
   { key: "defaultValue", header: "DEFAULT", width: 12 },
   { key: "description", header: "DESCRIPTION", width: 42 },
+];
+
+const accessibilityColumns = [
+  { key: "capability", header: "CAPABILITY", width: 18 },
+  { key: "coverage", header: "COVERAGE", width: 22 },
+  { key: "components", header: "COMPONENTS", width: 42 },
+  { key: "contract", header: "CONTRACT", width: 58 },
 ];
 
 const borderOptions = [
@@ -351,6 +359,16 @@ export function DocsView() {
             </AsciiCode>
           </div>
         </div>
+      </div>
+
+      <AsciiDivider width={80} border="single" label="ACCESSIBILITY & KEYBOARD CONTRACT" className="divider-full" />
+
+      <div className="docs-accessibility-contract">
+        <div>
+          <h2 className="section-title">Support matrix</h2>
+          <p className="section-desc">Keyboard and assistive-technology expectations for the components that carry the most interaction risk.</p>
+        </div>
+        <AsciiTable columns={accessibilityColumns} data={accessibilityContractRows} />
       </div>
 
       <div className="docs-layout">

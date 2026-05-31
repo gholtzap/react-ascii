@@ -489,6 +489,13 @@ footer pre {
   margin-top: 1rem;
 }
 
+.docs-accessibility-contract {
+  max-width: 100%;
+  overflow: auto;
+  margin-bottom: 2rem;
+  padding-bottom: 0.25rem;
+}
+
 .docs-sidebar {
   display: flex;
   flex-direction: column;

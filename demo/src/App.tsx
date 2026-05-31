@@ -39,6 +39,7 @@ import { AsciiToggle } from "../../src/components/AsciiToggle";
 import { AsciiTree } from "../../src/components/AsciiTree";
 import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
+import { accessibilityContractCount } from "./accessibilityContract";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
 import { docsCategories, docsComponentCount, generatedDocsPropTableCount } from "./docsCatalog";
 import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
@@ -378,6 +379,7 @@ function Dashboard() {
         <div className="dash-docs-metrics">
           <span className="green"><AsciiBadge>{`${docsComponentCount} components`}</AsciiBadge></span>
           <span className="blue"><AsciiTag>{`${generatedDocsPropTableCount} generated prop tables`}</AsciiTag></span>
+          <span className="green"><AsciiTag>{`${accessibilityContractCount} a11y contracts`}</AsciiTag></span>
           <span className="blue"><AsciiTag>{`${docsCategories.length} categories`}</AsciiTag></span>
           <span className="green"><AsciiTag>{`${docsRecipeCount} recipes`}</AsciiTag></span>
           <AsciiKbd keys={["Docs"]} />

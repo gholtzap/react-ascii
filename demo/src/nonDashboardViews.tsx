@@ -67,6 +67,7 @@ import { AsciiToggleGroup } from "../../src/components/AsciiToggleGroup";
 import { AsciiTooltip } from "../../src/components/AsciiTooltip";
 import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
+import { accessibilityContractCount } from "./accessibilityContract";
 import { demoComponents, filterDemoComponents } from "./demoRegistry";
 import { docsComponentCount, generatedDocsPropCount, generatedDocsPropTableCount } from "./docsCatalog";
 import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
@@ -129,7 +130,7 @@ export function ComponentsView() {
           </div>
           <div className="blue">
             <AsciiBox width={42} title="Use It For" border="single">
-              {"imports\nprops\naccessibility\nstarting examples"}
+              {`imports\nprops\n${accessibilityContractCount} accessibility contracts\nstarting examples`}
             </AsciiBox>
           </div>
           <div className="green">
