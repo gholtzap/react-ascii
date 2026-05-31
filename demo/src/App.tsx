@@ -44,6 +44,7 @@ import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoSh
 import { docsCategories, docsComponentCount, generatedDocsPropTableCount } from "./docsCatalog";
 import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
 import { docsRecipeCount, docsRecipes } from "./docsRecipes";
+import { ThemeBuilderSummary } from "./themeBuilder";
 
 type DashboardEnvironment = "production" | "staging" | "development";
 type DashboardServiceRow = {
@@ -388,6 +389,7 @@ function Dashboard() {
 
       <div className="dash-recipe-strip">
         <DocsPlaygroundSummary />
+        <ThemeBuilderSummary />
         {docsRecipes.slice(0, 3).map((recipe) => (
           <AsciiBox key={recipe.id} width={34} title={recipe.title} border="single">
             {recipe.components.slice(0, 3).join("\n")}

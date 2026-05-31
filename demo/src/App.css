@@ -496,6 +496,54 @@ footer pre {
   padding-bottom: 0.25rem;
 }
 
+.docs-theme-builder {
+  margin-bottom: 2rem;
+}
+
+.theme-builder,
+.theme-builder-controls,
+.theme-builder-preview,
+.theme-builder-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.theme-builder-controls,
+.theme-builder-preview {
+  border-top: 1px solid var(--ascii-border);
+  padding-top: 0.75rem;
+}
+
+.theme-builder-swatches,
+.theme-builder-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.theme-builder-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--ascii-dim);
+}
+
+.theme-builder-swatch input {
+  width: 4rem;
+  height: 2rem;
+  border: 1px solid var(--ascii-border);
+  background: var(--ascii-surface);
+}
+
+.theme-builder-stage {
+  padding: 1rem;
+  border: 1px solid var(--ascii-border);
+  background: var(--ascii-surface);
+}
+
 .docs-sidebar {
   display: flex;
   flex-direction: column;

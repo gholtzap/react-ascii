@@ -72,6 +72,7 @@ import { demoComponents, filterDemoComponents } from "./demoRegistry";
 import { docsComponentCount, generatedDocsPropCount, generatedDocsPropTableCount } from "./docsCatalog";
 import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
 import { docsRecipeCount, docsRecipes } from "./docsRecipes";
+import { ThemeBuilderSummary } from "./themeBuilder";
 
 const LazyComponentFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.ComponentFeatureShowcases })));
 
@@ -123,6 +124,7 @@ export function ComponentsView() {
         <p className="section-desc">The Docs tab now exposes prop controls, editable JSX, copy actions, local theme and density toggles, and dashboard-context previews.</p>
         <div className="demo-row">
           <DocsPlaygroundSummary />
+          <ThemeBuilderSummary />
           <div className="green">
             <AsciiBox width={40} title="Coverage" border="single">
               {`${docsComponentCount} component docs\n${generatedDocsPropTableCount} generated prop tables\n${generatedDocsPropCount} TypeScript props`}

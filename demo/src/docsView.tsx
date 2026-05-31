@@ -21,6 +21,7 @@ import type { DensityPreset, ThemePreset } from "../../src/themes";
 import { accessibilityContractRows } from "./accessibilityContract";
 import { docsCategories, docsComponentCount, filterDocsComponents, getDocsComponent } from "./docsCatalog";
 import { docsRecipes, getDocsRecipe } from "./docsRecipes";
+import { ThemeBuilder } from "./themeBuilder";
 
 const categoryItems = [
   { key: "All", label: "All" },
@@ -369,6 +370,16 @@ export function DocsView() {
           <p className="section-desc">Keyboard and assistive-technology expectations for the components that carry the most interaction risk.</p>
         </div>
         <AsciiTable columns={accessibilityColumns} data={accessibilityContractRows} />
+      </div>
+
+      <AsciiDivider width={80} border="single" label="THEME BUILDER" className="divider-full" />
+
+      <div className="docs-theme-builder">
+        <div>
+          <h2 className="section-title">AsciiTheme tokens</h2>
+          <p className="section-desc">Tune colors, density, borders, animation, and contrast mode, then copy the resulting token payload.</p>
+        </div>
+        <ThemeBuilder />
       </div>
 
       <div className="docs-layout">
