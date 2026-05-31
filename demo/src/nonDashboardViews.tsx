@@ -69,6 +69,7 @@ import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
 import { demoComponents, filterDemoComponents } from "./demoRegistry";
 import { docsCategories, docsComponentCount } from "./docsCatalog";
+import { docsRecipeCount, docsRecipes } from "./docsRecipes";
 
 const LazyComponentFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.ComponentFeatureShowcases })));
 
@@ -127,6 +128,11 @@ export function ComponentsView() {
           <div className="blue">
             <AsciiBox width={42} title="Use It For" border="single">
               {"imports\nprops\naccessibility\nstarting examples"}
+            </AsciiBox>
+          </div>
+          <div className="green">
+            <AsciiBox width={42} title={`${docsRecipeCount} Recipes`} border="single">
+              {docsRecipes.map((recipe) => recipe.title).join("\n")}
             </AsciiBox>
           </div>
         </div>

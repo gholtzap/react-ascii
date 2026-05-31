@@ -121,6 +121,12 @@
   gap: 0.75rem;
 }
 
+.dash-recipe-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
 .dash-toggles {
   display: flex;
   flex-direction: column;
@@ -442,6 +448,47 @@ footer pre {
   align-items: flex-start;
 }
 
+.docs-recipes {
+  display: grid;
+  grid-template-columns: minmax(24ch, 34ch) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.docs-recipe-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.docs-recipe-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ascii-dim);
+  cursor: pointer;
+  font: inherit;
+  padding: 0.55rem 0.6rem;
+  text-align: left;
+}
+
+.docs-recipe-item span:last-child {
+  font-size: 0.75rem;
+}
+
+.docs-recipe-item:hover,
+.docs-recipe-item-active {
+  border-color: var(--ascii-border);
+  color: var(--ascii-accent);
+}
+
+.docs-recipe-code {
+  margin-top: 1rem;
+}
+
 .docs-sidebar {
   display: flex;
   flex-direction: column;
@@ -566,6 +613,7 @@ footer pre {
   }
 
   .docs-layout,
+  .docs-recipes,
   .docs-playground,
   .docs-example {
     display: flex;

@@ -16,6 +16,7 @@ import { AsciiTable } from "../../src/components/AsciiTable";
 import { AsciiTag } from "../../src/components/AsciiTag";
 import type { BorderStyle } from "../../src/chars";
 import { docsCategories, docsComponentCount, filterDocsComponents, getDocsComponent } from "./docsCatalog";
+import { docsRecipes, getDocsRecipe } from "./docsRecipes";
 
 const categoryItems = [
   { key: "All", label: "All" },
@@ -157,9 +158,11 @@ export function DocsView() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [selectedName, setSelectedName] = useState("AsciiButton");
+  const [selectedRecipeId, setSelectedRecipeId] = useState("incident-console");
   const deferredSearch = useDeferredValue(search);
   const filtered = useMemo(() => filterDocsComponents(deferredSearch, category), [deferredSearch, category]);
   const selected = getDocsComponent(selectedName);
+  const selectedRecipe = getDocsRecipe(selectedRecipeId);
   const isStale = search !== deferredSearch;
 
   return (
@@ -195,6 +198,46 @@ export function DocsView() {
             setSelectedName(nextFiltered[0]?.name ?? selectedName);
           }}
         />
+      </div>
+
+      <AsciiDivider width={80} border="single" label="RECIPES" className="divider-full" />
+
+      <div className="docs-recipes">
+        <div className="docs-recipe-list">
+          {docsRecipes.map((recipe) => (
+            <button
+              key={recipe.id}
+              type="button"
+              className={`docs-recipe-item ${recipe.id === selectedRecipe.id ? "docs-recipe-item-active" : ""}`}
+              onClick={() => setSelectedRecipeId(recipe.id)}
+            >
+              <span>{recipe.title}</span>
+              <span>{recipe.components.slice(0, 3).join(" + ")}</span>
+            </button>
+          ))}
+        </div>
+        <div className="docs-recipe-detail">
+          <div className="docs-detail-header">
+            <div>
+              <h2 className="section-title">{selectedRecipe.title}</h2>
+              <p className="section-desc">{selectedRecipe.summary}</p>
+            </div>
+            <span className="green"><AsciiBadge>{`${selectedRecipe.components.length} components`}</AsciiBadge></span>
+          </div>
+          <div className="docs-detail-grid">
+            <AsciiBox title="Components" width={42} border="single">
+              {selectedRecipe.components.map((component) => `- ${component}`).join("\n")}
+            </AsciiBox>
+            <AsciiBox title="Outcomes" width={48} border="single">
+              {selectedRecipe.outcomes.map((outcome) => `- ${outcome}`).join("\n")}
+            </AsciiBox>
+          </div>
+          <div className="docs-recipe-code">
+            <AsciiCode title={`${selectedRecipe.id}.tsx`} border="single">
+              {selectedRecipe.code}
+            </AsciiCode>
+          </div>
+        </div>
       </div>
 
       <div className="docs-layout">

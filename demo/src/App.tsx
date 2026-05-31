@@ -4,6 +4,7 @@ import { AsciiAccordion } from "../../src/components/AsciiAccordion";
 import { AsciiAvatar } from "../../src/components/AsciiAvatar";
 import { AsciiBadge } from "../../src/components/AsciiBadge";
 import { AsciiBarChart } from "../../src/components/AsciiBarChart";
+import { AsciiBox } from "../../src/components/AsciiBox";
 import { AsciiBreadcrumb } from "../../src/components/AsciiBreadcrumb";
 import { AsciiButton } from "../../src/components/AsciiButton";
 import { AsciiButtonGroup } from "../../src/components/AsciiButtonGroup";
@@ -40,6 +41,7 @@ import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
 import { docsCategories, docsComponentCount } from "./docsCatalog";
+import { docsRecipeCount, docsRecipes } from "./docsRecipes";
 
 type DashboardEnvironment = "production" | "staging" | "development";
 type DashboardServiceRow = {
@@ -375,8 +377,17 @@ function Dashboard() {
         <div className="dash-docs-metrics">
           <span className="green"><AsciiBadge>{`${docsComponentCount} components`}</AsciiBadge></span>
           <span className="blue"><AsciiTag>{`${docsCategories.length} categories`}</AsciiTag></span>
+          <span className="green"><AsciiTag>{`${docsRecipeCount} recipes`}</AsciiTag></span>
           <AsciiKbd keys={["Docs"]} />
         </div>
+      </div>
+
+      <div className="dash-recipe-strip">
+        {docsRecipes.slice(0, 3).map((recipe) => (
+          <AsciiBox key={recipe.id} width={34} title={recipe.title} border="single">
+            {recipe.components.slice(0, 3).join("\n")}
+          </AsciiBox>
+        ))}
       </div>
 
       {!darkAlerts && (
