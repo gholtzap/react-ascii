@@ -69,6 +69,7 @@ import { AsciiTree } from "../../src/components/AsciiTree";
 import { AsciiTypography } from "../../src/components/AsciiTypography";
 import { demoComponents, filterDemoComponents } from "./demoRegistry";
 import { docsCategories, docsComponentCount } from "./docsCatalog";
+import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
 import { docsRecipeCount, docsRecipes } from "./docsRecipes";
 
 const LazyComponentFeatureShowcases = lazy(() => import("./featureShowcases").then((module) => ({ default: module.ComponentFeatureShowcases })));
@@ -117,9 +118,10 @@ export function ComponentsView() {
     <div className="components">
 
       <div className="section">
-        <h2 className="section-title">Docs Playground</h2>
-        <p className="section-desc">The Docs tab now exposes searchable component guidance, usage examples, props, and accessibility notes.</p>
+        <h2 className="section-title">Live Component Playground</h2>
+        <p className="section-desc">The Docs tab now exposes prop controls, editable JSX, copy actions, local theme and density toggles, and dashboard-context previews.</p>
         <div className="demo-row">
+          <DocsPlaygroundSummary />
           <div className="green">
             <AsciiBox width={40} title="Coverage" border="single">
               {`${docsComponentCount} component docs\n${docsCategories.length} categories\nlive in the Docs tab`}

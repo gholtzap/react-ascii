@@ -41,6 +41,7 @@ import type { DensityPreset, ThemePreset } from "../../src/themes";
 import "./App.css";
 import { DemoControls, DemoFooter, DemoHeader, DemoViewSwitcher } from "./demoShell";
 import { docsCategories, docsComponentCount } from "./docsCatalog";
+import { DocsPlaygroundSummary } from "./docsPlaygroundSummary";
 import { docsRecipeCount, docsRecipes } from "./docsRecipes";
 
 type DashboardEnvironment = "production" | "staging" | "development";
@@ -371,8 +372,8 @@ function Dashboard() {
 
       <div className="dash-docs-strip">
         <div>
-          <h3 className="dash-section-title">Docs Playground</h3>
-          <div className="dim">Searchable per-component docs are available from the Docs tab.</div>
+          <h3 className="dash-section-title">Live Component Playground</h3>
+          <div className="dim">The Docs tab now includes prop controls, editable JSX, copyable examples, and dashboard context previews.</div>
         </div>
         <div className="dash-docs-metrics">
           <span className="green"><AsciiBadge>{`${docsComponentCount} components`}</AsciiBadge></span>
@@ -383,6 +384,7 @@ function Dashboard() {
       </div>
 
       <div className="dash-recipe-strip">
+        <DocsPlaygroundSummary />
         {docsRecipes.slice(0, 3).map((recipe) => (
           <AsciiBox key={recipe.id} width={34} title={recipe.title} border="single">
             {recipe.components.slice(0, 3).join("\n")}

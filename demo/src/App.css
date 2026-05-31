@@ -552,12 +552,28 @@ footer pre {
   min-width: 0;
 }
 
+.docs-playground-toolbar,
 .docs-playground-controls,
 .docs-playground-preview {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
   min-width: 0;
+}
+
+.docs-playground-toolbar {
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--ascii-border);
+  border-bottom: 1px solid var(--ascii-border);
+}
+
+.docs-playground-control,
+.docs-playground-actions,
+.docs-playground-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
 
 .docs-preview-panel {
@@ -574,15 +590,34 @@ footer pre {
   padding-bottom: 0.25rem;
 }
 
-.docs-code-actions {
-  display: flex;
-  justify-content: flex-start;
-}
-
 .docs-code-panel {
   max-width: 100%;
   overflow: auto;
   padding-bottom: 0.25rem;
+}
+
+.docs-dashboard-context {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--ascii-border);
+  background: var(--ascii-surface);
+}
+
+.docs-dashboard-context-top,
+.docs-dashboard-context-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.docs-dashboard-context-top {
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ascii-border);
 }
 
 .docs-example {
