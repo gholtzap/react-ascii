@@ -25,12 +25,14 @@ import { AsciiProcessTable } from "../../src/components/AsciiProcessTable";
 import { AsciiProgress } from "../../src/components/AsciiProgress";
 import { AsciiQueryPlan } from "../../src/components/AsciiQueryPlan";
 import { AsciiRackMap } from "../../src/components/AsciiRackMap";
+import { AsciiRunbook } from "../../src/components/AsciiRunbook";
 import { AsciiSelect } from "../../src/components/AsciiSelect";
 import { AsciiSequenceDiagram } from "../../src/components/AsciiSequenceDiagram";
 import { AsciiSheet } from "../../src/components/AsciiSheet";
 import { AsciiSplitPane } from "../../src/components/AsciiSplitPane";
 import { AsciiStat } from "../../src/components/AsciiStat";
 import { AsciiStatusGrid } from "../../src/components/AsciiStatusGrid";
+import { AsciiStepper } from "../../src/components/AsciiStepper";
 import { AsciiTag } from "../../src/components/AsciiTag";
 import { AsciiTerminal } from "../../src/components/AsciiTerminal";
 import { AsciiTextarea } from "../../src/components/AsciiTextarea";
@@ -40,6 +42,89 @@ import { AsciiTraceTimeline } from "../../src/components/AsciiTraceTimeline";
 import { AsciiWindow } from "../../src/components/AsciiWindow";
 
 export type ShowcaseMode = "dashboard" | "components";
+
+const RUNBOOK_STEPS = [
+  {
+    key: "freeze",
+    title: "Freeze writes",
+    status: "passed" as const,
+    owner: "db",
+    timestamp: "12:04",
+    description: "Checkout write traffic is paused at the edge.",
+    command: "deployctl traffic freeze checkout",
+    output: "gate closed · 0 write routes accepting",
+  },
+  {
+    key: "migrate",
+    title: "Apply migration",
+    status: "running" as const,
+    owner: "platform",
+    timestamp: "12:07",
+    description: "Run additive index build before promoting api-gateway.",
+    command: "dbmigrate up 20260531_add_order_lookup",
+    output: "index build 68% · locks clear · replica lag 18ms",
+    evidence: "trace: checkout-write p99 74ms",
+  },
+  {
+    key: "verify",
+    title: "Verify hot paths",
+    status: "pending" as const,
+    owner: "sre",
+    timestamp: "queued",
+    description: "Confirm auth, checkout, and webhook spans stay inside budget.",
+  },
+  {
+    key: "promote",
+    title: "Promote release",
+    status: "pending" as const,
+    owner: "release",
+    timestamp: "queued",
+    description: "Shift production traffic after verification clears.",
+  },
+];
+
+export function RunbookShowcase({ mode }: { mode: ShowcaseMode }) {
+  return (
+    <AsciiRunbook
+      title="Release Runbook"
+      width={mode === "dashboard" ? 58 : 74}
+      border="double"
+      defaultActiveStepKey="migrate"
+      steps={RUNBOOK_STEPS}
+      footer={
+        <div className="feature-actions">
+          <AsciiBadge>change-1427</AsciiBadge>
+          <AsciiButton label="Approve" border="single" />
+          <AsciiButton label="Rollback" border="bold" />
+        </div>
+      }
+    />
+  );
+}
+
+export function StepperShowcase({ mode }: { mode: ShowcaseMode }) {
+  const [current, setCurrent] = useState(1);
+
+  return (
+    <div className="feature-demo">
+      <AsciiStepper
+        current={current}
+        onChange={setCurrent}
+        compact={mode === "dashboard"}
+        steps={[
+          { key: "scope", label: "Scope", meta: "done", description: "Release target selected" },
+          { key: "verify", label: "Verify", meta: "running", description: "Smoke checks are running" },
+          { key: "approve", label: "Approve", status: "warning", meta: "gate", description: "Release owner approval required" },
+          { key: "ship", label: "Ship", disabled: true, meta: "locked", description: "Unlocks after approval" },
+        ]}
+      />
+      <div className="feature-actions" style={{ marginTop: "0.75rem" }}>
+        <AsciiButton label="Prev" border="single" onClick={() => setCurrent((value) => Math.max(0, value - 1))} />
+        <AsciiButton label="Next" border="single" onClick={() => setCurrent((value) => Math.min(3, value + 1))} />
+      </div>
+    </div>
+  );
+}
 
 export function SurfaceCompositionShowcase({ mode }: { mode: ShowcaseMode }) {
   const [modalOpen, setModalOpen] = useState(false);

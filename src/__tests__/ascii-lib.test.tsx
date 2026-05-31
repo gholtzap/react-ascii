@@ -18,6 +18,8 @@ import { AsciiInput } from "../components/AsciiInput";
 import { AsciiLogViewer } from "../components/AsciiLogViewer";
 import { AsciiModal } from "../components/AsciiModal";
 import { AsciiPopover } from "../components/AsciiPopover";
+import { AsciiRunbook } from "../components/AsciiRunbook";
+import { AsciiStepper } from "../components/AsciiStepper";
 import { AsciiTooltip } from "../components/AsciiTooltip";
 import { AsciiTree } from "../components/AsciiTree";
 import { useControllableState } from "../internal/useControllableState";
@@ -376,6 +378,116 @@ describe("ascii-lib", () => {
 
     await user.click(screen.getByRole("button", { name: "[copy]" }));
     expect(onCopyLine).toHaveBeenCalledTimes(1);
+  });
+
+  test("renders runbook step state and supports step selection", async () => {
+    const user = userEvent.setup();
+    const onActiveStepChange = vi.fn();
+
+    render(
+      <AsciiRunbook
+        title="Release Runbook"
+        defaultActiveStepKey="migrate"
+        onActiveStepChange={onActiveStepChange}
+        steps={[
+          {
+            key: "freeze",
+            title: "Freeze writes",
+            status: "passed",
+            owner: "db",
+            timestamp: "12:04",
+            description: "Writes paused",
+          },
+          {
+            key: "migrate",
+            title: "Apply migration",
+            status: "running",
+            command: "dbmigrate up",
+            output: "index build 68%",
+          },
+          {
+            key: "verify",
+            title: "Verify hot paths",
+            status: "pending",
+            evidence: "checkout p99 74ms",
+          },
+        ]}
+      />
+    );
+
+    expect(screen.getByText("1/3 complete")).toBeInTheDocument();
+    expect(screen.getByText("$ dbmigrate up")).toBeInTheDocument();
+    expect(screen.getByText("index build 68%")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /verify hot paths/i }));
+
+    expect(onActiveStepChange).toHaveBeenCalledWith("verify");
+    expect(screen.getByText("checkout p99 74ms")).toBeInTheDocument();
+  });
+
+  test("supports keyboard navigation between runbook steps", () => {
+    render(
+      <AsciiRunbook
+        title="Incident Runbook"
+        steps={[
+          { key: "detect", title: "Detect incident", status: "passed" },
+          { key: "contain", title: "Contain impact", status: "running" },
+          { key: "restore", title: "Restore service", status: "pending" },
+        ]}
+      />
+    );
+
+    const contain = screen.getByRole("button", { name: /contain impact/i });
+    contain.focus();
+    fireEvent.keyDown(contain, { key: "ArrowDown" });
+
+    expect(screen.getByRole("button", { name: /restore service/i })).toHaveAttribute("aria-current", "step");
+  });
+
+  test("renders interactive steppers with status, metadata, and disabled gates", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+
+    render(
+      <AsciiStepper
+        current={1}
+        onChange={onChange}
+        steps={[
+          { key: "scope", label: "Scope", meta: "done" },
+          { key: "verify", label: "Verify", description: "Smoke checks running", meta: "active" },
+          { key: "approve", label: "Approve", status: "warning", meta: "gate" },
+          { key: "ship", label: "Ship", disabled: true },
+        ]}
+      />
+    );
+
+    expect(screen.getByText("Smoke checks running")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /approve/i })).toHaveTextContent("[!]");
+    expect(screen.getByRole("button", { name: /ship/i })).toBeDisabled();
+
+    await user.click(screen.getByRole("button", { name: /approve/i }));
+
+    expect(onChange).toHaveBeenCalledWith(2);
+  });
+
+  test("supports keyboard selection in steppers", () => {
+    render(
+      <AsciiStepper
+        defaultCurrent={0}
+        onChange={() => {}}
+        steps={[
+          { key: "one", label: "One" },
+          { key: "two", label: "Two" },
+          { key: "three", label: "Three" },
+        ]}
+      />
+    );
+
+    const firstStep = screen.getByRole("button", { name: /one/i });
+    firstStep.focus();
+    fireEvent.keyDown(firstStep, { key: "ArrowRight" });
+
+    expect(screen.getByRole("button", { name: /two/i })).toHaveAttribute("aria-current", "step");
   });
 
   test("does not restart animated bar charts when rerendered with equal bar values", () => {

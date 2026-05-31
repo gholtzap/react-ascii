@@ -125,6 +125,96 @@
   overflow: auto;
 }
 
+.ascii-runbook {
+  display: inline-block;
+}
+
+.ascii-runbook-body {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ascii-runbook-summary,
+.ascii-runbook-meta,
+.ascii-runbook-step-status {
+  opacity: 0.72;
+}
+
+.ascii-runbook-steps {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.ascii-runbook-step {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ascii-runbook-step-trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 1ch;
+  align-items: baseline;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ascii-runbook-step-trigger:hover,
+.ascii-runbook-step-active {
+  filter: brightness(1.22);
+}
+
+.ascii-runbook-step-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-runbook-line,
+.ascii-runbook-step-title,
+.ascii-runbook-command {
+  white-space: pre;
+}
+
+.ascii-runbook-step-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ascii-runbook-detail {
+  display: grid;
+  gap: 0.35rem;
+  margin-left: 5ch;
+  padding-left: 1ch;
+  border-left: 1px dashed currentColor;
+}
+
+.ascii-runbook-description,
+.ascii-runbook-output,
+.ascii-runbook-evidence,
+.ascii-runbook-empty {
+  white-space: pre-wrap;
+}
+
+.ascii-runbook-command {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  overflow: auto;
+}
+
+.ascii-runbook-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 /* ── Sheet ──────────────────────────────── */
 
 .ascii-sheet-overlay {

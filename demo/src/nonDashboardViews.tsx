@@ -825,11 +825,23 @@ image: app:v2.4.1`}
           <div className="green">
             <AsciiStepper
               current={stepperIdx}
+              onChange={setStepperIdx}
               steps={[
-                { label: "Config", description: "Set up environment" },
-                { label: "Build", description: "Compile assets" },
-                { label: "Test", description: "Run test suite" },
-                { label: "Deploy" },
+                { key: "config", label: "Config", description: "Set up environment", meta: "done" },
+                { key: "build", label: "Build", description: "Compile assets", meta: "active" },
+                { key: "test", label: "Test", description: "Run test suite", meta: "queued" },
+                { key: "deploy", label: "Deploy", meta: "locked", disabled: true },
+              ]}
+            />
+          </div>
+          <div className="blue">
+            <AsciiStepper
+              current={1}
+              orientation="vertical"
+              steps={[
+                { key: "plan", label: "Plan", status: "complete", description: "Change window approved" },
+                { key: "verify", label: "Verify", status: "warning", description: "Waiting on smoke checks" },
+                { key: "ship", label: "Ship", status: "upcoming", description: "Promote when checks pass" },
               ]}
             />
           </div>

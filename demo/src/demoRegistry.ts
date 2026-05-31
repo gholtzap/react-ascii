@@ -62,6 +62,7 @@ export const demoComponents: DemoComponentEntry[] = [
   { name: "AsciiRackMap", category: "Ops" },
   { name: "AsciiRadio", category: "Form" },
   { name: "AsciiResizable", category: "Layout" },
+  { name: "AsciiRunbook", category: "Ops" },
   { name: "AsciiScanLine", category: "Effects" },
   { name: "AsciiScrollArea", category: "Layout" },
   { name: "AsciiSelect", category: "Form" },

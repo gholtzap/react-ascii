@@ -48,7 +48,94 @@
 
 .ascii-stepper {
   display: inline-block;
+}
+
+.ascii-stepper-list {
+  display: flex;
+  gap: 1ch;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ascii-stepper-vertical .ascii-stepper-list {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ascii-stepper-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1ch;
+}
+
+.ascii-stepper-vertical .ascii-stepper-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1ch;
+}
+
+.ascii-stepper-trigger,
+.ascii-stepper-static {
+  display: inline-flex;
+  gap: 1ch;
+  align-items: baseline;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: none;
+  font: inherit;
+  text-align: left;
+}
+
+.ascii-stepper-trigger {
+  cursor: pointer;
+}
+
+.ascii-stepper-trigger:hover,
+.ascii-stepper-active {
+  filter: brightness(1.22);
+}
+
+.ascii-stepper-trigger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.ascii-stepper-trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ascii-stepper-marker,
+.ascii-stepper-label,
+.ascii-stepper-meta,
+.ascii-stepper-connector {
   white-space: pre;
+}
+
+.ascii-stepper-description {
+  opacity: 0.72;
+  white-space: pre-wrap;
+}
+
+.ascii-stepper-horizontal .ascii-stepper-description {
+  display: block;
+  margin-left: 1ch;
+}
+
+.ascii-stepper-vertical .ascii-stepper-description {
+  grid-column: 2;
+}
+
+.ascii-stepper-meta {
+  opacity: 0.72;
+}
+
+.ascii-stepper-warning,
+.ascii-stepper-error {
+  font-weight: 600;
 }
 
 /* ── Date Picker ────────────────────────── */
