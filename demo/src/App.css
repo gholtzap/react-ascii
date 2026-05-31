@@ -544,6 +544,17 @@ footer pre {
   background: var(--ascii-surface);
 }
 
+.docs-package-ergonomics {
+  margin-bottom: 2rem;
+}
+
+.package-ergonomics-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
 .docs-sidebar {
   display: flex;
   flex-direction: column;

@@ -10,13 +10,44 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    }
+    },
+    "./button": {
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.mjs",
+      "require": "./dist/button.js"
+    },
+    "./command-palette": {
+      "types": "./dist/command-palette.d.ts",
+      "import": "./dist/command-palette.mjs",
+      "require": "./dist/command-palette.js"
+    },
+    "./data-table": {
+      "types": "./dist/data-table.d.ts",
+      "import": "./dist/data-table.mjs",
+      "require": "./dist/data-table.js"
+    },
+    "./log-viewer": {
+      "types": "./dist/log-viewer.d.ts",
+      "import": "./dist/log-viewer.mjs",
+      "require": "./dist/log-viewer.js"
+    },
+    "./terminal": {
+      "types": "./dist/terminal.d.ts",
+      "import": "./dist/terminal.mjs",
+      "require": "./dist/terminal.js"
+    },
+    "./theme": {
+      "types": "./dist/theme.d.ts",
+      "import": "./dist/theme.mjs",
+      "require": "./dist/theme.js"
+    },
+    "./styles.css": "./dist/styles.css"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/copy-styles.mjs",
     "dev": "tsup --watch",
     "generate:docs": "node scripts/generate-docs-catalog.mjs",
     "typecheck": "tsc --noEmit",

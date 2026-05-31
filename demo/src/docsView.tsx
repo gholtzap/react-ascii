@@ -21,6 +21,7 @@ import type { DensityPreset, ThemePreset } from "../../src/themes";
 import { accessibilityContractRows } from "./accessibilityContract";
 import { docsCategories, docsComponentCount, filterDocsComponents, getDocsComponent } from "./docsCatalog";
 import { docsRecipes, getDocsRecipe } from "./docsRecipes";
+import { PackageErgonomicsPanel } from "./packageErgonomics";
 import { ThemeBuilder } from "./themeBuilder";
 
 const categoryItems = [
@@ -380,6 +381,16 @@ export function DocsView() {
           <p className="section-desc">Tune colors, density, borders, animation, and contrast mode, then copy the resulting token payload.</p>
         </div>
         <ThemeBuilder />
+      </div>
+
+      <AsciiDivider width={80} border="single" label="PACKAGE ERGONOMICS" className="divider-full" />
+
+      <div className="docs-package-ergonomics">
+        <div>
+          <h2 className="section-title">Subpath imports</h2>
+          <p className="section-desc">Use focused entry points for common components and import CSS explicitly when the host app owns style loading.</p>
+        </div>
+        <PackageErgonomicsPanel />
       </div>
 
       <div className="docs-layout">
