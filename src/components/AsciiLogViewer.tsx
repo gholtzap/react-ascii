@@ -39,6 +39,7 @@ export interface AsciiLogViewerProps {
   onBookmarkedIdsChange?: (ids: string[]) => void;
   onCopyLine?: (line: AsciiLogEntry) => void;
   emptyMessage?: string;
+  ariaLabel?: string;
   color?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -99,6 +100,7 @@ export function AsciiLogViewer({
   onBookmarkedIdsChange,
   onCopyLine,
   emptyMessage = "No log lines",
+  ariaLabel = "Log lines",
   color,
   className,
   style,
@@ -222,6 +224,7 @@ export function AsciiLogViewer({
             type="button"
             className="ascii-logviewer-action"
             onClick={() => setResolvedFollow((currentFollow) => !currentFollow)}
+            aria-label={resolvedFollow ? "Pause log follow" : "Follow latest logs"}
           >
             {resolvedFollow ? "[pause]" : "[follow]"}
           </button>
@@ -230,6 +233,7 @@ export function AsciiLogViewer({
               type="button"
               className="ascii-logviewer-action"
               onClick={toggleBookmark}
+              aria-label={bookmarkedSet.has(getLineId(selectedLine, visibleLines.indexOf(selectedLine))) ? "Remove log bookmark" : "Bookmark selected log"}
             >
               {bookmarkedSet.has(getLineId(selectedLine, visibleLines.indexOf(selectedLine))) ? "[★]" : "[☆]"}
             </button>
@@ -238,6 +242,7 @@ export function AsciiLogViewer({
             <button
               type="button"
               className="ascii-logviewer-action"
+              aria-label="Copy selected log line"
               onClick={() => {
                 void copySelectedLine();
               }}
@@ -258,6 +263,7 @@ export function AsciiLogViewer({
         ref={listRef}
         className="ascii-logviewer-list"
         role="log"
+        aria-label={ariaLabel}
         aria-live={resolvedFollow ? "polite" : "off"}
         tabIndex={selectable ? 0 : undefined}
         onKeyDown={handleListKeyDown}
@@ -274,6 +280,7 @@ export function AsciiLogViewer({
               <div
                 key={lineId}
                 className={`ascii-logviewer-line ascii-logviewer-${line.level}${selected ? " ascii-logviewer-line-selected" : ""}${bookmarked ? " ascii-logviewer-line-bookmarked" : ""}`}
+                aria-selected={selected}
                 onClick={() => setResolvedSelectedId(lineId)}
               >
                 <span className="ascii-logviewer-mark">{`${selected ? ">" : " "}${bookmarked ? "*" : " "}`}</span>

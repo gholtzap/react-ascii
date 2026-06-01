@@ -13,6 +13,7 @@ export interface AsciiThemeProps {
   density?: DensityPreset;
   vars?: Partial<ThemeVars>;
   children: React.ReactNode;
+  name?: string;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -22,6 +23,7 @@ export function AsciiTheme({
   density,
   vars,
   children,
+  name,
   className,
   style,
 }: AsciiThemeProps) {
@@ -40,6 +42,9 @@ export function AsciiTheme({
       <div
         className={`ascii-theme ${className ?? ""}`.trim()}
         style={{ ...themeStyle, ...style } as React.CSSProperties}
+        data-ascii-theme={preset}
+        data-ascii-density={density}
+        data-ascii-theme-name={name}
       >
         {children}
       </div>

@@ -20,6 +20,8 @@ import { AsciiModal } from "../components/AsciiModal";
 import { AsciiPopover } from "../components/AsciiPopover";
 import { AsciiRunbook } from "../components/AsciiRunbook";
 import { AsciiStepper } from "../components/AsciiStepper";
+import { AsciiTerminal } from "../components/AsciiTerminal";
+import { AsciiTheme } from "../components/AsciiTheme";
 import { AsciiTooltip } from "../components/AsciiTooltip";
 import { AsciiTree } from "../components/AsciiTree";
 import { useControllableState } from "../internal/useControllableState";
@@ -280,6 +282,8 @@ describe("ascii-lib", () => {
     const user = userEvent.setup();
     const { container } = render(<CommandPaletteHarness />);
 
+    expect(screen.getByRole("combobox", { name: "Search commands" })).toBeInTheDocument();
+
     await user.click(screen.getByRole("option", { name: /ship canary/i }));
     await user.click(screen.getByRole("button", { name: "open palette" }));
 
@@ -320,6 +324,8 @@ describe("ascii-lib", () => {
     );
 
     const body = container.querySelector(".ascii-datatable-body") as HTMLElement | null;
+
+    expect(screen.getAllByRole("grid", { name: "Data table" })).toHaveLength(2);
 
     if (!body) {
       throw new Error("datatable body not rendered");
@@ -370,14 +376,28 @@ describe("ascii-lib", () => {
       />
     );
 
-    expect(screen.getByRole("button", { name: "[follow]" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "[★]" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Follow latest logs" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Remove log bookmark" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "[★]" }));
-    expect(screen.getByRole("button", { name: "[☆]" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Remove log bookmark" }));
+    expect(screen.getByRole("button", { name: "Bookmark selected log" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "[copy]" }));
+    await user.click(screen.getByRole("button", { name: "Copy selected log line" }));
     expect(onCopyLine).toHaveBeenCalledTimes(1);
+  });
+
+  test("exposes terminal and theme metadata for flagship surfaces", () => {
+    const { container } = render(
+      <AsciiTheme preset="mono" density="compact" name="ops">
+        <AsciiTerminal title="Ops shell" initialLines={["ready"]} />
+      </AsciiTheme>
+    );
+
+    expect(container.querySelector(".ascii-theme")).toHaveAttribute("data-ascii-theme", "mono");
+    expect(container.querySelector(".ascii-theme")).toHaveAttribute("data-ascii-density", "compact");
+    expect(container.querySelector(".ascii-theme")).toHaveAttribute("data-ascii-theme-name", "ops");
+    expect(screen.getByRole("application", { name: "Ops shell" })).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "Ops shell input" })).toBeInTheDocument();
   });
 
   test("renders runbook step state and supports step selection", async () => {

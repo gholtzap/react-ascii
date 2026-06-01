@@ -33,6 +33,7 @@ export interface AsciiDataTableProps {
   defaultSelectedKeys?: string[];
   onSelectedKeysChange?: (keys: string[]) => void;
   onRowClick?: (row: Record<string, unknown>) => void;
+  ariaLabel?: string;
   color?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -215,6 +216,7 @@ export function AsciiDataTable({
   defaultSelectedKeys = [],
   onSelectedKeysChange,
   onRowClick,
+  ariaLabel = "Data table",
   color,
   className,
   style,
@@ -423,7 +425,14 @@ export function AsciiDataTable({
   const makeStatusRow = (message: string) => b.v + pad(` ${message} `, totalInnerWidth) + b.v;
 
   return (
-    <div className={`ascii-lib ascii-datatable ${className ?? ""}`.trim()} style={color ? { ...style, color } : style}>
+    <div
+      className={`ascii-lib ascii-datatable ${className ?? ""}`.trim()}
+      style={color ? { ...style, color } : style}
+      role="grid"
+      aria-label={ariaLabel}
+      aria-rowcount={rowMeta.length}
+      aria-colcount={orderedColumns.length + (selectable ? 1 : 0)}
+    >
       <div className={`ascii-datatable-head${stickyHeader ? " ascii-datatable-head-sticky" : ""}`}>
         <span>{topLine}</span>
         {"\n"}
@@ -467,6 +476,7 @@ export function AsciiDataTable({
                       }
                     }}
                     aria-sort={sortKey === column.key ? (sortDir === "asc" ? "ascending" : "descending") : "none"}
+                    aria-label={column.sortable ? `Sort by ${column.header}` : `Resize ${column.header}`}
                   >
                     {pad(cell, resolvedColumnWidths[index], headerAligns[index])}
                   </button>
@@ -506,6 +516,9 @@ export function AsciiDataTable({
                 key={entry.id}
                 type="button"
                 className={`ascii-datatable-row${entry.id === resolvedActiveRowKey ? " ascii-datatable-row-active" : ""}${selected ? " ascii-datatable-row-selected" : ""}`}
+                role="row"
+                aria-selected={selected}
+                aria-current={entry.id === resolvedActiveRowKey ? "true" : undefined}
                 onClick={() => {
                   setActiveRowKey(entry.id);
                   if (selectable) {

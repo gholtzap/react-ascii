@@ -23,6 +23,7 @@ export interface AsciiCommandPaletteProps {
   showRecent?: boolean;
   emptyMessage?: string;
   ariaLabel?: string;
+  inputAriaLabel?: string;
   border?: BorderStyle;
   color?: string;
   className?: string;
@@ -168,6 +169,7 @@ export function AsciiCommandPalette({
   showRecent = true,
   emptyMessage = "No results",
   ariaLabel = "Command palette",
+  inputAriaLabel = "Search commands",
   border = "round",
   color,
   className,
@@ -287,6 +289,7 @@ export function AsciiCommandPalette({
             aria-autocomplete="list"
             aria-controls={listboxId}
             aria-activedescendant={activeId}
+            aria-label={inputAriaLabel}
             style={{ width: `${inner - 2}ch` }}
           />
           {" " + b.v}
@@ -323,6 +326,7 @@ export function AsciiCommandPalette({
                           className={`ascii-cmdpalette-item${isActive ? " ascii-cmdpalette-item-active" : ""}${item.recent ? " ascii-cmdpalette-item-recent" : ""}`}
                           role="option"
                           aria-selected={isActive}
+                          aria-label={`${item.section}: ${item.label}${item.shortcut ? `, ${item.shortcut}` : ""}`}
                           onMouseEnter={() => reset(currentIndex)}
                           onClick={() => selectItem(item)}
                         >

@@ -16,6 +16,8 @@ export interface AsciiTerminalProps {
   filterQuery?: string;
   searchQuery?: string;
   maxStoredLines?: number;
+  ariaLabel?: string;
+  live?: "off" | "polite" | "assertive";
   color?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -35,6 +37,8 @@ export function AsciiTerminal({
   filterQuery,
   searchQuery,
   maxStoredLines = 200,
+  ariaLabel,
+  live = "polite",
   color,
   className,
   style,
@@ -132,6 +136,8 @@ export function AsciiTerminal({
       className={`ascii-lib ascii-terminal ${className ?? ""}`.trim()}
       style={color ? { ...style, color } : style}
       onClick={() => inputRef.current?.focus()}
+      role="application"
+      aria-label={ariaLabel ?? title}
     >
       <div style={{ whiteSpace: "pre" }}>{topLine}</div>
       {toolbar ? <div className="ascii-terminal-toolbar">{toolbar}</div> : null}
@@ -145,6 +151,8 @@ export function AsciiTerminal({
           overflowY: "auto",
           overflowX: "hidden",
         }}
+        role="log"
+        aria-live={live}
       >
         {visibleLines.map((line, i) => (
           <div key={i}>
@@ -163,7 +171,7 @@ export function AsciiTerminal({
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             style={{ width: `${contentWidth - prompt.length}ch` }}
-            aria-label="Terminal input"
+            aria-label={`${title} input`}
             spellCheck={false}
             autoComplete="off"
           />

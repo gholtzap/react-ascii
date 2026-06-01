@@ -953,6 +953,12 @@ export const generatedDocsProps: Record<string, DocsProp[]> = {
       "description": "Declared in AsciiCommandPaletteProps."
     },
     {
+      "name": "inputAriaLabel",
+      "type": "string",
+      "defaultValue": "\"Search commands\"",
+      "description": "Declared in AsciiCommandPaletteProps."
+    },
+    {
       "name": "border",
       "type": "BorderStyle",
       "defaultValue": "\"round\"",
@@ -1128,6 +1134,12 @@ export const generatedDocsProps: Record<string, DocsProp[]> = {
       "name": "onRowClick",
       "type": "(row: Record<string, unknown>) => void",
       "defaultValue": "-",
+      "description": "Declared in AsciiDataTableProps."
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "defaultValue": "\"Data table\"",
       "description": "Declared in AsciiDataTableProps."
     },
     {
@@ -2518,6 +2530,12 @@ export const generatedDocsProps: Record<string, DocsProp[]> = {
       "name": "emptyMessage",
       "type": "string",
       "defaultValue": "\"No log lines\"",
+      "description": "Declared in AsciiLogViewerProps."
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "defaultValue": "\"Log lines\"",
       "description": "Declared in AsciiLogViewerProps."
     },
     {
@@ -4347,6 +4365,18 @@ export const generatedDocsProps: Record<string, DocsProp[]> = {
       "description": "Declared in AsciiTerminalProps."
     },
     {
+      "name": "ariaLabel",
+      "type": "string",
+      "defaultValue": "-",
+      "description": "Declared in AsciiTerminalProps."
+    },
+    {
+      "name": "live",
+      "type": "\"off\" | \"polite\" | \"assertive\"",
+      "defaultValue": "\"polite\"",
+      "description": "Declared in AsciiTerminalProps."
+    },
+    {
       "name": "color",
       "type": "string",
       "defaultValue": "-",
@@ -4431,6 +4461,12 @@ export const generatedDocsProps: Record<string, DocsProp[]> = {
     {
       "name": "children",
       "type": "React.ReactNode",
+      "defaultValue": "-",
+      "description": "Declared in AsciiThemeProps."
+    },
+    {
+      "name": "name",
+      "type": "string",
       "defaultValue": "-",
       "description": "Declared in AsciiThemeProps."
     },
