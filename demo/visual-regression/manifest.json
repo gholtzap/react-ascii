@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-05-31",
+  "baseUrl": "http://127.0.0.1:5173/",
+  "tool": "agent-browser",
+  "shots": [
+    {
+      "file": "dashboard-desktop.png",
+      "viewport": "1280x900",
+      "surface": "Dashboard",
+      "coverage": "dashboard tables, charts, terminal-like ops surfaces"
+    },
+    {
+      "file": "dashboard-mobile.png",
+      "viewport": "390x844",
+      "surface": "Dashboard",
+      "coverage": "responsive dashboard layout"
+    },
+    {
+      "file": "components-desktop.png",
+      "viewport": "1280x900",
+      "surface": "Components",
+      "coverage": "component gallery tables, controls, terminal and log sections"
+    },
+    {
+      "file": "components-overlay.png",
+      "viewport": "1280x900",
+      "surface": "Components",
+      "coverage": "overlay state opened from the component gallery"
+    },
+    {
+      "file": "components-mobile.png",
+      "viewport": "390x844",
+      "surface": "Components",
+      "coverage": "responsive component gallery layout"
+    }
+  ]
+}
